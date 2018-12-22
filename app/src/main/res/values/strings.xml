@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">Jak dobrze sie znacie?</string>
+    <string name="select_gender">Wybierz płeć</string>
+    <string name="login_text">masz już konto?
+        <u>zaloguj się</u>
+    </string>
+
+    <string name="facebook_app_id">249845939148351</string>
+    <string name="fb_login_protocol_scheme">fb249845939148351</string>
+
+</resources>

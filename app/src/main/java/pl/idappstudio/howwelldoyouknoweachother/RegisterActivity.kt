@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package pl.idappstudio.howwelldoyouknoweachother
 
 import android.annotation.SuppressLint
@@ -23,7 +25,7 @@ class RegisterActivity : Activity() {
 
     private lateinit var auth: FirebaseAuth
 
-    val db = FirebaseFirestore.getInstance()
+    private val db = FirebaseFirestore.getInstance()
 
     @SuppressLint("PrivateResource", "InflateParams")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -169,11 +171,7 @@ class RegisterActivity : Activity() {
                         val genderInt: Int = genderSpinner.selectedItemPosition
                         val gender: String
 
-                        if(genderInt == 0){
-                            gender = "male"
-                        } else {
-                            gender = "famle"
-                        }
+                        gender = if(genderInt == 0) "male" else "famle"
 
                         var email = emailInput.text.trim()
                         val emailNum = email.indexOf("@")

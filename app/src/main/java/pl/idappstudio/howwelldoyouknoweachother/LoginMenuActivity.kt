@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package pl.idappstudio.howwelldoyouknoweachother
 
 import android.annotation.SuppressLint
@@ -9,6 +11,7 @@ import android.os.Bundle
 import android.support.design.widget.Snackbar
 import android.view.View
 import com.facebook.*
+import com.facebook.appevents.AppEventsLogger
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.firebase.auth.FacebookAuthProvider
@@ -26,7 +29,7 @@ class LoginMenuActivity : Activity() {
 
     private lateinit var alertDialog: AlertDialog
 
-    val db = FirebaseFirestore.getInstance()
+    private val db = FirebaseFirestore.getInstance()
 
     @SuppressLint("PrivateResource", "InflateParams")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -38,6 +41,9 @@ class LoginMenuActivity : Activity() {
         callbackManager = CallbackManager.Factory.create()
 
         auth = FirebaseAuth.getInstance()
+
+        FacebookSdk.sdkInitialize(applicationContext)
+        AppEventsLogger.activateApp(this)
 
         val dialogBuilder = AlertDialog.Builder(this, R.style.Base_Theme_MaterialComponents_Dialog)
         val inflater = this.layoutInflater
@@ -116,11 +122,7 @@ class LoginMenuActivity : Activity() {
                     val genderInt = profile.firstName.lastIndex
                     val gender: String
 
-                    if(profile.firstName.substring(genderInt) == "a"){
-                        gender = "famle"
-                    } else {
-                        gender = "male"
-                    }
+                    gender = if(profile.firstName.substring(genderInt) == "a") "famle" else "male"
 
                     val user = HashMap<String, Any>()
                     user["name"] = profile.firstName.toString()

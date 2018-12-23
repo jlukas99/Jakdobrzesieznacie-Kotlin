@@ -1,3 +1,5 @@
+@file:Suppress("DEPRECATION")
+
 package pl.idappstudio.howwelldoyouknoweachother
 
 import android.app.Activity
@@ -17,7 +19,7 @@ class IntroActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_intro)
 
-        FacebookSdk.sdkInitialize(getApplicationContext())
+        FacebookSdk.sdkInitialize(applicationContext)
         AppEventsLogger.activateApp(this)
 
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN

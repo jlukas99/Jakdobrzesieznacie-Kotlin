@@ -141,7 +141,7 @@
                 app:layout_constraintBottom_toBottomOf="@+id/genderSpinner" app:layout_constraintVertical_bias="0.0"/>
 
         <android.support.design.button.MaterialButton
-                android:id="@+id/btn_login"
+                android:id="@+id/btn_send"
                 android:layout_width="264.09dp"
                 android:layout_height="38.66dp"
                 android:text="STWÓRZ KONTO"
@@ -160,7 +160,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:fontFamily="@font/varela_round" android:textSize="11sp" android:textAlignment="center"
-                app:layout_constraintTop_toBottomOf="@+id/btn_login"
+                app:layout_constraintTop_toBottomOf="@+id/btn_send"
                 app:layout_constraintVertical_bias="1.0"
                 android:layout_marginTop="16dp" android:layout_marginStart="32dp" android:layout_marginEnd="32dp"
                 app:layout_constraintEnd_toEndOf="parent" app:layout_constraintHorizontal_bias="0.503"

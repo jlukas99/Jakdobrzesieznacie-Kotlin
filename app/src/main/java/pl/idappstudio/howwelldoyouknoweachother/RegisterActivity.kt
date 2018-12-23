@@ -125,7 +125,7 @@ class RegisterActivity : Activity() {
 
         })
 
-        btn_login.setOnClickListener {
+        btn_send.setOnClickListener {
 
             var error = 0
 
@@ -189,12 +189,15 @@ class RegisterActivity : Activity() {
 
                                 alertDialog.dismiss()
 
-                                val snackbar: Snackbar? = Snackbar.make(view, "Utworzono konto", 2500)
-                                snackbar?.view?.setBackgroundColor(resources.getColor(R.color.colorAccent))
+                                val snackbar: Snackbar? = Snackbar.make(view, "Konto już istnieje", 2500)
+                                snackbar?.view?.setBackgroundColor(resources.getColor(R.color.colorRed))
                                 snackbar?.show()
+
+                                val intent = Intent(this, LoginActivity::class.java)
 
                                 Timer("StartIntent", false).schedule(700) {
 
+                                    startActivity(intent)
                                     finish()
 
                                 }
@@ -209,8 +212,11 @@ class RegisterActivity : Activity() {
                                     snackbar?.view?.setBackgroundColor(resources.getColor(R.color.colorAccent))
                                     snackbar?.show()
 
+                                    val intent = Intent(this, MenuActivity::class.java)
+
                                     Timer("StartIntent", false).schedule(700) {
 
+                                        startActivity(intent)
                                         finish()
 
                                     }

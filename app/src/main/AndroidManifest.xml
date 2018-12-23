@@ -12,6 +12,7 @@
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
             android:theme="@style/MyTheme"
+            tools:replace="android:theme"
             tools:ignore="AllowBackup,GoogleAppIndexingWarning">
         <activity android:name=".IntroActivity">
             <intent-filter>
@@ -46,6 +47,10 @@
             </intent-filter>
         </activity>
         <activity android:name=".LoginActivity">
+        </activity>
+        <activity android:name=".ResetPasswordActivity">
+        </activity>
+        <activity android:name=".MenuActivity">
         </activity>
     </application>
 

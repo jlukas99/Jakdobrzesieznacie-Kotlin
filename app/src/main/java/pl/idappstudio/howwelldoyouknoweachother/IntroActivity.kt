@@ -39,7 +39,7 @@ class IntroActivity : Activity() {
 
         } else {
 
-            val intent = Intent(this, LoginActivity::class.java)
+            val intent = Intent(this, MenuActivity::class.java)
 
             Timer("StartIntent", false).schedule(4500) {
                 startActivity(intent)

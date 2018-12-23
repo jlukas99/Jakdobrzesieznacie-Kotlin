@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+            android:id="@+id/navigation_pack"
+            android:icon="@drawable/ic_pack_icon"
+            android:iconTint="@color/colorAccent"
+            android:title="PACZKI"/>
+
+    <item
+            android:id="@+id/navigation_states"
+            android:icon="@drawable/ic_status_icon"
+            android:title="STATUSY"/>
+
+    <item
+            android:id="@+id/navigation_play"
+            android:title=""/>
+
+    <item
+            android:id="@+id/navigation_add_friends"
+            android:icon="@drawable/ic_add_friends_icon"
+            android:title="ZAPROSZENIA"/>
+
+    <item
+            android:id="@+id/navigation_profile"
+            android:icon="@drawable/ic_profile_icon"
+            android:title="PROFIL"/>
+
+</menu>

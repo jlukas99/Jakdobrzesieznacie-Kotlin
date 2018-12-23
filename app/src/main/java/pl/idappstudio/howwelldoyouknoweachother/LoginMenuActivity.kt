@@ -62,7 +62,7 @@ class LoginMenuActivity : Activity() {
 
         }
 
-        btn_login.setOnClickListener {
+        btn_send.setOnClickListener {
 
             intent = Intent(this, LoginActivity::class.java)
             startIntent(intent)
@@ -139,9 +139,12 @@ class LoginMenuActivity : Activity() {
                             snackbar?.view?.setBackgroundColor(resources.getColor(R.color.colorPrimary))
                             snackbar?.show()
 
+                            val intent = Intent(this, MenuActivity::class.java)
+
                             Timer("StartIntent", false).schedule(700) {
 
-                                //                            finish()
+                                startActivity(intent)
+                                finish()
 
                             }
 
@@ -155,9 +158,12 @@ class LoginMenuActivity : Activity() {
                                 snackbar?.view?.setBackgroundColor(resources.getColor(R.color.colorPrimary))
                                 snackbar?.show()
 
+                                val intent = Intent(this, MenuActivity::class.java)
+
                                 Timer("StartIntent", false).schedule(700) {
 
-                                    //                            finish()
+                                    startActivity(intent)
+                                    finish()
 
                                 }
 

@@ -118,7 +118,7 @@ class LoginMenuActivity : Activity() {
 
                     val profile = Profile.getCurrentProfile()
 
-                    val uid = profile.id
+                    val uid = auth.currentUser?.uid.toString()
                     val genderInt = profile.firstName.lastIndex
                     val gender: String
 
@@ -129,13 +129,14 @@ class LoginMenuActivity : Activity() {
                     user["gender"] = gender
                     user["type"] = "free"
                     user["uid"] = uid
+                    user["profile"] = profile.id
 
                     db.collection("users").document(uid).get().addOnSuccessListener { document ->
                         if(document.exists()) {
 
                             alertDialog.dismiss()
 
-                            val snackbar: Snackbar? = Snackbar.make(view, "Zalogowano za pomocą Facebook'a 2", 2500)
+                            val snackbar: Snackbar? = Snackbar.make(view, "Zalogowano za pomocą Facebook'a", 2500)
                             snackbar?.view?.setBackgroundColor(resources.getColor(R.color.colorPrimary))
                             snackbar?.show()
 

@@ -21,7 +21,8 @@ class MenuActivity : AppCompatActivity() {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_states -> {
-
+                val statesFragment = StatesFragment.newInstance()
+                openFragment(statesFragment)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_play -> {
@@ -30,11 +31,13 @@ class MenuActivity : AppCompatActivity() {
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_add_friends -> {
-
+                val invitesFragment = InvitesFragment.newInstance()
+                openFragment(invitesFragment)
                 return@OnNavigationItemSelectedListener true
             }
             R.id.navigation_profile -> {
-
+                val profileFragment = ProfileFragment.newInstance()
+                openFragment(profileFragment)
                 return@OnNavigationItemSelectedListener true
             }
         }
@@ -50,6 +53,7 @@ class MenuActivity : AppCompatActivity() {
         fab_play.fabIcon = resources.getDrawable(R.drawable.ic_play_icon)
 
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener)
+        navigation.menu.getItem(2).isChecked = true
 
         val friendsFragment = FriendsFragment.newInstance()
         openFragment(friendsFragment)

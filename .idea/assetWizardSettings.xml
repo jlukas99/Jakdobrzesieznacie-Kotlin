@@ -14,8 +14,11 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_pack_icon" />
-                            <entry key="sourceFile" value="C:\Users\johnn\Dysk Google\iDapp Studio\Jak dobrze sie znacie\Assets\icon\pack_icon.svg" />
+                            <entry key="height" value="17" />
+                            <entry key="outputName" value="ic_6a8d83618b" />
+                            <entry key="overrideSize" value="true" />
+                            <entry key="sourceFile" value="C:\Users\johnn\Dysk Google\iDapp Studio\Jak dobrze sie znacie\Assets\icon\6a8d83618b.svg" />
+                            <entry key="width" value="17" />
                           </map>
                         </option>
                       </PersistentState>

@@ -87,17 +87,31 @@
             android:elevation="0dp" style="@android:style/Widget.Material.ImageButton"
             app:layout_constraintTop_toTopOf="@+id/linearLayout2"/>
 
+    <com.github.ybq.android.spinkit.SpinKitView
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            android:id="@+id/loading"
+            style="@style/SpinKitView.ThreeBounce"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:SpinKit_Color="@color/colorWhite"
+            android:layout_marginEnd="16dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginBottom="16dp" app:layout_constraintBottom_toTopOf="@+id/linearLayout3"
+            android:layout_marginTop="16dp" app:layout_constraintTop_toBottomOf="@+id/linearLayout2"/>
+
     <android.support.v7.widget.RecyclerView
             android:layout_height="0dp" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_width="match_parent"
             android:id="@+id/recyclerView"
             tools:listitem="@layout/invite_item"
-            android:animateLayoutChanges="false"
             app:layout_constraintTop_toBottomOf="@+id/linearLayout2" android:layout_marginTop="12dp"
-            android:layout_marginEnd="16dp" android:layout_marginStart="16dp" app:layout_constraintHeight_max="200dp"
-    >
-    </android.support.v7.widget.RecyclerView>
+            android:layout_marginEnd="16dp" android:layout_marginStart="16dp"
+            app:layout_constraintHeight_max="200dp"
+            app:layout_constraintHorizontal_bias="0.0" android:animateLayoutChanges="false"
+            app:layout_constraintHeight_min="48dp" />
+
     <LinearLayout
             android:orientation="horizontal"
             android:layout_height="wrap_content"
@@ -107,7 +121,7 @@
             android:layout_marginStart="48dp"
             app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="48dp" app:layout_constraintHorizontal_bias="0.0"
-            android:layout_marginTop="12dp" app:layout_constraintTop_toBottomOf="@+id/recyclerView">
+            app:layout_constraintTop_toBottomOf="@+id/recyclerView" android:layout_marginTop="12dp">
 
         <View
                 android:layout_width="wrap_content"
@@ -132,15 +146,6 @@
                 android:layout_gravity="center" android:layout_weight="1" android:layout_width="wrap_content"/>
 
     </LinearLayout>
-    <android.support.v7.widget.RecyclerView
-            android:layout_height="0dp" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintHorizontal_bias="1.0"
-            tools:listitem="@layout/invite_item" android:layout_width="match_parent"
-            android:id="@+id/recyclerView2"
-            android:layout_marginTop="16dp" app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
-            app:layout_constraintBottom_toBottomOf="@+id/view7"
-            app:layout_constraintVertical_bias="0.0" android:visibility="gone"/>
     <ImageButton
             android:src="@drawable/ic_hide_icon"
             android:layout_width="wrap_content"
@@ -152,5 +157,57 @@
             android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintTop_toTopOf="@+id/linearLayout3"/>
+    <EditText
+            android:layout_width="0dp"
+            android:layout_height="38.66dp"
+            android:id="@+id/searchInput" android:layout_marginTop="12dp"
+            app:layout_constraintTop_toBottomOf="@+id/linearLayout3" android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent" android:inputType="text"
+            android:background="@drawable/card_background_dark" android:hint="Wpisz nick..."
+            android:paddingStart="54dp" android:paddingEnd="54dp" app:layout_constraintHorizontal_bias="1.0"
+            android:textSize="14sp"/>
+    <ImageView
+            android:src="@drawable/ic_search_icon"
+            android:layout_width="38.66dp"
+            android:layout_height="38.66dp" android:id="@+id/searchImage"
+            android:background="@drawable/input_overlay_white"
+            android:padding="10dp"
+            app:layout_constraintStart_toStartOf="@+id/searchInput"
+            app:layout_constraintBottom_toBottomOf="@+id/searchInput"
+            android:tint="@color/colorWhite"/>
+    <TextView
+            android:text="0"
+            android:layout_width="38.66dp"
+            android:layout_height="38.66dp" android:id="@+id/searchCount"
+            android:gravity="center_vertical|center_horizontal"
+            android:background="@drawable/input_overlay_white"
+            app:layout_constraintEnd_toEndOf="@+id/searchInput"
+            app:layout_constraintBottom_toBottomOf="@+id/searchInput"/>
+
+    <com.github.ybq.android.spinkit.SpinKitView
+            android:id="@+id/loading2"
+            style="@style/SpinKitView.ThreeBounce"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:SpinKit_Color="@color/colorWhite" android:layout_marginBottom="16dp"
+            app:layout_constraintBottom_toBottomOf="@+id/view7" android:layout_marginEnd="16dp"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/searchInput" app:layout_constraintVertical_bias="0.0"
+            android:visibility="gone"/>
+
+    <android.support.v7.widget.RecyclerView
+            android:layout_height="wrap_content"
+            android:layout_width="match_parent"
+            android:id="@+id/recyclerSearch"
+            tools:listitem="@layout/search_item"
+            app:layout_constraintHeight_max="200dp"
+            android:layout_marginTop="12dp"
+            app:layout_constraintTop_toBottomOf="@+id/searchInput" android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="16dp" app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.0" android:animateLayoutChanges="false" />
 
 </android.support.constraint.ConstraintLayout>

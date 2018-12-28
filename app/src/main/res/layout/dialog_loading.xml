@@ -20,6 +20,7 @@
                 android:layout_marginBottom="16dp" app:layout_constraintBottom_toBottomOf="parent"
                 android:fontFamily="@font/varela_round" android:textSize="14sp" android:textAllCaps="false"
                 android:textColor="@color/colorWhite"/>
+
         <com.github.ybq.android.spinkit.SpinKitView
                 android:id="@+id/loading"
                 style="@style/SpinKitView.MultiplePulse"
@@ -30,6 +31,7 @@
                 app:layout_constraintStart_toStartOf="parent" android:layout_marginTop="16dp"
                 app:layout_constraintTop_toTopOf="parent" android:layout_marginBottom="16dp"
                 app:layout_constraintBottom_toBottomOf="parent"/>
+
     </android.support.constraint.ConstraintLayout>
 
 </android.support.constraint.ConstraintLayout>

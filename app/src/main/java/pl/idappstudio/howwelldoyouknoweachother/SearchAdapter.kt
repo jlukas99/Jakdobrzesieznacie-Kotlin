@@ -1,9 +1,8 @@
-@file:Suppress("DEPRECATION")
-
 package pl.idappstudio.howwelldoyouknoweachother
 
 import android.graphics.drawable.Drawable
 import android.support.design.widget.Snackbar
+import android.support.v4.content.ContextCompat.getColor
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -12,24 +11,25 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
-import kotlinx.android.synthetic.main.invite_item.view.*
 import com.bumptech.glide.request.target.Target
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
+import kotlinx.android.synthetic.main.search_item.view.*
+import java.util.HashMap
 
 
 
 
-class InviteAdapter (private val partItemList: List<InviteItem>, private val listener: (Int) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
+class SearchAdapter (private val partItemList: List<InviteItem>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return InviteAdapter.PartViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.invite_item, parent, false))
+        return PartViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.search_item, parent, false))
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
-        (holder as PartViewHolder).bind(partItemList[position], position, listener)
+        (holder as PartViewHolder).bind(partItemList[position])
     }
 
     override fun getItemCount() = partItemList.size
@@ -37,9 +37,9 @@ class InviteAdapter (private val partItemList: List<InviteItem>, private val lis
     class PartViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
         private val db = FirebaseFirestore.getInstance().collection("users")
-        private val auth = FirebaseAuth.getInstance().currentUser
+        private val user = FirebaseAuth.getInstance().currentUser
 
-        fun bind(part: InviteItem, pos: Int, listener: (Int) -> Unit) = with(itemView) {
+        fun bind(part: InviteItem) {
 
             itemView.profileLoading.visibility = View.VISIBLE
             itemView.invite_name.text = part.name
@@ -154,87 +154,37 @@ class InviteAdapter (private val partItemList: List<InviteItem>, private val lis
                 itemView.addLoading.visibility = View.VISIBLE
 
                 itemView.btn_send.isEnabled = false
-                itemView.btn_delete.isEnabled = false
 
                 itemView.btn_send.visibility = View.GONE
-                itemView.btn_delete.visibility = View.GONE
 
-                db.document(auth?.uid!!).get().addOnSuccessListener { doc ->
+                db.document(user?.uid!!).get().addOnSuccessListener { doc ->
 
-                    val friend = HashMap<String, Any?>()
-                    friend["name"] = part.name
-                    friend["image"] = part.image
-                    friend["uid"] = part.id
-                    friend["fb"] = part.fb
+                    val user = HashMap<String, Any?>()
+                    user["name"] = doc.getString("name")
+                    user["image"] = doc.getString("image")
+                    user["uid"] = doc.getString("uid")
+                    user["fb"] = doc.getBoolean("fb")
 
-                    db.document(auth.uid).collection("friends").document(part.id).set(friend).addOnSuccessListener {
+                    db.document(part.id).collection("invites").document(doc.getString("uid").toString()).set(user).addOnSuccessListener {
 
-                        val user = HashMap<String, Any?>()
-                        user["name"] = doc.getString("name")
-                        user["image"] = doc.getString("image")
-                        user["uid"] = doc.getString("uid")
-                        user["fb"] = doc.getBoolean("fb")
+                        val snackbar: Snackbar? = Snackbar.make(itemView.btn_send, "Wysłano zaproszenia do ${part.name}", 2500)
+                        snackbar?.view?.setBackgroundColor(itemView.resources.getColor(R.color.colorAccent))
+                        snackbar?.show()
 
-                        db.document(part.id).collection("friends").document(doc.getString("uid").toString()).set(user).addOnSuccessListener {
+                        itemView.addLoading.visibility = View.INVISIBLE
+                        itemView.btn_send.visibility = View.VISIBLE
+                        itemView.btn_send.setColorFilter(getColor(itemView.context, R.color.colorLigth), android.graphics.PorterDuff.Mode.SRC_IN)
 
-                            val snackbar: Snackbar? = Snackbar.make(itemView.btn_delete, "Dodano do znajomych ${part.name}", 2500)
-                            snackbar?.view?.setBackgroundColor(itemView.resources.getColor(R.color.colorAccent))
-                            snackbar?.show()
+                    }.addOnFailureListener {
 
-                            db.document(auth.uid).collection("invites").document(part.id).delete()
+                        val snackbar: Snackbar? = Snackbar.make(itemView.btn_send, "Nie udało się wysłać zaproszenia!", 2500)
+                        snackbar?.view?.setBackgroundColor(itemView.resources.getColor(R.color.colorRed))
+                        snackbar?.show()
 
-                            listener(pos)
+                        itemView.addLoading.visibility = View.INVISIBLE
+                        itemView.btn_send.isEnabled = true
 
-                        }.addOnFailureListener {
-
-                            val snackbar: Snackbar? = Snackbar.make(itemView.btn_delete, "Nie udało się dodać znajomego!", 2500)
-                            snackbar?.view?.setBackgroundColor(itemView.resources.getColor(R.color.colorRed))
-                            snackbar?.show()
-
-                            itemView.addLoading.visibility = View.INVISIBLE
-                            itemView.btn_send.isEnabled = true
-                            itemView.btn_delete.isEnabled = true
-
-                            itemView.btn_send.visibility = View.VISIBLE
-                            itemView.btn_delete.visibility = View.VISIBLE
-
-                        }
                     }
-
-                }
-
-            }
-
-            itemView.btn_delete.setOnClickListener {
-
-                itemView.addLoading.visibility = View.VISIBLE
-
-                itemView.btn_send.isEnabled = false
-                itemView.btn_delete.isEnabled = false
-
-                itemView.btn_send.visibility = View.GONE
-                itemView.btn_delete.visibility = View.GONE
-
-                db.document(auth?.uid!!).collection("invites").document(part.id).delete().addOnSuccessListener {
-
-                    val snackbar: Snackbar? = Snackbar.make(itemView.btn_delete, "Usunięto zaproszenie od ${part.name}", 2500)
-                    snackbar?.view?.setBackgroundColor(itemView.resources.getColor(R.color.colorYellow))
-                    snackbar?.show()
-
-                    listener(pos)
-
-                }.addOnFailureListener {
-
-                    val snackbar: Snackbar? = Snackbar.make(itemView.btn_delete, "Nie udało się usunąć znajomego!", 2500)
-                    snackbar?.view?.setBackgroundColor(itemView.resources.getColor(R.color.colorRed))
-                    snackbar?.show()
-
-                    itemView.addLoading.visibility = View.INVISIBLE
-                    itemView.btn_send.isEnabled = true
-                    itemView.btn_delete.isEnabled = true
-
-                    itemView.btn_send.visibility = View.VISIBLE
-                    itemView.btn_delete.visibility = View.VISIBLE
 
                 }
 

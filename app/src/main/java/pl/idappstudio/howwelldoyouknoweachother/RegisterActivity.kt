@@ -7,6 +7,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
+import android.net.Uri
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -16,7 +17,9 @@ import kotlinx.android.synthetic.main.activity_register.*
 import java.util.regex.Pattern
 import com.google.firebase.auth.FirebaseAuth
 import android.support.design.widget.Snackbar
+import com.google.common.io.Files.getFileExtension
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.storage.FirebaseStorage
 import java.util.*
 import kotlin.concurrent.schedule
 
@@ -25,7 +28,9 @@ class RegisterActivity : Activity() {
 
     private lateinit var auth: FirebaseAuth
 
+    private var fileUri: Uri? = null
     private val db = FirebaseFirestore.getInstance()
+    private val storage = FirebaseStorage.getInstance().reference.child("profile_image")
 
     @SuppressLint("PrivateResource", "InflateParams")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -49,6 +54,16 @@ class RegisterActivity : Activity() {
         alertDialog?.window?.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.colorTranspery)))
         alertDialog.setCanceledOnTouchOutside(false)
         alertDialog.setCancelable(false)
+
+        selectImage.setOnClickListener {
+
+            val intent = Intent(Intent.ACTION_GET_CONTENT)
+            intent.type = "image/*"
+            if (intent.resolveActivity(packageManager) != null) {
+                startActivityForResult(intent, REQUEST_SELECT_IMAGE_IN_ALBUM)
+            }
+
+        }
 
         emailInput.addTextChangedListener(object: TextWatcher {
             override fun afterTextChanged(s: Editable?) {
@@ -177,11 +192,13 @@ class RegisterActivity : Activity() {
                         val emailNum = email.indexOf("@")
                         email = email.substring(0, emailNum)
 
-                        val user = HashMap<String, Any>()
+                        val user = HashMap<String, Any?>()
                         user["name"] = email
                         user["gender"] = gender
                         user["type"] = "free"
+                        user["image"] = if(fileUri != null) { uid } else "logo"
                         user["uid"] = uid
+                        user["fb"] = false
 
                         db.collection("users").document(uid).get().addOnSuccessListener { document ->
 
@@ -206,18 +223,47 @@ class RegisterActivity : Activity() {
 
                                 db.collection("users").document(uid).set(user).addOnCompleteListener {
 
-                                    alertDialog.dismiss()
+                                    if(fileUri != null){
 
-                                    val snackbar: Snackbar? = Snackbar.make(view, "Utworzono konto", 2500)
-                                    snackbar?.view?.setBackgroundColor(resources.getColor(R.color.colorAccent))
-                                    snackbar?.show()
+                                        val fileRef = storage.child("$uid-image")
 
-                                    val intent = Intent(this, MenuActivity::class.java)
+                                        fileRef.putFile(fileUri!!).addOnFailureListener {
 
-                                    Timer("StartIntent", false).schedule(700) {
+                                        }.addOnSuccessListener {
 
-                                        startActivity(intent)
-                                        finish()
+                                            alertDialog.dismiss()
+
+                                            val snackbar: Snackbar? = Snackbar.make(view, "Utworzono konto", 2500)
+                                            snackbar?.view?.setBackgroundColor(resources.getColor(R.color.colorAccent))
+                                            snackbar?.show()
+
+                                            val intent = Intent(this, MenuActivity::class.java)
+
+                                            Timer("StartIntent", false).schedule(700) {
+
+                                                startActivity(intent)
+                                                finish()
+
+                                            }
+
+                                        }
+
+                                    } else {
+
+                                        alertDialog.dismiss()
+
+                                        val snackbar: Snackbar? = Snackbar.make(view, "Utworzono konto", 2500)
+                                        snackbar?.view?.setBackgroundColor(resources.getColor(R.color.colorAccent))
+                                        snackbar?.show()
+
+                                        val intent = Intent(this, MenuActivity::class.java)
+
+                                        Timer("StartIntent", false).schedule(700) {
+
+                                            startActivity(intent)
+                                            finish()
+
+                                        }
 
                                     }
 
@@ -247,6 +293,26 @@ class RegisterActivity : Activity() {
 
         }
 
+    }
+
+    companion object {
+
+        private const val REQUEST_SELECT_IMAGE_IN_ALBUM = 1
+
+    }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        if (resultCode == Activity.RESULT_OK && requestCode == 1) {
+
+            fileUri = data?.data
+            selectImageText.visibility = View.GONE
+            selectImageIcon.visibility = View.GONE
+            selectImage.setImageURI(fileUri)
+
+        } else {
+
+            super.onActivityResult(requestCode, resultCode, data)
+        }
     }
 
     fun isEmailValid(email: String): Boolean {

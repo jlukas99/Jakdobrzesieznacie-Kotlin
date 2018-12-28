@@ -129,7 +129,8 @@ class LoginMenuActivity : Activity() {
                     user["gender"] = gender
                     user["type"] = "free"
                     user["uid"] = uid
-                    user["profile"] = profile.id
+                    user["image"] = profile.id
+                    user["fb"] = true
 
                     db.collection("users").document(uid).get().addOnSuccessListener { document ->
                         if(document.exists()) {

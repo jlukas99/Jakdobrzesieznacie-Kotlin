@@ -26,16 +26,8 @@ import android.animation.LayoutTransition
 import android.view.animation.OvershootInterpolator
 import android.animation.PropertyValuesHolder
 import android.animation.ObjectAnimator
-
-
-
-
-
-
-
-
-
-
+import android.util.Log
+import android.widget.Toast
 
 
 class InvitesFragment : Fragment() {

@@ -9,8 +9,6 @@ import com.facebook.FacebookSdk
 import com.facebook.appevents.AppEventsLogger
 import com.google.android.gms.ads.MobileAds
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreSettings
 import org.jetbrains.anko.startActivity
 import pl.idappstudio.howwelldoyouknoweachother.R
 import pl.idappstudio.howwelldoyouknoweachother.util.AdMobUtil
@@ -31,7 +29,7 @@ class IntroActivity : Activity() {
 
         AdMobUtil(this@IntroActivity)
 
-        Timer("StartIntent", false).schedule(3500) {
+        Timer("StartActivity", false).schedule(3500) {
             if (FirebaseAuth.getInstance().currentUser == null) startActivity<LoginMenuActivity>() else startActivity<MenuActivity>()
             finish()
         }

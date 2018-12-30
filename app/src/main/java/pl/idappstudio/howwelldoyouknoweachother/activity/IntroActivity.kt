@@ -20,14 +20,9 @@ import kotlin.concurrent.schedule
 
 class IntroActivity : Activity() {
 
-    private val firebase = FirebaseFirestore.getInstance()
-    private val settings = FirebaseFirestoreSettings.Builder().setTimestampsInSnapshotsEnabled(true).build()
-
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_intro)
-
-        firebase.firestoreSettings = settings
 
         FacebookSdk.sdkInitialize(applicationContext)
         AppEventsLogger.activateApp(this)

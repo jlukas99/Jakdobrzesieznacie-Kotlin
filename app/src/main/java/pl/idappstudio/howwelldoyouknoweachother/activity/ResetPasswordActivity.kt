@@ -1,11 +1,10 @@
 @file:Suppress("DEPRECATION")
 
-package pl.idappstudio.howwelldoyouknoweachother
+package pl.idappstudio.howwelldoyouknoweachother.activity
 
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.AlertDialog
-import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.design.widget.Snackbar
@@ -13,29 +12,28 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import com.google.firebase.auth.FirebaseAuth
-import kotlinx.android.synthetic.main.activity_login.*
+import kotlinx.android.synthetic.main.activity_reset_password.*
+import pl.idappstudio.howwelldoyouknoweachother.R
 import java.util.*
 import java.util.regex.Pattern
 import kotlin.concurrent.schedule
 
-class LoginActivity : Activity() {
+class ResetPasswordActivity : Activity() {
 
     private lateinit var auth: FirebaseAuth
 
     private lateinit var alertDialog: AlertDialog
 
-    @SuppressLint("InflateParams", "PrivateResource")
+    @SuppressLint("PrivateResource", "InflateParams")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_login)
-
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        setContentView(R.layout.activity_reset_password)
 
         auth = FirebaseAuth.getInstance()
 
         val dialogBuilder = AlertDialog.Builder(this, R.style.Base_Theme_MaterialComponents_Dialog)
         val inflater = this.layoutInflater
-        val dialogView = inflater.inflate(R.layout.dialog_loading_login, null)
+        val dialogView = inflater.inflate(R.layout.dialog_loading, null)
         dialogBuilder.setView(dialogView)
 
         alertDialog = dialogBuilder.create()
@@ -43,7 +41,7 @@ class LoginActivity : Activity() {
         alertDialog.setCanceledOnTouchOutside(false)
         alertDialog.setCancelable(false)
 
-        emailInput.addTextChangedListener(object: TextWatcher {
+        emailInput.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable?) {
 
                 val content = emailInput?.text.toString().trim()
@@ -62,8 +60,8 @@ class LoginActivity : Activity() {
 
             }
 
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) { }
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) { }
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
 
         })
 
@@ -72,10 +70,7 @@ class LoginActivity : Activity() {
             emailInput.setBackgroundResource(R.drawable.input_overlay)
             emailImage.setBackgroundResource(R.drawable.input_overlay_icon)
 
-            passwordInput.setBackgroundResource(R.drawable.input_overlay)
-            passwordImage.setBackgroundResource(R.drawable.input_overlay_icon)
-
-            if(emailInput.text.toString().trim().isEmpty()) {
+            if (emailInput.text.toString().trim().isEmpty()) {
 
                 emailInput?.error = "Wpisz email"
                 emailInput.setBackgroundResource(R.drawable.input_overlay_error)
@@ -83,38 +78,29 @@ class LoginActivity : Activity() {
 
                 return@setOnClickListener
 
-            } else if (passwordInput.text.toString().trim().isEmpty()) {
-
-                passwordInput?.error = "Wpisz hasło"
-                passwordInput.setBackgroundResource(R.drawable.input_overlay_error)
-                passwordImage.setBackgroundResource(R.drawable.input_overlay_icon_error)
-
-                return@setOnClickListener
-
             }
 
             alertDialog.show()
 
-            auth.signInWithEmailAndPassword(emailInput.text.toString().trim(), passwordInput.text.toString().trim()).addOnSuccessListener {
+            auth.sendPasswordResetEmail(emailInput.text.toString().trim()).addOnSuccessListener {
 
                 alertDialog.dismiss()
 
-                val snackbar: Snackbar? = Snackbar.make(view, "Zalogowano", 2500)
+                val snackbar: Snackbar? = Snackbar.make(view, "Wysłano wiadomość, sprawdź mail'a", 2500)
                 snackbar?.view?.setBackgroundColor(resources.getColor(R.color.colorAccent))
                 snackbar?.show()
 
-                val intent = Intent(this, MenuActivity::class.java)
+                Timer("startIntent", false).schedule(700) {
 
-                Timer("StartIntent", false).schedule(700) {
-                    startActivity(intent)
                     finish()
+
                 }
 
             }.addOnCanceledListener {
 
                 alertDialog.dismiss()
 
-                val snackbar: Snackbar? = Snackbar.make(view, "Anulowano logowanie", 2500)
+                val snackbar: Snackbar? = Snackbar.make(view, "Anulowano przywracanie hasła", 2500)
                 snackbar?.view?.setBackgroundColor(resources.getColor(R.color.colorYellow))
                 snackbar?.show()
 
@@ -122,34 +108,11 @@ class LoginActivity : Activity() {
 
                 alertDialog.dismiss()
 
-                val snackbar: Snackbar? = Snackbar.make(view, "Niepoprawny email bądź hasło", 2500)
+                val snackbar: Snackbar? = Snackbar.make(view, "Nie udało się wysłać mail'a", 2500)
                 snackbar?.view?.setBackgroundColor(resources.getColor(R.color.colorRed))
                 snackbar?.show()
 
-                passwordInput?.error = null
-                passwordInput.setBackgroundResource(R.drawable.input_overlay_error)
-                passwordImage.setBackgroundResource(R.drawable.input_overlay_icon_error)
-
-                emailInput?.error = null
-                emailInput.setBackgroundResource(R.drawable.input_overlay_error)
-                emailImage.setBackgroundResource(R.drawable.input_overlay_icon_error)
-
             }
-
-        }
-
-        btn_register.setOnClickListener {
-
-            intent = Intent(this, RegisterActivity::class.java)
-            startActivity(intent)
-            finish()
-
-        }
-
-        btn_reset_password.setOnClickListener {
-
-            intent = Intent(this, ResetPasswordActivity::class.java)
-            startActivity(intent)
 
         }
 
@@ -164,6 +127,11 @@ class LoginActivity : Activity() {
                     + "[0-9]{1,2}|25[0-5]|2[0-4][0-9]))|"
                     + "([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$"
         ).matcher(email).matches()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
     }
 
 }

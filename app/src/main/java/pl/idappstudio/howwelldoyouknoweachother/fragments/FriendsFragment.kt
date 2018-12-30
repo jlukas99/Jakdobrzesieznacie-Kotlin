@@ -1,7 +1,5 @@
-package pl.idappstudio.howwelldoyouknoweachother
+package pl.idappstudio.howwelldoyouknoweachother.fragments
 
-
-import android.content.Intent
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -9,6 +7,11 @@ import android.view.View
 import android.view.ViewGroup
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.fragment_friends.view.*
+import org.jetbrains.anko.clearTask
+import org.jetbrains.anko.newTask
+import org.jetbrains.anko.support.v4.intentFor
+import pl.idappstudio.howwelldoyouknoweachother.R
+import pl.idappstudio.howwelldoyouknoweachother.activity.LoginMenuActivity
 
 class FriendsFragment : Fragment() {
 
@@ -19,8 +22,7 @@ class FriendsFragment : Fragment() {
         rootView.button2.setOnClickListener {
 
             FirebaseAuth.getInstance().signOut()
-            val intent = Intent(context, LoginMenuActivity::class.java)
-            startActivity(intent)
+            startActivity(intentFor<LoginMenuActivity>().newTask().clearTask())
 
         }
 

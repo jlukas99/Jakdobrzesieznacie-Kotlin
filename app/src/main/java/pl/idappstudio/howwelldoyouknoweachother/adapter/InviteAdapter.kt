@@ -1,6 +1,6 @@
 @file:Suppress("DEPRECATION")
 
-package pl.idappstudio.howwelldoyouknoweachother
+package pl.idappstudio.howwelldoyouknoweachother.adapter
 
 import android.graphics.drawable.Drawable
 import android.support.design.widget.Snackbar
@@ -17,15 +17,21 @@ import com.bumptech.glide.request.target.Target
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
-
-
+import pl.idappstudio.howwelldoyouknoweachother.model.InviteItem
+import pl.idappstudio.howwelldoyouknoweachother.R
 
 
 class InviteAdapter (private val partItemList: List<InviteItem>, private val listener: (Int) -> Unit) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return InviteAdapter.PartViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.invite_item, parent, false))
+        return PartViewHolder(
+            LayoutInflater.from(parent.context).inflate(
+                R.layout.invite_item,
+                parent,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -44,7 +50,7 @@ class InviteAdapter (private val partItemList: List<InviteItem>, private val lis
             itemView.profileLoading.visibility = View.VISIBLE
             itemView.invite_name.text = part.name
 
-            if(part.image.contains("logo")){
+            if(part.image!!.contains("logo")){
 
                 Glide.with(itemView.context).load(R.mipmap.logo).listener(object : RequestListener<Drawable> {
 
@@ -61,7 +67,7 @@ class InviteAdapter (private val partItemList: List<InviteItem>, private val lis
 
             } else {
 
-                if (part.fb) {
+                if (part.fb!!) {
 
                     Glide.with(itemView.context).load("http://graph.facebook.com/${part.image}/picture?type=large")
                         .listener(object : RequestListener<Drawable> {
@@ -164,10 +170,10 @@ class InviteAdapter (private val partItemList: List<InviteItem>, private val lis
                     val friend = HashMap<String, Any?>()
                     friend["name"] = part.name
                     friend["image"] = part.image
-                    friend["uid"] = part.id
+                    friend["uid"] = part.uid
                     friend["fb"] = part.fb
 
-                    db.document(auth.uid).collection("friends").document(part.id).set(friend).addOnSuccessListener {
+                    db.document(auth.uid).collection("friends").document(part.uid!!).set(friend).addOnSuccessListener {
 
                         val user = HashMap<String, Any?>()
                         user["name"] = doc.getString("name")
@@ -175,13 +181,13 @@ class InviteAdapter (private val partItemList: List<InviteItem>, private val lis
                         user["uid"] = doc.getString("uid")
                         user["fb"] = doc.getBoolean("fb")
 
-                        db.document(part.id).collection("friends").document(doc.getString("uid").toString()).set(user).addOnSuccessListener {
+                        db.document(part.uid!!).collection("friends").document(doc.getString("uid").toString()).set(user).addOnSuccessListener {
 
                             val snackbar: Snackbar? = Snackbar.make(itemView.btn_delete, "Dodano do znajomych ${part.name}", 2500)
                             snackbar?.view?.setBackgroundColor(itemView.resources.getColor(R.color.colorAccent))
                             snackbar?.show()
 
-                            db.document(auth.uid).collection("invites").document(part.id).delete()
+                            db.document(auth.uid).collection("invites").document(part.uid!!).delete()
 
                             listener(pos)
 
@@ -215,7 +221,7 @@ class InviteAdapter (private val partItemList: List<InviteItem>, private val lis
                 itemView.btn_send.visibility = View.GONE
                 itemView.btn_delete.visibility = View.GONE
 
-                db.document(auth?.uid!!).collection("invites").document(part.id).delete().addOnSuccessListener {
+                db.document(auth?.uid!!).collection("invites").document(part.uid!!).delete().addOnSuccessListener {
 
                     val snackbar: Snackbar? = Snackbar.make(itemView.btn_delete, "Usunięto zaproszenie od ${part.name}", 2500)
                     snackbar?.view?.setBackgroundColor(itemView.resources.getColor(R.color.colorYellow))

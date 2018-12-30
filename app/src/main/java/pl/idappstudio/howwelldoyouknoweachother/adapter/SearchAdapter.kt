@@ -1,4 +1,4 @@
-package pl.idappstudio.howwelldoyouknoweachother
+package pl.idappstudio.howwelldoyouknoweachother.adapter
 
 import android.graphics.drawable.Drawable
 import android.support.design.widget.Snackbar
@@ -16,6 +16,8 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.search_item.view.*
+import pl.idappstudio.howwelldoyouknoweachother.model.InviteItem
+import pl.idappstudio.howwelldoyouknoweachother.R
 import java.util.HashMap
 
 
@@ -25,7 +27,13 @@ import java.util.HashMap
 class SearchAdapter (private val partItemList: List<InviteItem>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        return PartViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.search_item, parent, false))
+        return PartViewHolder(
+            LayoutInflater.from(parent.context).inflate(
+                R.layout.search_item,
+                parent,
+                false
+            )
+        )
     }
 
     override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
@@ -44,7 +52,7 @@ class SearchAdapter (private val partItemList: List<InviteItem>) : RecyclerView.
             itemView.profileLoading.visibility = View.VISIBLE
             itemView.invite_name.text = part.name
 
-            if(part.image.contains("logo")){
+            if(part.image!!.contains("logo")){
 
                 Glide.with(itemView.context).load(R.mipmap.logo).listener(object : RequestListener<Drawable> {
 
@@ -61,7 +69,7 @@ class SearchAdapter (private val partItemList: List<InviteItem>) : RecyclerView.
 
             } else {
 
-                if (part.fb) {
+                if (part.fb!!) {
 
                     Glide.with(itemView.context).load("http://graph.facebook.com/${part.image}/picture?type=large")
                         .listener(object : RequestListener<Drawable> {
@@ -165,7 +173,7 @@ class SearchAdapter (private val partItemList: List<InviteItem>) : RecyclerView.
                     user["uid"] = doc.getString("uid")
                     user["fb"] = doc.getBoolean("fb")
 
-                    db.document(part.id).collection("invites").document(doc.getString("uid").toString()).set(user).addOnSuccessListener {
+                    db.document(part.uid!!).collection("invites").document(doc.getString("uid").toString()).set(user).addOnSuccessListener {
 
                         val snackbar: Snackbar? = Snackbar.make(itemView.btn_send, "Wysłano zaproszenia do ${part.name}", 2500)
                         snackbar?.view?.setBackgroundColor(itemView.resources.getColor(R.color.colorAccent))
@@ -173,7 +181,9 @@ class SearchAdapter (private val partItemList: List<InviteItem>) : RecyclerView.
 
                         itemView.addLoading.visibility = View.INVISIBLE
                         itemView.btn_send.visibility = View.VISIBLE
-                        itemView.btn_send.setColorFilter(getColor(itemView.context, R.color.colorLigth), android.graphics.PorterDuff.Mode.SRC_IN)
+                        itemView.btn_send.setColorFilter(getColor(itemView.context,
+                            R.color.colorLigth
+                        ), android.graphics.PorterDuff.Mode.SRC_IN)
 
                     }.addOnFailureListener {
 

@@ -1,6 +1,6 @@
 @file:Suppress("DEPRECATION")
 
-package pl.idappstudio.howwelldoyouknoweachother
+package pl.idappstudio.howwelldoyouknoweachother.activity
 
 import android.annotation.SuppressLint
 import android.app.Activity
@@ -14,12 +14,21 @@ import com.facebook.*
 import com.facebook.appevents.AppEventsLogger
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
+import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.InterstitialAd
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.iid.FirebaseInstanceId
 import kotlinx.android.synthetic.main.activity_login_menu.*
+import org.jetbrains.anko.clearTask
+import org.jetbrains.anko.intentFor
+import org.jetbrains.anko.newTask
+import org.jetbrains.anko.startActivity
+import pl.idappstudio.howwelldoyouknoweachother.R
+import pl.idappstudio.howwelldoyouknoweachother.service.MyFirebaseMessagingService
+import pl.idappstudio.howwelldoyouknoweachother.util.AdMobUtil
+import pl.idappstudio.howwelldoyouknoweachother.util.FirestoreUtil
 import java.util.*
-import kotlin.concurrent.schedule
 
 class LoginMenuActivity : Activity() {
 
@@ -29,14 +38,35 @@ class LoginMenuActivity : Activity() {
 
     private lateinit var alertDialog: AlertDialog
 
-    private val db = FirebaseFirestore.getInstance()
-
     @SuppressLint("PrivateResource", "InflateParams")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login_menu)
 
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        val adManager = AdMobUtil(this@LoginMenuActivity)
+        val ad: InterstitialAd = adManager.getAd()
+
+        ad.adListener = object: AdListener() {
+            override fun onAdLoaded() {
+                ad.show()
+            }
+
+            override fun onAdFailedToLoad(errorCode: Int) {
+                adManager.createAd(this@LoginMenuActivity)
+            }
+
+            override fun onAdOpened() {
+
+            }
+
+            override fun onAdLeftApplication() {
+
+            }
+
+            override fun onAdClosed() {
+                adManager.createAd(this@LoginMenuActivity)
+            }
+        }
 
         callbackManager = CallbackManager.Factory.create()
 
@@ -45,7 +75,9 @@ class LoginMenuActivity : Activity() {
         FacebookSdk.sdkInitialize(applicationContext)
         AppEventsLogger.activateApp(this)
 
-        val dialogBuilder = AlertDialog.Builder(this, R.style.Base_Theme_MaterialComponents_Dialog)
+        val dialogBuilder = AlertDialog.Builder(this,
+            R.style.Base_Theme_MaterialComponents_Dialog
+        )
         val inflater = this.layoutInflater
         val dialogView = inflater.inflate(R.layout.dialog_loading_login, null)
         dialogBuilder.setView(dialogView)
@@ -57,15 +89,13 @@ class LoginMenuActivity : Activity() {
 
         btn_stworz_konto.setOnClickListener {
 
-            intent = Intent(this, RegisterActivity::class.java)
-            startIntent(intent)
+            startActivity<RegisterActivity>()
 
         }
 
         btn_send.setOnClickListener {
 
-            intent = Intent(this, LoginActivity::class.java)
-            startIntent(intent)
+            startActivity<LoginActivity>()
 
         }
 
@@ -124,54 +154,19 @@ class LoginMenuActivity : Activity() {
 
                     gender = if(profile.firstName.substring(genderInt) == "a") "famle" else "male"
 
-                    val user = HashMap<String, Any>()
-                    user["name"] = profile.firstName.toString()
-                    user["gender"] = gender
-                    user["type"] = "free"
-                    user["uid"] = uid
-                    user["image"] = profile.id
-                    user["fb"] = true
+                    FirestoreUtil.registerCurrentUser(uid, profile.name, profile.id, true, gender, "free") {
 
-                    db.collection("users").document(uid).get().addOnSuccessListener { document ->
-                        if(document.exists()) {
+                        alertDialog.dismiss()
 
-                            alertDialog.dismiss()
+                        val snackbar: Snackbar? = Snackbar.make(view, "Zalogowano za pomocą Facebook'a", 2500)
+                        snackbar?.view?.setBackgroundColor(resources.getColor(R.color.colorPrimary))
+                        snackbar?.show()
 
-                            val snackbar: Snackbar? = Snackbar.make(view, "Zalogowano za pomocą Facebook'a", 2500)
-                            snackbar?.view?.setBackgroundColor(resources.getColor(R.color.colorPrimary))
-                            snackbar?.show()
+                        val registrationToken = FirebaseInstanceId.getInstance().token
+                        MyFirebaseMessagingService.addTokenToFirestore(registrationToken)
 
-                            val intent = Intent(this, MenuActivity::class.java)
+                        startActivity(intentFor<MenuActivity>().newTask().clearTask())
 
-                            Timer("StartIntent", false).schedule(700) {
-
-                                startActivity(intent)
-                                finish()
-
-                            }
-
-                        } else {
-
-                            db.collection("users").document(uid).set(user).addOnCompleteListener {
-
-                                alertDialog.dismiss()
-
-                                val snackbar: Snackbar? = Snackbar.make(view, "Zalogowano za pomocą Facebook'a", 2500)
-                                snackbar?.view?.setBackgroundColor(resources.getColor(R.color.colorPrimary))
-                                snackbar?.show()
-
-                                val intent = Intent(this, MenuActivity::class.java)
-
-                                Timer("StartIntent", false).schedule(700) {
-
-                                    startActivity(intent)
-                                    finish()
-
-                                }
-
-                            }
-
-                        }
                     }
 
                 } else {
@@ -187,10 +182,8 @@ class LoginMenuActivity : Activity() {
             }
     }
 
-    private fun startIntent(intent:Intent){
-
-        startActivity(intent)
-
+    override fun onResume() {
+        super.onResume()
+        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
     }
-
 }

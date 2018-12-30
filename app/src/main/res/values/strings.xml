@@ -14,4 +14,13 @@
     <string name="facebook_app_id">249845939148351</string>
     <string name="fb_login_protocol_scheme">fb249845939148351</string>
 
+    <!--AdMob-->
+    <string name="adMob_id">ca-app-pub-3261119979316423~1350182251</string>
+    <!--<string name="adMob_menu_ad_id">ca-app-pub-3261119979316423/2454442952</string>-->
+
+    <!--Test AdMob-->
+    <string name="adMob_menu_ad_id">ca-app-pub-3940256099942544/8691691433</string>
+    <string name="default_notification_channel_id">13</string>
+
+
 </resources>

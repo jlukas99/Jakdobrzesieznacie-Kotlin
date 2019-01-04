@@ -16,8 +16,7 @@ class StatesFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(): StatesFragment =
-            StatesFragment()
+        fun newInstance(): StatesFragment = StatesFragment()
     }
 
 

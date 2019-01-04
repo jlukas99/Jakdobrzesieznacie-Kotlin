@@ -12,6 +12,7 @@ import com.google.firebase.auth.FirebaseAuth
 import org.jetbrains.anko.startActivity
 import pl.idappstudio.howwelldoyouknoweachother.R
 import pl.idappstudio.howwelldoyouknoweachother.util.AdMobUtil
+import pl.idappstudio.howwelldoyouknoweachother.util.FirestoreUtil
 import java.util.*
 import kotlin.concurrent.schedule
 
@@ -24,6 +25,8 @@ class IntroActivity : Activity() {
 
         FacebookSdk.sdkInitialize(applicationContext)
         AppEventsLogger.activateApp(this)
+
+        FirestoreUtil.initialize()
 
         MobileAds.initialize(this, resources.getString(R.string.adMob_id))
 

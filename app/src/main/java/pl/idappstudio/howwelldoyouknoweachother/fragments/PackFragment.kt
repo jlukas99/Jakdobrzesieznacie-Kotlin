@@ -16,8 +16,7 @@ class PackFragment : Fragment() {
     }
 
     companion object {
-        fun newInstance(): PackFragment =
-            PackFragment()
+        fun newInstance(): PackFragment = PackFragment()
     }
 
 

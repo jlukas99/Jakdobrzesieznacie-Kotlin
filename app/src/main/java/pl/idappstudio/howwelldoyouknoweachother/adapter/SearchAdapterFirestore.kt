@@ -5,6 +5,7 @@ package pl.idappstudio.howwelldoyouknoweachother.adapter
 import android.graphics.drawable.Drawable
 import android.support.annotation.NonNull
 import android.support.design.widget.Snackbar
+import android.support.v4.content.ContextCompat.getColor
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
@@ -17,14 +18,14 @@ import com.bumptech.glide.request.target.Target
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.storage.FirebaseStorage
-import kotlinx.android.synthetic.main.invite_item.view.*
-import pl.idappstudio.howwelldoyouknoweachother.model.InviteItem
+import kotlinx.android.synthetic.main.search_item.view.*
 import pl.idappstudio.howwelldoyouknoweachother.R
 import pl.idappstudio.howwelldoyouknoweachother.glide.GlideApp
+import pl.idappstudio.howwelldoyouknoweachother.model.InviteItem
 import pl.idappstudio.howwelldoyouknoweachother.util.FirestoreUtil
 
 
-class InviteAdapterFirestore(@NonNull options: FirestoreRecyclerOptions<InviteItem>) : FirestoreRecyclerAdapter<InviteItem, InviteAdapterFirestore.InviteHolder>(options) {
+class SearchAdapterFirestore(@NonNull options: FirestoreRecyclerOptions<InviteItem>) : FirestoreRecyclerAdapter<InviteItem, SearchAdapterFirestore.InviteHolder>(options) {
 
     override fun onBindViewHolder(@NonNull holder: InviteHolder, position: Int, @NonNull model: InviteItem) {
 
@@ -35,69 +36,32 @@ class InviteAdapterFirestore(@NonNull options: FirestoreRecyclerOptions<InviteIt
             holder.itemView.addLoading.visibility = View.VISIBLE
 
             holder.itemView.btn_send.isEnabled = false
-            holder.itemView.btn_delete.isEnabled = false
 
             holder.itemView.btn_send.visibility = View.GONE
-            holder.itemView.btn_delete.visibility = View.GONE
 
-            FirestoreUtil.addFriend(getItem(position).uid.toString(), holder) { b, holder ->
+            FirestoreUtil.sendInvite(getItem(position).uid.toString(), holder){ b, holder ->
 
-                if (b) {
+                holder.itemView.addLoading.visibility = View.INVISIBLE
+                holder.itemView.btn_send.visibility = View.VISIBLE
 
-                    val snackbar: Snackbar? = Snackbar.make(holder.itemView.btn_send, "Zaakceptowano zaproszenie od ${model.name}", 2500)
+                if(b){
+                    holder.itemView.btn_send.setColorFilter(getColor(holder.itemView.context, R.color.colorLigth
+                    ), android.graphics.PorterDuff.Mode.SRC_IN)
+
+                    val snackbar: Snackbar? = Snackbar.make(holder.itemView.btn_send, "Wysłano zaproszenia do ${model.name}", 2500)
                     snackbar?.view?.setBackgroundColor(holder.itemView.resources.getColor(R.color.colorAccent))
                     snackbar?.show()
-
-                    snapshots.getSnapshot(position).reference.delete()
-
                 } else {
 
-                    holder.itemView.addLoading.visibility = View.INVISIBLE
-
                     holder.itemView.btn_send.isEnabled = true
-                    holder.itemView.btn_delete.isEnabled = true
 
-                    holder.itemView.btn_send.visibility = View.VISIBLE
-                    holder.itemView.btn_delete.visibility = View.VISIBLE
-
-                    val snackbar: Snackbar? = Snackbar.make(holder.itemView.btn_send, "Nie udało się dodać do znajomych!", 2500)
-                    snackbar?.view?.setBackgroundColor(holder.itemView.resources.getColor(R.color.colorYellow))
-                    snackbar?.show()
+                    val snackbar2: Snackbar? = Snackbar.make(holder.itemView.btn_send, "Nie udało się wysłać zaproszenia!", 2500)
+                    snackbar2?.view?.setBackgroundColor(holder.itemView.resources.getColor(R.color.colorRed))
+                    snackbar2?.show()
 
                 }
             }
 
-        }
-
-        holder.itemView.btn_delete.setOnClickListener {
-
-            holder.itemView.addLoading.visibility = View.VISIBLE
-
-            holder.itemView.btn_send.isEnabled = false
-            holder.itemView.btn_delete.isEnabled = false
-
-            holder.itemView.btn_send.visibility = View.GONE
-            holder.itemView.btn_delete.visibility = View.GONE
-
-            val snackbar: Snackbar? = Snackbar.make(holder.itemView.btn_delete, "Usunięto zaproszenie od ${model.name}", 2500)
-            snackbar?.view?.setBackgroundColor(holder.itemView.resources.getColor(R.color.colorRed))
-            snackbar?.show()
-
-            snapshots.getSnapshot(position).reference.delete().addOnFailureListener {
-
-                holder.itemView.addLoading.visibility = View.INVISIBLE
-
-                holder.itemView.btn_send.isEnabled = true
-                holder.itemView.btn_delete.isEnabled = true
-
-                holder.itemView.btn_send.visibility = View.VISIBLE
-                holder.itemView.btn_delete.visibility = View.VISIBLE
-
-                val snackbar2: Snackbar? = Snackbar.make(holder.itemView.btn_delete, "Nie udało się usunąć zaproszenie", 2500)
-                snackbar2?.view?.setBackgroundColor(holder.itemView.resources.getColor(R.color.colorRed))
-                snackbar2?.show()
-
-            }
         }
 
         if(model.image!!.contains("logo")){
@@ -208,7 +172,7 @@ class InviteAdapterFirestore(@NonNull options: FirestoreRecyclerOptions<InviteIt
 
     @NonNull
     override fun onCreateViewHolder(@NonNull parent: ViewGroup, viewType: Int): InviteHolder {
-        val v = LayoutInflater.from(parent.context).inflate(R.layout.invite_item, parent, false)
+        val v = LayoutInflater.from(parent.context).inflate(R.layout.search_item, parent, false)
         return InviteHolder(v)
     }
 

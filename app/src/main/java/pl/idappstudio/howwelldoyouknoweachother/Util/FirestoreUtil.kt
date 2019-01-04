@@ -3,18 +3,27 @@ package pl.idappstudio.howwelldoyouknoweachother.util
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreSettings
 import com.google.firebase.firestore.ListenerRegistration
-import pl.idappstudio.howwelldoyouknoweachother.model.Message
-import pl.idappstudio.howwelldoyouknoweachother.model.UserData
+import pl.idappstudio.howwelldoyouknoweachother.adapter.InviteAdapterFirestore
+import pl.idappstudio.howwelldoyouknoweachother.adapter.SearchAdapterFirestore
+import pl.idappstudio.howwelldoyouknoweachother.model.*
 
 object FirestoreUtil {
 
     private val firestoreInstance: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
 
     private val db = firestoreInstance.collection("users")
-    private val currentUserDocRef: DocumentReference get() = firestoreInstance.document("users/${FirebaseAuth.getInstance().currentUser?.uid
-        ?: throw NullPointerException("UID is null.")}")
+    private val currentUserDocRef: DocumentReference get() = firestoreInstance.document("users/${FirebaseAuth.getInstance().currentUser?.uid}")
+
+    lateinit var currentUser: UserData
+    var friendsUser = ArrayList<FriendsItem>()
+
+    fun initialize(){
+
+        getCurrentUser { currentUser = it }
+        getFriendsUser { friendsUser.add(FriendsItem(it.uid, it.days, it.favorite!!))}
+
+    }
 
     fun registerCurrentUser(uid: String, name: String, image: String, fb: Boolean, gender: String, type: String, onComplete: () -> Unit) {
         currentUserDocRef.get().addOnSuccessListener { documentSnapshot ->
@@ -37,32 +46,47 @@ object FirestoreUtil {
         if (gender.isNotBlank()) userFieldMap["gender"] = gender
         if (type.isNotBlank()) userFieldMap["type"] = type
         currentUserDocRef.update(userFieldMap)
+
+        initialize()
+    }
+
+    fun getFriendsUser(onComplete: (FriendsData) -> Unit){
+        currentUserDocRef.collection("friends").get().addOnSuccessListener {
+            for(doc in it){
+                onComplete(doc.toObject(FriendsData::class.java))
+            }
+        }
     }
 
     fun getCurrentUser(onComplete: (UserData) -> Unit) {
         currentUserDocRef.get().addOnSuccessListener {
-                onComplete(it.toObject(UserData::class.java)!!)
-            }
+            onComplete(it.toObject(UserData::class.java)!!)
+        }
     }
 
-//    fun addUsersListener(context: Context, onListen: (List<Item>) -> Unit): ListenerRegistration {
-//        return firestoreInstance.collection("users")
-//            .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-//                if (firebaseFirestoreException != null) {
-//                    Log.e("FIRESTORE", "Users listener error.", firebaseFirestoreException)
-//                    return@addSnapshotListener
-//                }
-//
-//                val items = mutableListOf<Item>()
-//                querySnapshot!!.documents.forEach {
-//                    if (it.id != FirebaseAuth.getInstance().currentUser?.uid)
-//                        items.add(PersonItem(it.toObject(User::class.java)!!, it.id, context))
-//                }
-//                onListen(items)
-//            }
-//    }
+    fun sendInvite(uid: String, inviteHolder: SearchAdapterFirestore.InviteHolder, onComplete: (Boolean, SearchAdapterFirestore.InviteHolder) -> Unit) {
 
-    fun addFriend(uid: String, onComplete: () -> Unit){
+        val user = HashMap<String, Any?>()
+        user["name"] = currentUser.name
+        user["image"] = currentUser.image
+        user["uid"] = currentUser.uid
+        user["fb"] = currentUser.fb
+
+        db.document(uid).collection("invites").document(currentUser.uid).set(user).addOnSuccessListener {
+
+            val msg: Message = InviteNotificationMessage("Zaproszenie do znajomych", "${FirestoreUtil.currentUser.name} chce dodać cię do znajomych", FirebaseAuth.getInstance().currentUser?.uid.toString(), uid, FirestoreUtil.currentUser.name, NotificationType.INVITE)
+            FirestoreUtil.sendMessage(msg, uid)
+
+            onComplete(true, inviteHolder)
+
+        }.addOnFailureListener {
+
+            onComplete(false, inviteHolder)
+
+        }
+    }
+
+    fun addFriend(uid: String, inviteHolder: InviteAdapterFirestore.InviteHolder, onComplete: (Boolean, InviteAdapterFirestore.InviteHolder) -> Unit){
 
         val user = HashMap<String, Any>()
         user["uid"] = uid
@@ -78,9 +102,22 @@ object FirestoreUtil {
 
             db.document(uid).collection("friends").document(FirebaseAuth.getInstance().currentUser?.uid!!).set(user2).addOnSuccessListener {
 
-                onComplete()
+                val msg: Message = InviteNotificationMessage("${FirestoreUtil.currentUser.name} zaakceptował zaproszenie", "${FirestoreUtil.currentUser.name} i ty jesteście teraz znajomymi", FirebaseAuth.getInstance().currentUser?.uid.toString(), uid, FirestoreUtil.currentUser.name, NotificationType.INVITE)
+                FirestoreUtil.sendMessage(msg, uid)
+
+                initialize()
+
+                onComplete(true, inviteHolder)
+
+            }.addOnFailureListener {
+
+                onComplete(false, inviteHolder)
 
             }
+
+        }.addOnFailureListener {
+
+            onComplete(false, inviteHolder)
 
         }
 
@@ -144,7 +181,6 @@ object FirestoreUtil {
             .add(message)
     }
 
-    //region FCM
     fun getFCMRegistrationTokens(onComplete: (tokens: MutableList<String>) -> Unit) {
         currentUserDocRef.get().addOnSuccessListener {
             val user = it.toObject(UserData::class.java)!!
@@ -155,4 +191,5 @@ object FirestoreUtil {
     fun setFCMRegistrationTokens(registrationTokens: MutableList<String>) {
         currentUserDocRef.update(mapOf("registrationTokens" to registrationTokens))
     }
+
 }

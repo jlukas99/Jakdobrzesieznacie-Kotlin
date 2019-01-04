@@ -10,7 +10,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.support.v7.widget.helper.ItemTouchHelper
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.animation.*
@@ -19,22 +18,16 @@ import android.widget.ImageButton
 import android.widget.TextView
 import com.github.ybq.android.spinkit.SpinKitView
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlin.collections.ArrayList
 import android.view.animation.LinearInterpolator
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.firestore.Query
-import android.support.v7.widget.RecyclerView.ViewHolder
 import com.google.firebase.auth.FirebaseAuth
 import pl.idappstudio.howwelldoyouknoweachother.adapter.InviteAdapterFirestore
 import pl.idappstudio.howwelldoyouknoweachother.model.InviteItem
 import pl.idappstudio.howwelldoyouknoweachother.R
-import pl.idappstudio.howwelldoyouknoweachother.adapter.SearchAdapter
-import pl.idappstudio.howwelldoyouknoweachother.model.UserData
-import pl.idappstudio.howwelldoyouknoweachother.util.FirestoreUtil
+import pl.idappstudio.howwelldoyouknoweachother.adapter.SearchAdapterFirestore
 
 class InvitesFragment : Fragment() {
-
-    private lateinit var currentUser: UserData
 
     private lateinit var btnHide: ImageButton
     private lateinit var btnHide2: ImageButton
@@ -48,20 +41,18 @@ class InvitesFragment : Fragment() {
     private lateinit var countSearch: TextView
 
     private lateinit var adapter: InviteAdapterFirestore
-
-    private val list1 = ArrayList<InviteItem>()
-    private val list2 = ArrayList<InviteItem>()
-    private val list3 = ArrayList<InviteItem>()
+    private lateinit var adapter2: SearchAdapterFirestore
 
     private var isHide = false
     private var isHide2 = false
 
-    private val db = FirebaseFirestore.getInstance().collection("users")
+    private var query: Query? = null
+    private var options:FirestoreRecyclerOptions<InviteItem>? = null
+
+    private val db = FirebaseFirestore.getInstance()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView:View = inflater.inflate(R.layout.fragment_invites, container, false)
-
-        FirestoreUtil.getCurrentUser { currentUser = it }
 
         loading = rootView.findViewById(R.id.loading)
         loading2 = rootView.findViewById(R.id.loading2)
@@ -74,12 +65,6 @@ class InvitesFragment : Fragment() {
 
         searchInput = rootView.findViewById(R.id.searchInput)
         countSearch = rootView.findViewById(R.id.searchCount)
-
-        recyclerSearch.layoutManager = LinearLayoutManager(context)
-
-        recyclerSearch.setHasFixedSize(true)
-
-        recyclerSearch.adapter = null
 
         btnHide.setOnClickListener {
 
@@ -111,14 +96,12 @@ class InvitesFragment : Fragment() {
 
             override fun onTextChanged(s: CharSequence, start: Int, before: Int, count: Int) {
 
-                loading2.visibility = View.VISIBLE
-
             }
 
         })
 
         getInvites()
-        getUsers()
+        getSearch()
 
         return rootView
     }
@@ -127,9 +110,9 @@ class InvitesFragment : Fragment() {
 
         loading.visibility = View.VISIBLE
 
-        val query: Query = db.document(FirebaseAuth.getInstance().currentUser?.uid.toString()).collection("invites").orderBy("name", Query.Direction.ASCENDING)
+        val query: Query = db.collection("users").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).collection("invites").orderBy("name", Query.Direction.ASCENDING)
 
-        val options:FirestoreRecyclerOptions<InviteItem> = FirestoreRecyclerOptions.Builder<InviteItem>().setQuery(query, InviteItem::class.java).build()
+        val options:FirestoreRecyclerOptions<InviteItem> = FirestoreRecyclerOptions.Builder<InviteItem>().setQuery(query, InviteItem::class.java).setLifecycleOwner(this).build()
 
         adapter = InviteAdapterFirestore(options)
 
@@ -140,82 +123,32 @@ class InvitesFragment : Fragment() {
         recyclerView.requestLayout()
         loading.visibility = View.GONE
 
-        ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
-            override fun onMove(recyclerView: RecyclerView, viewHolder: ViewHolder, target: ViewHolder): Boolean {
-                return false
-            }
-
-            override fun onSwiped(viewHolder: ViewHolder, direction: Int) {
-
-                if(direction == ItemTouchHelper.LEFT){
-                    adapter.deleteItem(viewHolder.adapterPosition)
-                    return
-                }
-
-                if(direction == ItemTouchHelper.RIGHT){
-                    adapter.addFriend(viewHolder.adapterPosition)
-                    return
-                }
-
-                }
-            }).attachToRecyclerView(recyclerView)
-
-    }
-
-    private fun getUsers(){
-
-        list2.clear()
-
-        db.get().addOnSuccessListener { task ->
-            if(!task.isEmpty){
-
-                for(doc in task){
-
-                        list2.add(
-                            InviteItem(
-                                doc.getString("uid").toString(),
-                                doc.getString("name").toString(),
-                                doc.getString("image").toString(),
-                                doc.getBoolean("fb")!!
-                            )
-                        )
-
-                    }
-                }
-
-            }
-
     }
 
     private fun getSearch() {
 
-        list3.clear()
+        query = if(searchInput.text.isNullOrBlank()){
 
-        if(list2.isEmpty()){
-            onComplete2(list3)
-            return
+            db.collection("users").orderBy("name", Query.Direction.ASCENDING)
+
+        } else {
+
+            db.collection("users").orderBy("name", Query.Direction.ASCENDING).whereGreaterThanOrEqualTo("name", searchInput.text.toString())
+
         }
 
-        if(!searchInput.text.toString().isBlank()){
-            for(i in list2){
-                    if(i.name!!.toUpperCase().contains(searchInput.text.toString().toUpperCase()) and !searchInput.text.toString().toUpperCase().contains(currentUser.name.toUpperCase())){
-                        list3.add(i)
-                    }
-            }
-        }
+        options = FirestoreRecyclerOptions.Builder<InviteItem>().setQuery(query!!, InviteItem::class.java).setLifecycleOwner(this).build()
 
-        onComplete2(list3)
+        adapter2 = SearchAdapterFirestore(options as FirestoreRecyclerOptions<InviteItem>)
 
-    }
+        recyclerSearch.setHasFixedSize(true)
+        recyclerSearch.layoutManager = LinearLayoutManager(context)
+        recyclerSearch.adapter = adapter2
 
-    private fun onComplete2(invite: ArrayList<InviteItem>)  {
-
-        recyclerSearch.adapter = SearchAdapter(invite)
-        recyclerSearch.adapter!!.notifyDataSetChanged()
-
+        recyclerSearch.requestLayout()
         loading2.visibility = View.GONE
 
-        countSearch.text = invite.size.toString()
+        countSearch.text = adapter2.itemCount.toString()
 
     }
 
@@ -274,11 +207,13 @@ class InvitesFragment : Fragment() {
     override fun onStart() {
         super.onStart()
         adapter.startListening()
+        adapter2.startListening()
     }
 
     override fun onStop() {
         super.onStop()
         adapter.stopListening()
+        adapter2.stopListening()
     }
 
     companion object {

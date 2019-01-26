@@ -94,8 +94,11 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_search_icon" />
-                            <entry key="sourceFile" value="C:\Users\johnn\Downloads\642e15339e.svg" />
+                            <entry key="height" value="18" />
+                            <entry key="outputName" value="ic_corn" />
+                            <entry key="overrideSize" value="true" />
+                            <entry key="sourceFile" value="C:\Users\johnn\Dysk Google\iDapp Studio\Jak dobrze sie znacie\Assets\svg\Path 161.svg" />
+                            <entry key="width" value="19" />
                           </map>
                         </option>
                       </PersistentState>

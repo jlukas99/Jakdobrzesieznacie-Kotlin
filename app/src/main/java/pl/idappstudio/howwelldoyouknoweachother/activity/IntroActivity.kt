@@ -26,15 +26,21 @@ class IntroActivity : Activity() {
         FacebookSdk.sdkInitialize(applicationContext)
         AppEventsLogger.activateApp(this)
 
-        FirestoreUtil.initialize()
-
         MobileAds.initialize(this, resources.getString(R.string.adMob_id))
 
         AdMobUtil(this@IntroActivity)
 
-        Timer("StartActivity", false).schedule(3500) {
-            if (FirebaseAuth.getInstance().currentUser == null) startActivity<LoginMenuActivity>() else startActivity<MenuActivity>()
-            finish()
+        if (FirebaseAuth.getInstance().currentUser == null) {
+            Timer("StartActivity", false).schedule(3500) {
+                startActivity<LoginMenuActivity>()
+                finish()
+            }
+        } else {
+            FirestoreUtil.initialize()
+            Timer("StartActivity", false).schedule(3500) {
+                startActivity<MenuActivity>()
+                finish()
+            }
         }
 
     }

@@ -197,21 +197,25 @@ class RegisterActivity : Activity() {
                         val emailNum = email.indexOf("@")
                         email = email.substring(0, emailNum)
 
-                        FirestoreUtil.registerCurrentUser(uid, email, uid, false, gender, "free") {
+                        val image = if(fileUri != null) uid else "logo"
 
-                            val selectedImageBmp = MediaStore.Images.Media.getBitmap(contentResolver, fileUri)
+                        FirestoreUtil.registerCurrentUser(uid, email, image, false, gender, "free") {
 
-                            val outputStream = ByteArrayOutputStream()
+                            if(fileUri != null) {
+                                val selectedImageBmp = MediaStore.Images.Media.getBitmap(contentResolver, fileUri)
 
-                            selectedImageBmp.compress(Bitmap.CompressFormat.JPEG, 90, outputStream)
-                            val selectedImageBytes = outputStream.toByteArray()
+                                val outputStream = ByteArrayOutputStream()
 
-                            StorgeUtil.uploadProfilePhoto(selectedImageBytes) {
+                                selectedImageBmp.compress(Bitmap.CompressFormat.JPEG, 90, outputStream)
+                                val selectedImageBytes = outputStream.toByteArray()
 
-                                selectImageText.visibility = View.GONE
-                                selectImageIcon.visibility = View.GONE
-                                selectImage.setImageURI(fileUri)
+                                StorgeUtil.uploadProfilePhoto(selectedImageBytes) {
 
+                                    selectImageText.visibility = View.GONE
+                                    selectImageIcon.visibility = View.GONE
+                                    selectImage.setImageURI(fileUri)
+
+                                }
                             }
 
                             alertDialog.dismiss()

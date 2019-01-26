@@ -7,6 +7,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import pl.idappstudio.howwelldoyouknoweachother.R
+import pl.idappstudio.howwelldoyouknoweachother.util.FirestoreUtil
 
 class PackFragment : Fragment() {
 
@@ -17,6 +18,11 @@ class PackFragment : Fragment() {
 
     companion object {
         fun newInstance(): PackFragment = PackFragment()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        FirestoreUtil.initialize()
     }
 
 

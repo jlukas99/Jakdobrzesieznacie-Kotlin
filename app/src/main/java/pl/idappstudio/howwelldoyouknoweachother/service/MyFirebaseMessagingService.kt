@@ -56,8 +56,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
             data = remoteMessage.data
 
-            messageTitle = remoteMessage.notification?.title.toString()
-            messageBody = remoteMessage.notification?.body.toString()
+            messageTitle = data["title"].toString()
+            messageBody = data["body"].toString()
             messageType = data["type"].toString()
 
             sendNotification(messageBody, messageTitle, messageType)

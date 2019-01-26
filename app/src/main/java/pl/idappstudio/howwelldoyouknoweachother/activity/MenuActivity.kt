@@ -15,8 +15,7 @@ import pl.idappstudio.howwelldoyouknoweachother.util.AdMobUtil
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
-
-
+import pl.idappstudio.howwelldoyouknoweachother.util.FirestoreUtil
 
 
 class MenuActivity : AppCompatActivity() {
@@ -102,6 +101,7 @@ class MenuActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        FirestoreUtil.initialize()
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
     }
 }

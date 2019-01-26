@@ -102,7 +102,7 @@ object FirestoreUtil {
 
             db.document(uid).collection("friends").document(FirebaseAuth.getInstance().currentUser?.uid!!).set(user2).addOnSuccessListener {
 
-                val msg: Message = InviteNotificationMessage("${FirestoreUtil.currentUser.name} zaakceptował zaproszenie", "${FirestoreUtil.currentUser.name} i ty jesteście teraz znajomymi", FirebaseAuth.getInstance().currentUser?.uid.toString(), uid, FirestoreUtil.currentUser.name, NotificationType.INVITE)
+                val msg: Message = InviteNotificationMessage("Nowy znajomy", "${FirestoreUtil.currentUser.name} i ty jesteście teraz znajomymi", FirebaseAuth.getInstance().currentUser?.uid.toString(), uid, FirestoreUtil.currentUser.name, NotificationType.INVITE)
                 FirestoreUtil.sendMessage(msg, uid)
 
                 initialize()

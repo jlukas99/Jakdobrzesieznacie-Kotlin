@@ -21,11 +21,27 @@ import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.search_item.view.*
 import pl.idappstudio.howwelldoyouknoweachother.R
 import pl.idappstudio.howwelldoyouknoweachother.glide.GlideApp
+import pl.idappstudio.howwelldoyouknoweachother.interfaces.CountInterface
 import pl.idappstudio.howwelldoyouknoweachother.model.InviteItem
 import pl.idappstudio.howwelldoyouknoweachother.util.FirestoreUtil
 
+class SearchAdapterFirestore(@NonNull options: FirestoreRecyclerOptions<InviteItem>, private val count: CountInterface) : FirestoreRecyclerAdapter<InviteItem, SearchAdapterFirestore.InviteHolder>(options) {
 
-class SearchAdapterFirestore(@NonNull options: FirestoreRecyclerOptions<InviteItem>) : FirestoreRecyclerAdapter<InviteItem, SearchAdapterFirestore.InviteHolder>(options) {
+    private var rv: RecyclerView? = null
+
+    fun setRV(rv: RecyclerView) {
+        this.rv = rv
+    }
+
+    override fun onDataChanged() {
+        super.onDataChanged()
+
+        if(rv != null) {
+
+            count.count()
+
+        }
+    }
 
     override fun onBindViewHolder(@NonNull holder: InviteHolder, position: Int, @NonNull model: InviteItem) {
 
@@ -48,16 +64,26 @@ class SearchAdapterFirestore(@NonNull options: FirestoreRecyclerOptions<InviteIt
                     holder.itemView.btn_send.setColorFilter(getColor(holder.itemView.context, R.color.colorLigth
                     ), android.graphics.PorterDuff.Mode.SRC_IN)
 
-                    val snackbar: Snackbar? = Snackbar.make(holder.itemView.btn_send, "Wysłano zaproszenia do ${model.name}", 2500)
-                    snackbar?.view?.setBackgroundColor(holder.itemView.resources.getColor(R.color.colorAccent))
-                    snackbar?.show()
+                    if(holder.itemView.rootView != null) {
+
+                        val snackbar: Snackbar? =
+                            Snackbar.make(holder.itemView.rootView, "Wysłano zaproszenia do ${model.name}", 2500)
+                        snackbar?.view?.setBackgroundColor(holder.itemView.resources.getColor(R.color.colorAccent))
+                        snackbar?.show()
+
+                    }
+
                 } else {
 
-                    holder.itemView.btn_send.isEnabled = true
+                    if(holder.itemView.rootView != null) {
 
-                    val snackbar2: Snackbar? = Snackbar.make(holder.itemView.btn_send, "Nie udało się wysłać zaproszenia!", 2500)
-                    snackbar2?.view?.setBackgroundColor(holder.itemView.resources.getColor(R.color.colorRed))
-                    snackbar2?.show()
+                        holder.itemView.btn_send.isEnabled = true
+
+                        val snackbar2: Snackbar? = Snackbar.make(holder.itemView.rootView, "Nie udało się wysłać zaproszenia!", 2500)
+                        snackbar2?.view?.setBackgroundColor(holder.itemView.resources.getColor(R.color.colorRed))
+                        snackbar2?.show()
+
+                    }
 
                 }
             }

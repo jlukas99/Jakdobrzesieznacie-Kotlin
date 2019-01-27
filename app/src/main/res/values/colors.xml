@@ -11,4 +11,5 @@
     <color name="colorButtonSecondary">#96000000</color>
     <color name="colorLigth">#78ffffff</color>
     <color name="colorFacebook">#0066ff</color>
+    <color name="colorDarkCard">#60000000</color>
 </resources>

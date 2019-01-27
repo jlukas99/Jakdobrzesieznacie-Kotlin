@@ -66,8 +66,7 @@ class SearchAdapterFirestore(@NonNull options: FirestoreRecyclerOptions<InviteIt
 
                     if(holder.itemView.rootView != null) {
 
-                        val snackbar: Snackbar? =
-                            Snackbar.make(holder.itemView.rootView, "Wysłano zaproszenia do ${model.name}", 2500)
+                        val snackbar: Snackbar? = Snackbar.make(holder.itemView.rootView, "Wysłano zaproszenia do ${model.name}", 2500)
                         snackbar?.view?.setBackgroundColor(holder.itemView.resources.getColor(R.color.colorAccent))
                         snackbar?.show()
 

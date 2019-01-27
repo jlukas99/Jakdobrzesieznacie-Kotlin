@@ -1,6 +1,8 @@
 package pl.idappstudio.howwelldoyouknoweachother.util
 
+import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.ListenerRegistration
@@ -12,16 +14,14 @@ object FirestoreUtil {
 
     private val firestoreInstance: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
 
-    private val db = firestoreInstance.collection("users")
+    private val db: CollectionReference get() = firestoreInstance.collection("users")
     private val currentUserDocRef: DocumentReference get() = firestoreInstance.document("users/${FirebaseAuth.getInstance().currentUser?.uid}")
 
     lateinit var currentUser: UserData
-    var friendsUser = ArrayList<FriendsItem>()
 
     fun initialize(){
 
         getCurrentUser { currentUser = it }
-        getFriendsUser { friendsUser.add(FriendsItem(it.uid, it.days, it.favorite!!))}
 
     }
 
@@ -50,10 +50,31 @@ object FirestoreUtil {
         initialize()
     }
 
-    fun getFriendsUser(onComplete: (FriendsData) -> Unit){
-        currentUserDocRef.collection("friends").get().addOnSuccessListener {
-            for(doc in it){
-                onComplete(doc.toObject(FriendsData::class.java))
+    fun getFriendsUser(id: String, onComplete: (FriendsData) -> Unit) {
+        db.document(id).get().addOnSuccessListener {
+
+            val image: String = it.getString("image")!!
+            val fb: Boolean = it.getBoolean("fb")!!
+            val gender: String = it.getString("gender")!!
+            val name = it.get("name").toString()
+            val type = it.get("type").toString()
+            val uid = it.get("uid").toString()
+
+            currentUserDocRef.collection("friends").document(id).get().addOnSuccessListener {
+
+                Log.d("TAG", it.data?.get("stats").toString())
+
+                val days: Int = it.getLong("days")!!.toInt()
+                val favorite: Boolean? = it.getBoolean("favorite")
+                val stats: HashMap<String, Int> = it.data?.get("stats") as HashMap<String, Int>
+                val set: String = it.getString("set")!!
+                val gamemode: String = it.getString("gamemode")!!
+                val stage: Int = it.getLong("stage")!!.toInt()
+
+                val friendsData = FriendsData(uid, name, image, fb, gender, type, days, favorite, stats, set, gamemode, stage)
+
+                onComplete(friendsData)
+
             }
         }
     }
@@ -86,12 +107,27 @@ object FirestoreUtil {
         }
     }
 
+    fun setFavorite(uid: String, b: Boolean) {
+
+        db.document(currentUser.uid).collection("friends").document(uid).update("favorite", b)
+
+    }
+
     fun addFriend(uid: String, inviteHolder: InviteAdapterFirestore.InviteHolder, onComplete: (Boolean, InviteAdapterFirestore.InviteHolder) -> Unit){
+
+        val al:HashMap<String, Int> = HashMap()
+        al["canswer"] = 0
+        al["banswer"] = 0
+        al["playegames"] = 0
 
         val user = HashMap<String, Any>()
         user["uid"] = uid
         user["favorite"] = false
         user["days"] = 0
+        user["stats"] = al
+        user["set"] = "default"
+        user["gamemode"] = "classic"
+        user["stage"] = 0
 
         db.document(FirebaseAuth.getInstance().currentUser?.uid!!).collection("friends").document(uid).set(user).addOnSuccessListener {
 
@@ -99,6 +135,10 @@ object FirestoreUtil {
             user2["uid"] = FirebaseAuth.getInstance().currentUser?.uid.toString()
             user2["favorite"] = false
             user2["days"] = 0
+            user2["stats"] = al
+            user2["set"] = "default"
+            user2["gamemode"] = "classic"
+            user2["stage"] = 0
 
             db.document(uid).collection("friends").document(FirebaseAuth.getInstance().currentUser?.uid!!).set(user2).addOnSuccessListener {
 

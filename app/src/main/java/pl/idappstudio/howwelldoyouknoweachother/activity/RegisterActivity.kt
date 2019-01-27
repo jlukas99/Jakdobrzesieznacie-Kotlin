@@ -191,7 +191,7 @@ class RegisterActivity : Activity() {
                     if (task.isSuccessful) {
 
                         val uid = auth.currentUser?.uid.toString()
-                        val gender: String = if(genderSpinner.selectedItemPosition == 0) "male" else "famle"
+                        val gender: String = if(genderSpinner.selectedItemPosition == 0) "male" else "female"
 
                         var email = emailInput.text.trim()
                         val emailNum = email.indexOf("@")

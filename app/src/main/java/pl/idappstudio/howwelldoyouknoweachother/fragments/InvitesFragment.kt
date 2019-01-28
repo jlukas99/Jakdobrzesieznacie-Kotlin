@@ -32,6 +32,8 @@ import pl.idappstudio.howwelldoyouknoweachother.util.FirestoreUtil
 
 class InvitesFragment : Fragment(), CountInterface {
 
+    override fun click(s: String, b: Boolean, name: String) {}
+
     private lateinit var btnHide: ImageButton
     private lateinit var btnHide2: ImageButton
 

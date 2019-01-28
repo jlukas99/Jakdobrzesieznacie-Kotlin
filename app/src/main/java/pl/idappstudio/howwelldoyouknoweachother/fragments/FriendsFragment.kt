@@ -25,6 +25,8 @@ import pl.idappstudio.howwelldoyouknoweachother.util.FirestoreUtil
 
 class FriendsFragment : Fragment(), CountInterface {
 
+    override fun click(s: String, b: Boolean, name: String) {}
+
     override fun count() {}
 
     private lateinit var image_round: ImageView

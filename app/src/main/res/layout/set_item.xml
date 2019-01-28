@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                             xmlns:app="http://schemas.android.com/apk/res-auto"
+                                             xmlns:tools="http://schemas.android.com/tools"
+                                             android:layout_width="match_parent"
+                                             android:layout_height="50dp"
+                                             android:layout_marginBottom="4dp" android:layout_marginTop="4dp">
+
+    <android.support.design.button.MaterialButton
+            android:id="@+id/set_btn"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:text="........."
+            app:cornerRadius="100dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:backgroundTint="@color/colorPrimary"
+            android:insetTop="0dp" android:textSize="11sp" android:textAlignment="center"
+            android:textAllCaps="true" android:typeface="normal" android:fontFamily="@font/varela_round"
+            app:layout_constraintStart_toStartOf="parent"
+            app:icon="@drawable/ic_stat_name"
+            app:layout_constraintHorizontal_bias="0.0"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.0"
+            android:insetBottom="0dp" app:iconPadding="0dp"/>
+
+
+</android.support.constraint.ConstraintLayout>

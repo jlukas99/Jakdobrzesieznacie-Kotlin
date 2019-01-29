@@ -6,5 +6,5 @@ interface CountInterface {
 
     fun count()
 
-    fun click(s: String, b: Boolean, name: String)
+    fun click(s: String, b: Boolean, name: String, image: Int)
 }

@@ -24,7 +24,6 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.activity_friends_profile.*
-import kotlinx.android.synthetic.main.dialog_choose_set.*
 import pl.idappstudio.howwelldoyouknoweachother.R
 import pl.idappstudio.howwelldoyouknoweachother.adapter.SetAdapterFirestore
 import pl.idappstudio.howwelldoyouknoweachother.glide.GlideApp
@@ -38,11 +37,15 @@ import pl.idappstudio.howwelldoyouknoweachother.util.GameUtil
 
 class FriendsProfileActivity : AppCompatActivity(), CountInterface {
 
-    override fun reload() {}
+    override fun reload() {
+
+        rvSetDefault.requestLayout()
+
+    }
 
     override fun count() {}
 
-    override fun click(s: String, b: Boolean, name: String) {
+    override fun click(s: String, b: Boolean, name: String, image: Int) {
 
         if(setDialog.isShowing){
 
@@ -50,7 +53,17 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
 
                 FirestoreUtil.updateGameSettings(game.yourTurn, game.friendTurn, game.yourStage, game.friendStage, s, game.friendSet.id, game.gamemode, game.gameID, FirebaseAuth.getInstance().currentUser?.uid.toString(), friends.uid)
 
-                friends_profile_set_btn.text = GameUtil().getSetName(name)
+                friends_profile_set_btn.text = GameUtil.getSetName(name)
+
+                if(image == 700034){
+
+                    friends_profile_set_btn.icon = resources.getDrawable(R.drawable.ic_stat_name)
+
+                } else {
+
+                    friends_profile_set_btn.icon = resources.getDrawable(R.drawable.ic_pack_icon)
+
+                }
 
                 getFriendInformation()
 
@@ -60,7 +73,7 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
 
                 FirestoreUtil.updateGameSettings(game.yourTurn, game.friendTurn, game.yourStage, game.friendStage, s, game.friendSet.id, game.gamemode, game.gameID, FirebaseAuth.getInstance().currentUser?.uid.toString(), friends.uid)
 
-                friends_profile_set_btn.text = GameUtil().getSetName(name)
+                friends_profile_set_btn.text = GameUtil.getSetName(name)
 
                 getFriendInformation()
 
@@ -93,6 +106,7 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
     private lateinit var rvSetDefault: RecyclerView
 
     private lateinit var crownImage: ImageView
+    private lateinit var packImage: ImageView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -101,6 +115,25 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
         friends_profile_loading_image.visibility = View.VISIBLE
 
         setDialog()
+        blockFunction()
+
+    }
+
+    fun blockFunction(){
+
+        friends_profile_favorite.isEnabled = false
+        friends_profile_set_btn.isEnabled = false
+        friends_profile_startgame_btn.isEnabled = false
+        friends_profile_gamemode_btn.isEnabled = false
+
+    }
+
+    fun unlockFunction(){
+
+        friends_profile_favorite.isEnabled = true
+        friends_profile_set_btn.isEnabled = true
+        friends_profile_startgame_btn.isEnabled = true
+        friends_profile_gamemode_btn.isEnabled = true
 
     }
 
@@ -126,7 +159,7 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
 
             if (friends.fb!!) {
 
-                GlideApp.with(this).load("http://graph.facebook.com/${friends.image}/picture?type=large")
+                GlideApp.with(applicationContext).load("http://graph.facebook.com/${friends.image}/picture?type=large")
                     .listener(object : RequestListener<Drawable> {
 
                         override fun onLoadFailed(
@@ -156,61 +189,61 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
                 val storageReference =
                     FirebaseStorage.getInstance().reference.child("profile_image").child(friends.image + "-image")
                         .downloadUrl
-                storageReference.addOnSuccessListener { Uri ->
 
-                    GlideApp.with(this).load(Uri.toString()).listener(object :
-                        RequestListener<Drawable> {
+                    storageReference.addOnSuccessListener { Uri ->
 
-                        override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            return true
-                        }
+                        GlideApp.with(applicationContext).load(Uri.toString()).listener(object :
+                            RequestListener<Drawable> {
 
-                        override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: DataSource?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            friends_profile_loading_image.visibility = View.GONE
-                            return false
-                        }
+                            override fun onLoadFailed(
+                                e: GlideException?,
+                                model: Any?,
+                                target: Target<Drawable>?,
+                                isFirstResource: Boolean
+                            ): Boolean {
+                                return true
+                            }
 
-                    }).into(friends_profile_image)
+                            override fun onResourceReady(
+                                resource: Drawable?,
+                                model: Any?,
+                                target: Target<Drawable>?,
+                                dataSource: DataSource?,
+                                isFirstResource: Boolean
+                            ): Boolean {
+                                friends_profile_loading_image.visibility = View.GONE
+                                return false
+                            }
 
-                }.addOnFailureListener {
+                        }).into(friends_profile_image)
 
-                    GlideApp.with(this).load(R.mipmap.logo).listener(object :
-                        RequestListener<Drawable> {
+                    }.addOnFailureListener {
 
-                        override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            return true
-                        }
+                        GlideApp.with(applicationContext).load(R.mipmap.logo).listener(object :
+                            RequestListener<Drawable> {
 
-                        override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: DataSource?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            friends_profile_loading_image.visibility = View.GONE
-                            return false
-                        }
+                            override fun onLoadFailed(
+                                e: GlideException?,
+                                model: Any?,
+                                target: Target<Drawable>?,
+                                isFirstResource: Boolean
+                            ): Boolean {
+                                return true
+                            }
 
-                    }).into(friends_profile_image)
+                            override fun onResourceReady(
+                                resource: Drawable?,
+                                model: Any?,
+                                target: Target<Drawable>?,
+                                dataSource: DataSource?,
+                                isFirstResource: Boolean
+                            ): Boolean {
+                                friends_profile_loading_image.visibility = View.GONE
+                                return false
+                            }
 
-                }
+                        }).into(friends_profile_image)
+                    }
             }
         }
     }
@@ -246,6 +279,12 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
                 ), android.graphics.PorterDuff.Mode.SRC_IN
             )
 
+            packImage.setColorFilter(
+                ContextCompat.getColor(
+                    this, R.color.colorLigth
+                ), android.graphics.PorterDuff.Mode.SRC_IN
+            )
+
             adapterSetDefault.startListening()
 
         }
@@ -263,6 +302,7 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
         rvSetDefault = setDialog.findViewById(R.id.rvSetDefault)
 
         crownImage = setDialog.findViewById(R.id.crown_image)
+        packImage = setDialog.findViewById(R.id.pack_icon)
 
     }
 
@@ -361,6 +401,8 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
         friends_profile_stats_precent.text = "$suma%"
 
         setImage()
+
+        unlockFunction()
 
     }
 

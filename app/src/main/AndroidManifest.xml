@@ -18,6 +18,8 @@
             android:theme="@style/MyTheme"
             tools:ignore="AllowBackup"
             tools:replace="android:theme">
+        <activity android:name=".activity.GameActivity">
+        </activity>
         <activity android:name=".activity.FriendsProfileActivity">
         </activity>
         <activity android:name=".activity.SettingsActivity">

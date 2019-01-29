@@ -52,7 +52,7 @@ class SetAdapterFirestore(@NonNull options: FirestoreRecyclerOptions<SetItem>, p
 
         holder.itemView.set_btn.text = model.name
 
-        if(model.image == R.drawable.ic_stat_name) {
+        if(model.image == 700034) {
 
             holder.itemView.set_btn.setIconResource(R.drawable.ic_stat_name)
 
@@ -72,7 +72,7 @@ class SetAdapterFirestore(@NonNull options: FirestoreRecyclerOptions<SetItem>, p
 
         holder.itemView.set_btn.setOnClickListener {
 
-            listener.click(model.id!!, model.premium!!, model.name!!)
+            listener.click(model.id!!, model.premium!!, model.name!!, model.image!!)
 
         }
 

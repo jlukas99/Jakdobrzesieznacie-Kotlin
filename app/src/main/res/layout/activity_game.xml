@@ -57,40 +57,32 @@
                                                 android:layout_marginEnd="8dp" android:layout_marginBottom="8dp"/>
     <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/userProfileImage"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:scaleType="centerCrop"
             app:civ_border_color="@color/colorWhite" app:civ_border_width="1dp"
             android:background="@drawable/input_overlay_white"
             android:layout_marginTop="16dp" app:layout_constraintTop_toBottomOf="@+id/linearLayout1"
-            android:layout_marginStart="16dp" app:layout_constraintStart_toStartOf="@+id/linearLayout1"/>
+            android:layout_marginStart="16dp" app:layout_constraintStart_toStartOf="@+id/linearLayout1"
+            android:layout_marginEnd="8dp" app:layout_constraintEnd_toStartOf="@+id/etapText"/>
     <TextView
-            android:text="Janek"
+            android:text="..."
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/userNameText"
-            app:layout_constraintStart_toEndOf="@+id/userProfileImage" android:layout_marginStart="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/userProfileImage"
-            android:textAlignment="center" android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="@+id/userProfileImage" app:layout_constraintVertical_bias="0.33999997"/>
+            android:textAlignment="center"
+            app:layout_constraintStart_toStartOf="@+id/userProfileImage"
+            app:layout_constraintEnd_toEndOf="@+id/userProfileImage"
+            app:layout_constraintTop_toBottomOf="@+id/userProfileImage" android:layout_marginTop="8dp"/>
     <TextView
-            android:text="30%"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:id="@+id/userPrecentText"
-            android:layout_marginBottom="8dp" app:layout_constraintBottom_toBottomOf="@+id/userProfileImage"
-            android:textAlignment="center" app:layout_constraintTop_toBottomOf="@+id/userNameText"
-            app:layout_constraintEnd_toEndOf="@+id/userNameText"
-            app:layout_constraintStart_toStartOf="@+id/userNameText" app:layout_constraintVertical_bias="0.0"
-            android:textSize="10sp"/>
-    <TextView
-            android:text="3 z 3"
+            android:text="..."
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/etapText"
             android:textAlignment="center" android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintBottom_toBottomOf="@+id/userProfileImage"
             app:layout_constraintTop_toTopOf="@+id/userProfileImage" android:textAllCaps="false"
-            android:textSize="16sp" app:layout_constraintVertical_bias="0.63"/>
+            android:textSize="16sp" app:layout_constraintVertical_bias="0.63"
+            app:layout_constraintStart_toStartOf="@+id/linearLayout1"
+            app:layout_constraintEnd_toEndOf="@+id/linearLayout1"/>
     <TextView
             android:text="ETAP"
             android:layout_width="wrap_content"
@@ -112,38 +104,56 @@
                                                 android:layout_marginBottom="8dp" android:layout_marginStart="8dp"/>
     <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/friendProfileImage"
-            android:layout_width="80dp"
-            android:layout_height="80dp"
+            android:layout_width="60dp"
+            android:layout_height="60dp"
             android:scaleType="centerCrop"
             app:civ_border_color="@color/colorWhite" app:civ_border_width="1dp"
             android:background="@drawable/input_overlay_white"
             android:layout_marginEnd="16dp" app:layout_constraintEnd_toEndOf="@+id/linearLayout1"
-            android:layout_marginTop="16dp" app:layout_constraintTop_toBottomOf="@+id/linearLayout1"/>
+            android:layout_marginTop="16dp" app:layout_constraintTop_toBottomOf="@+id/linearLayout1"
+            app:layout_constraintStart_toEndOf="@+id/etapText" android:layout_marginStart="8dp"/>
     <TextView
-            android:text="Maciek"
+            android:text="..."
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/friendNameText"
-            android:textAlignment="center" android:textStyle="bold"
-            android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/friendProfileImage"
-            app:layout_constraintTop_toTopOf="@+id/friendProfileImage"
-            app:layout_constraintBottom_toBottomOf="@+id/friendProfileImage"
-            app:layout_constraintVertical_bias="0.32999998"/>
-    <TextView
-            android:text="30%"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" android:id="@+id/friendPrecentText"
             android:textAlignment="center"
-            android:textSize="10sp"
-            app:layout_constraintEnd_toEndOf="@+id/friendNameText"
-            app:layout_constraintStart_toStartOf="@+id/friendNameText"
-            app:layout_constraintTop_toBottomOf="@+id/friendNameText" android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="@+id/friendProfileImage" app:layout_constraintVertical_bias="0.0"/>
-    <android.support.v4.view.ViewPager
-            android:layout_width="match_parent"
-            android:layout_height="0dp" app:layout_constraintTop_toBottomOf="@+id/userProfileImage"
+            app:layout_constraintTop_toBottomOf="@+id/friendProfileImage"
+            app:layout_constraintEnd_toEndOf="@+id/friendProfileImage"
+            app:layout_constraintStart_toStartOf="@+id/friendProfileImage" android:layout_marginTop="8dp"/>
+    <TextView
+            android:text="1"
+            android:layout_width="18dp"
+            android:layout_height="18dp" android:id="@+id/textView15"
+            android:background="@drawable/game_number_overlay" android:gravity="center_horizontal|center_vertical"
+            app:layout_constraintBottom_toBottomOf="@+id/textView16"
+            app:layout_constraintEnd_toStartOf="@+id/textView16"
+            app:layout_constraintTop_toTopOf="@+id/textView16"
+            android:layout_marginEnd="4dp" android:textSize="10sp"/>
+    <TextView
+            android:text="2"
+            android:layout_width="18dp"
+            android:layout_height="18dp" android:id="@+id/textView16"
+            app:layout_constraintTop_toBottomOf="@+id/etapText"
+            android:background="@drawable/game_number_overlay" android:gravity="center_horizontal|center_vertical"
+            android:layout_marginTop="8dp" app:layout_constraintStart_toEndOf="@+id/userProfileImage"
+            android:layout_marginStart="8dp" android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toStartOf="@+id/friendProfileImage" android:textSize="10sp"/>
+    <TextView
+            android:text="3"
+            android:layout_width="18dp"
+            android:layout_height="18dp" android:id="@+id/textView17"
+            android:background="@drawable/game_number_overlay" android:gravity="center_horizontal|center_vertical"
+            app:layout_constraintTop_toTopOf="@+id/textView16"
+            app:layout_constraintBottom_toBottomOf="@+id/textView16"
+            app:layout_constraintStart_toEndOf="@+id/textView16"
+            android:layout_marginStart="4dp" android:textSize="10sp"/>
+    <fragment
+            android:layout_width="0dp"
+            android:id="@+id/fragment" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="16dp"
-            android:layout_marginTop="16dp" android:id="@+id/viewPager"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/userNameText"
+            android:name="pl.idappstudio.howwelldoyouknoweachother.fragments.StageThreeOwnQuestionFragment"
+            android:layout_height="0dp"/>
+
 </android.support.constraint.ConstraintLayout>

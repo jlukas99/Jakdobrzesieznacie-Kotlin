@@ -28,10 +28,7 @@ import pl.idappstudio.howwelldoyouknoweachother.R
 import pl.idappstudio.howwelldoyouknoweachother.adapter.SetAdapterFirestore
 import pl.idappstudio.howwelldoyouknoweachother.glide.GlideApp
 import pl.idappstudio.howwelldoyouknoweachother.interfaces.CountInterface
-import pl.idappstudio.howwelldoyouknoweachother.model.FriendsData
-import pl.idappstudio.howwelldoyouknoweachother.model.GameData
-import pl.idappstudio.howwelldoyouknoweachother.model.SetItem
-import pl.idappstudio.howwelldoyouknoweachother.model.StatsData
+import pl.idappstudio.howwelldoyouknoweachother.model.*
 import pl.idappstudio.howwelldoyouknoweachother.util.FirestoreUtil
 import pl.idappstudio.howwelldoyouknoweachother.util.GameUtil
 
@@ -51,17 +48,17 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
 
             if(b && friends.type == "premium"){
 
-                FirestoreUtil.updateGameSettings(game.yourTurn, game.friendTurn, game.yourStage, game.friendStage, s, game.friendSet.id, game.gamemode, game.gameID, FirebaseAuth.getInstance().currentUser?.uid.toString(), friends.uid)
+                FirestoreUtil.updateGameSettings(game.uTurn, game.fTurn, game.uStage, game.fStage, s, game.fSet.id, game.gamemode, game.gameID, FirebaseAuth.getInstance().currentUser?.uid.toString(), friends.uid)
 
                 friends_profile_set_btn.text = GameUtil.getSetName(name)
 
                 if(image == 700034){
 
-                    friends_profile_set_btn.icon = resources.getDrawable(R.drawable.ic_stat_name)
+                    friends_profile_set_btn.setIconResource(R.drawable.ic_stat_name)
 
                 } else {
 
-                    friends_profile_set_btn.icon = resources.getDrawable(R.drawable.ic_pack_icon)
+                    friends_profile_set_btn.setIconResource(R.drawable.ic_pack_icon)
 
                 }
 
@@ -71,7 +68,7 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
 
             } else if (!b) {
 
-                FirestoreUtil.updateGameSettings(game.yourTurn, game.friendTurn, game.yourStage, game.friendStage, s, game.friendSet.id, game.gamemode, game.gameID, FirebaseAuth.getInstance().currentUser?.uid.toString(), friends.uid)
+                FirestoreUtil.updateGameSettings(game.uTurn, game.fTurn, game.uStage, game.fStage, s, game.fSet.id, game.gamemode, game.gameID, FirebaseAuth.getInstance().currentUser?.uid.toString(), friends.uid)
 
                 friends_profile_set_btn.text = GameUtil.getSetName(name)
 
@@ -91,9 +88,14 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
 
     }
 
-    private lateinit var friends: FriendsData
-    private lateinit var game: GameData
+    private lateinit var friends: UserData
     private lateinit var stats: StatsData
+
+    private lateinit var information: FriendInfoData
+    private lateinit var game: GameData
+
+    private lateinit var user: UserData
+    private lateinit var userStats: StatsData
 
     private lateinit var snackbar: Snackbar
 
@@ -116,6 +118,12 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
 
         setDialog()
         blockFunction()
+
+        friends_profile_startgame_btn.setOnClickListener {
+
+            GameUtil.startGame(game, friends, it.context)
+
+        }
 
     }
 
@@ -157,7 +165,7 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
 
         } else {
 
-            if (friends.fb!!) {
+            if (friends.fb) {
 
                 GlideApp.with(applicationContext).load("http://graph.facebook.com/${friends.image}/picture?type=large")
                     .listener(object : RequestListener<Drawable> {
@@ -262,7 +270,7 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
 
         if(setDialog.isShowing) {
 
-            val query: Query = db.whereEqualTo("type", "default")
+            val query: Query = db.whereEqualTo("type", "default").orderBy("premium", Query.Direction.ASCENDING)
 
             val options: FirestoreRecyclerOptions<SetItem> = FirestoreRecyclerOptions.Builder<SetItem>().setQuery(query, SetItem::class.java).setLifecycleOwner(this).build()
 
@@ -333,7 +341,7 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
 
                 }
 
-                friends_profile_gamemode_btn.text = GameUtil().getGamemodeName(snapshot.getString("gamemode")!!)
+                friends_profile_gamemode_btn.text = GameUtil.getGamemodeName(snapshot.getString("gamemode")!!)
 
             }
         })
@@ -343,7 +351,7 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
     fun setInformation(){
 
         friends_profile_name.text = friends.name
-        friends_profile_set_btn.text = GameUtil().getSetName(game.youtSet.name)
+        friends_profile_set_btn.text = GameUtil.getSetName(game.uSet.name)
 
         friends_profile_set_btn.setOnClickListener {
 
@@ -353,7 +361,7 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
 
         updateInofrmation()
 
-        if(friends.favorite!!){
+        if(information.favorite){
 
             friends_profile_favorite.setIconResource(R.drawable.ic_heart_solid)
 
@@ -380,25 +388,14 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
             }
         }
 
-        val a: Float = stats.canswer.toFloat()
-        val b: Float = stats.banswer.toFloat()
-        val c: Int = stats.games
-
-        val sum: Float = a/(a+b)
-        val suma: Int = if(sum.toInt().toString().length == 1) {
-            (sum*100).toInt()
-        } else if(sum.toInt().toString().length == 2) {
-            (sum*10).toInt()
-        } else if(sum.toInt().toString().length == 3) {
-            sum.toInt()
-        } else {
-            sum.toString().substring(0, 3).toInt()
-        }
+        val a: Float = userStats.canswer.toFloat()
+        val b: Float = userStats.banswer.toFloat()
+        val c: Int = userStats.games
 
         friends_profile_stats_canswer.text = a.toInt().toString()
         friends_profile_stats_banswer.text = b.toInt().toString()
         friends_profile_stats_games.text = c.toString()
-        friends_profile_stats_precent.text = "$suma%"
+        friends_profile_stats_precent.text = "${GameUtil.getPrecent(userStats)}%"
 
         setImage()
 
@@ -407,11 +404,16 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
     }
 
     private fun getFriendInformation(){
-        FirestoreUtil.getFriendsUser(intent?.extras?.get("id").toString()) { e ->
+        GameUtil.getUserData(FirebaseAuth.getInstance().currentUser?.uid.toString(), intent?.extras?.get("id").toString()) { e ->
 
-            friends = e
+            friends = e.friendsData
+            user = e.userData
+
             game = e.game
-            stats = e.stats
+            information = e.finfo
+
+            stats = e.fstats
+            userStats = e.ustats
 
             setInformation()
 

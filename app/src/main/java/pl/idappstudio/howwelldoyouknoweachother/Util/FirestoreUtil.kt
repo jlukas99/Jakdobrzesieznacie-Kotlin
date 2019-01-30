@@ -1,11 +1,9 @@
 package pl.idappstudio.howwelldoyouknoweachother.util
 
-import android.util.Log
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.ListenerRegistration
 import pl.idappstudio.howwelldoyouknoweachother.adapter.InviteAdapterFirestore
 import pl.idappstudio.howwelldoyouknoweachother.adapter.SearchAdapterFirestore
 import pl.idappstudio.howwelldoyouknoweachother.model.*
@@ -50,60 +48,6 @@ object FirestoreUtil {
         currentUserDocRef.update(userFieldMap)
 
         initialize()
-    }
-
-    fun getFriendsUser(id: String, onComplete: (FriendsData) -> Unit) {
-        db.document(id).get().addOnSuccessListener {
-
-            val image: String = it.getString("image")!!
-            val fb: Boolean = it.getBoolean("fb")!!
-            val gender: String = it.getString("gender")!!
-            val name = it.get("name").toString()
-            val type = it.get("type").toString()
-            val uid = it.get("uid").toString()
-
-            currentUserDocRef.collection("friends").document(id).get().addOnSuccessListener {
-
-                val days: Int = it.getLong("days")!!.toInt()
-                val favorite: Boolean? = it.getBoolean("favorite")
-                val canswer: Int = it.getLong("canswer")!!.toInt()
-                val banswer: Int = it.getLong("banswer")!!.toInt()
-                val games: Int = it.getLong("games")!!.toInt()
-                val gameID: String = it.getString("gameId")!!
-
-                val stats = StatsData(canswer, banswer, games)
-
-                dbGame.document(gameID).get().addOnSuccessListener {
-
-                    val gamemode: String = it.getString("gamemode")!!
-                    val friendStage: Int = it.getLong("$id-stage")!!.toInt()
-                    val yourStage: Int = it.getLong("${FirebaseAuth.getInstance().currentUser?.uid.toString()}-stage")!!.toInt()
-                    val friendTurn: Boolean = it.getBoolean("$uid-turn")!!
-                    val yourTurn: Boolean = it.getBoolean("${FirebaseAuth.getInstance().currentUser?.uid.toString()}-turn")!!
-                    val friendSet: String = it.getString("$uid-set")!!
-                    val yourSet: String = it.getString("${FirebaseAuth.getInstance().currentUser?.uid.toString()}-set")!!
-
-                    dbSet.document(yourSet).get().addOnSuccessListener {
-
-                        val ySet = it.toObject(YourSetData::class.java)!!
-
-                        dbSet.document(friendSet).get().addOnSuccessListener {
-
-                            val fSet = it.toObject(FriendSetData::class.java)!!
-
-                            val game = GameData(yourTurn, friendTurn, yourStage, friendStage, ySet, fSet, gamemode, gameID)
-
-                            val friendsData = FriendsData(uid, name, image, fb, gender, type, days, favorite, stats, game)
-
-                            onComplete(friendsData)
-
-                        }
-
-                    }
-
-                }
-            }
-        }
     }
 
     fun getCurrentUser(onComplete: (UserData) -> Unit) {
@@ -214,58 +158,6 @@ object FirestoreUtil {
         }
 
     }
-
-    fun removeListener(registration: ListenerRegistration) = registration.remove()
-
-//    fun getOrCreateChatChannel(otherUserId: String,
-//                               onComplete: (channelId: String) -> Unit) {
-//        currentUserDocRef.collection("engagedChatChannels")
-//            .document(otherUserId).get().addOnSuccessListener {
-//                if (it.exists()) {
-//                    onComplete(it["channelId"] as String)
-//                    return@addOnSuccessListener
-//                }
-//
-//                val currentUserId = FirebaseAuth.getInstance().currentUser!!.uid
-//
-//                val newChannel = chatChannelsCollectionRef.document()
-//                newChannel.set(ChatChannel(mutableListOf(currentUserId, otherUserId)))
-//
-//                currentUserDocRef
-//                    .collection("engagedChatChannels")
-//                    .document(otherUserId)
-//                    .set(mapOf("channelId" to newChannel.id))
-//
-//                firestoreInstance.collection("users").document(otherUserId)
-//                    .collection("engagedChatChannels")
-//                    .document(currentUserId)
-//                    .set(mapOf("channelId" to newChannel.id))
-//
-//                onComplete(newChannel.id)
-//            }
-//    }
-
-//    fun addChatMessagesListener(channelId: String, context: Context,
-//                                onListen: (List<Item>) -> Unit): ListenerRegistration {
-//        return chatChannelsCollectionRef.document(channelId).collection("messages")
-//            .orderBy("time")
-//            .addSnapshotListener { querySnapshot, firebaseFirestoreException ->
-//                if (firebaseFirestoreException != null) {
-//                    Log.e("FIRESTORE", "ChatMessagesListener error.", firebaseFirestoreException)
-//                    return@addSnapshotListener
-//                }
-//
-//                val items = mutableListOf<Item>()
-//                querySnapshot!!.documents.forEach {
-//                    if (it["type"] == MessageType.TEXT)
-//                        items.add(TextMessageItem(it.toObject(TextMessage::class.java)!!, context))
-//                    else
-//                        items.add(ImageMessageItem(it.toObject(ImageMessage::class.java)!!, context))
-//                    return@forEach
-//                }
-//                onListen(items)
-//            }
-//    }
 
     fun sendMessage(message: Message, recipientID: String) {
         db.document(recipientID)

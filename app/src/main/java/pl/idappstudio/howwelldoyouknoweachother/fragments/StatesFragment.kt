@@ -24,6 +24,4 @@ class StatesFragment : Fragment() {
         super.onResume()
         FirestoreUtil.initialize()
     }
-
-
 }

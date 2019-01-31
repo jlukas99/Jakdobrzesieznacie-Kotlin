@@ -3,8 +3,9 @@ package pl.idappstudio.howwelldoyouknoweachother.activity
 import android.graphics.drawable.Drawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.app.FragmentPagerAdapter
+import android.support.v4.content.ContextCompat
 import android.view.View
+import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
 import com.bumptech.glide.load.engine.GlideException
@@ -26,31 +27,84 @@ import pl.idappstudio.howwelldoyouknoweachother.util.GameUtil
 
 class GameActivity : AppCompatActivity() {
 
-    private lateinit var friends: UserData
-    private lateinit var stats: StatsData
+    companion object {
 
-    private lateinit var information: FriendInfoData
-    private lateinit var game: GameData
+        lateinit var friends: UserData
+        lateinit var stats: StatsData
 
-    private lateinit var user: UserData
-    private lateinit var userStats: StatsData
+        lateinit var information: FriendInfoData
+        lateinit var game: GameData
+
+        lateinit var user: UserData
+        lateinit var userStats: StatsData
+
+        lateinit var questionOne: TextView
+        lateinit var questionTwo: TextView
+        lateinit var questionThree: TextView
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
+        questionOne = findViewById(R.id.questionOneText)
+        questionTwo = findViewById(R.id.questionTwoText)
+        questionThree = findViewById(R.id.questionThreeText)
+
         userLoadingImage.visibility = View.VISIBLE
         friendLoadingImage.visibility = View.VISIBLE
 
-        val manager = supportFragmentManager
-        val transaction = manager.beginTransaction()
-        transaction.replace(R.id.fragment, StageThreeOwnQuestionFragment()).commit()
+        showLoading()
 
     }
 
-    private fun setInterface(){
+    private fun showLoading(){
 
-        setUserImage()
+        gameIcon.setColorFilter(ContextCompat.getColor(this, R.color.colorLigth), android.graphics.PorterDuff.Mode.SRC_IN)
+
+        gameIcon.visibility = View.VISIBLE
+        gameText.visibility = View.VISIBLE
+        gameLoading.visibility = View.VISIBLE
+
+    }
+
+    private fun hideLoading(){
+
+        gameIcon.visibility = View.GONE
+        gameText.visibility = View.GONE
+        gameLoading.visibility = View.GONE
+
+    }
+
+    private fun setFragment(){
+
+        if(game.uStage == 3 || game.uStage == 0){
+
+            supportFragmentManager.beginTransaction().replace(R.id.fragment, StageThreeOwnQuestionFragment()).commit()
+            hideLoading()
+
+        } else if(game.uStage == 2){
+
+            supportFragmentManager.beginTransaction().replace(R.id.fragment, StageThreeOwnQuestionFragment()).commit()
+            hideLoading()
+
+        } else if(game.uStage == 1){
+
+            supportFragmentManager.beginTransaction().replace(R.id.fragment, StageThreeOwnQuestionFragment()).commit()
+            hideLoading()
+
+        } else {
+
+            finish()
+
+        }
+
+    }
+
+    private fun setInterface(onComplete: () -> Unit){
+
+        setUserImage { onComplete() }
         setFriendImage()
 
         userNameText.text = user.name
@@ -60,7 +114,7 @@ class GameActivity : AppCompatActivity() {
 
     }
 
-    private fun setUserImage(){
+    private fun setUserImage(onComplete: () -> Unit){
 
         if(user.image.contains("logo")){
 
@@ -68,11 +122,13 @@ class GameActivity : AppCompatActivity() {
                 RequestListener<Drawable> {
 
                 override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                    onComplete()
                     return true
                 }
 
                 override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
                     userLoadingImage.visibility = View.GONE
+                    onComplete()
                     return false
                 }
 
@@ -91,6 +147,7 @@ class GameActivity : AppCompatActivity() {
                             target: Target<Drawable>?,
                             isFirstResource: Boolean
                         ): Boolean {
+                            onComplete()
                             return true
                         }
 
@@ -102,6 +159,7 @@ class GameActivity : AppCompatActivity() {
                             isFirstResource: Boolean
                         ): Boolean {
                             userLoadingImage.visibility = View.GONE
+                            onComplete()
                             return false
                         }
 
@@ -124,6 +182,7 @@ class GameActivity : AppCompatActivity() {
                             target: Target<Drawable>?,
                             isFirstResource: Boolean
                         ): Boolean {
+                            onComplete()
                             return true
                         }
 
@@ -135,6 +194,7 @@ class GameActivity : AppCompatActivity() {
                             isFirstResource: Boolean
                         ): Boolean {
                             userLoadingImage.visibility = View.GONE
+                            onComplete()
                             return false
                         }
 
@@ -151,6 +211,7 @@ class GameActivity : AppCompatActivity() {
                             target: Target<Drawable>?,
                             isFirstResource: Boolean
                         ): Boolean {
+                            onComplete()
                             return true
                         }
 
@@ -162,6 +223,7 @@ class GameActivity : AppCompatActivity() {
                             isFirstResource: Boolean
                         ): Boolean {
                             userLoadingImage.visibility = View.GONE
+                            onComplete()
                             return false
                         }
 
@@ -294,7 +356,11 @@ class GameActivity : AppCompatActivity() {
             stats = e.fstats
             userStats = e.ustats
 
-            setInterface()
+            setInterface {
+
+                setFragment()
+
+            }
 
         }
     }

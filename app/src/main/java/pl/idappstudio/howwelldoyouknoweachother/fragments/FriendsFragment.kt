@@ -18,21 +18,21 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.google.firebase.firestore.Query
 import pl.idappstudio.howwelldoyouknoweachother.R
 import pl.idappstudio.howwelldoyouknoweachother.adapter.FriendsAdapterFirestore
+import pl.idappstudio.howwelldoyouknoweachother.adapter.GamesAdapterFirestore
 import pl.idappstudio.howwelldoyouknoweachother.interfaces.CountInterface
 import pl.idappstudio.howwelldoyouknoweachother.model.FriendsItem
-import pl.idappstudio.howwelldoyouknoweachother.model.InviteItem
+import pl.idappstudio.howwelldoyouknoweachother.model.GamesItem
 import pl.idappstudio.howwelldoyouknoweachother.util.FirestoreUtil
 
 class FriendsFragment : Fragment(), CountInterface {
 
     override fun click(s: String, b: Boolean, name: String, image: Int) {}
 
-    override fun count() {}
-
     private lateinit var image_round: ImageView
     private lateinit var image_friends: ImageView
 
     private lateinit var text_none_friends: TextView
+    private lateinit var text_none_round: TextView
 
     private lateinit var btn_invite: Button
 
@@ -42,10 +42,11 @@ class FriendsFragment : Fragment(), CountInterface {
     private lateinit var loadingFriends: SpinKitView
     private lateinit var loadingRound: SpinKitView
 
-//    private lateinit var adapterRound: FriendsAdapterFirestore
+    private lateinit var adapterRound: GamesAdapterFirestore
     private lateinit var adapterFriends: FriendsAdapterFirestore
 
     private val db = FirebaseFirestore.getInstance().collection("users")
+    private val dbGames = FirebaseFirestore.getInstance().collection("games")
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -55,6 +56,7 @@ class FriendsFragment : Fragment(), CountInterface {
         image_friends = rootView.findViewById(R.id.image_none_friends)
 
         text_none_friends = rootView.findViewById(R.id.text_none_friends)
+        text_none_round = rootView.findViewById(R.id.text_none_round)
 
         rvRound = rootView.findViewById(R.id.rv_round)
         rvFriends = rootView.findViewById(R.id.rv_friends)
@@ -73,6 +75,7 @@ class FriendsFragment : Fragment(), CountInterface {
             ), android.graphics.PorterDuff.Mode.SRC_IN)
 
         getFriends()
+//        getGames()
 
         return rootView
     }
@@ -91,6 +94,56 @@ class FriendsFragment : Fragment(), CountInterface {
         rvFriends.setHasFixedSize(true)
         rvFriends.layoutManager = LinearLayoutManager(context)
         rvFriends.adapter = adapterFriends
+
+    }
+
+    private fun getGames() {
+
+        loadingRound.visibility = View.VISIBLE
+
+        val query: Query = dbGames.whereEqualTo("${FirebaseAuth.getInstance().currentUser?.uid.toString()}-turn", true)
+
+        val options: FirestoreRecyclerOptions<GamesItem> = FirestoreRecyclerOptions.Builder<GamesItem>().setQuery(query, GamesItem::class.java).setLifecycleOwner(this).build()
+
+        adapterRound = GamesAdapterFirestore(options, this)
+        adapterRound.setRV(rvRound)
+
+        rvRound.setHasFixedSize(true)
+        rvRound.layoutManager = LinearLayoutManager(context)
+        rvRound.adapter = adapterRound
+
+    }
+
+    override fun count() {
+
+        dbGames.whereEqualTo("${FirebaseAuth.getInstance().currentUser?.uid.toString()}-turn", true)
+            .get().addOnCompleteListener { task ->
+
+                if (!task.result?.isEmpty!!) {
+
+                    rvRound.layoutParams.height = 0
+                    rvRound.requestLayout()
+
+                    loadingRound.visibility = View.GONE
+
+                    image_round.visibility = View.GONE
+                    text_none_round.visibility = View.GONE
+                    rvRound.visibility = View.VISIBLE
+
+                } else {
+
+                    rvRound.layoutParams.height = 240
+                    rvRound.requestLayout()
+
+                    loadingRound.visibility = View.GONE
+
+                    rvRound.visibility = View.INVISIBLE
+                    text_none_round.visibility = View.VISIBLE
+                    image_round.visibility = View.VISIBLE
+
+                }
+
+            }
 
     }
 

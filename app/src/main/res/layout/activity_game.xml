@@ -123,37 +123,67 @@
     <TextView
             android:text="1"
             android:layout_width="18dp"
-            android:layout_height="18dp" android:id="@+id/textView15"
+            android:layout_height="18dp" android:id="@+id/questionOneText"
             android:background="@drawable/game_number_overlay" android:gravity="center_horizontal|center_vertical"
-            app:layout_constraintBottom_toBottomOf="@+id/textView16"
-            app:layout_constraintEnd_toStartOf="@+id/textView16"
-            app:layout_constraintTop_toTopOf="@+id/textView16"
-            android:layout_marginEnd="4dp" android:textSize="10sp"/>
+            app:layout_constraintBottom_toBottomOf="@+id/questionTwoText"
+            app:layout_constraintEnd_toStartOf="@+id/questionTwoText"
+            app:layout_constraintTop_toTopOf="@+id/questionTwoText"
+            android:layout_marginEnd="4dp" android:textSize="10sp" android:textColor="@color/colorWhite"/>
     <TextView
             android:text="2"
             android:layout_width="18dp"
-            android:layout_height="18dp" android:id="@+id/textView16"
+            android:layout_height="18dp" android:id="@+id/questionTwoText"
             app:layout_constraintTop_toBottomOf="@+id/etapText"
             android:background="@drawable/game_number_overlay" android:gravity="center_horizontal|center_vertical"
             android:layout_marginTop="8dp" app:layout_constraintStart_toEndOf="@+id/userProfileImage"
             android:layout_marginStart="8dp" android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/friendProfileImage" android:textSize="10sp"/>
+            app:layout_constraintEnd_toStartOf="@+id/friendProfileImage" android:textSize="10sp"
+            android:textColor="@color/colorWhite"/>
     <TextView
             android:text="3"
             android:layout_width="18dp"
-            android:layout_height="18dp" android:id="@+id/textView17"
+            android:layout_height="18dp" android:id="@+id/questionThreeText"
             android:background="@drawable/game_number_overlay" android:gravity="center_horizontal|center_vertical"
-            app:layout_constraintTop_toTopOf="@+id/textView16"
-            app:layout_constraintBottom_toBottomOf="@+id/textView16"
-            app:layout_constraintStart_toEndOf="@+id/textView16"
-            android:layout_marginStart="4dp" android:textSize="10sp"/>
+            app:layout_constraintTop_toTopOf="@+id/questionTwoText"
+            app:layout_constraintBottom_toBottomOf="@+id/questionTwoText"
+            app:layout_constraintStart_toEndOf="@+id/questionTwoText"
+            android:layout_marginStart="4dp" android:textSize="10sp" android:textColor="@color/colorWhite"/>
     <fragment
             android:layout_width="0dp"
-            android:id="@+id/fragment" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_height="0dp"
+            android:name="pl.idappstudio.howwelldoyouknoweachother.fragments.ClearFragment"
+            android:id="@+id/fragment" app:layout_constraintTop_toBottomOf="@+id/userNameText"
+            app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/userNameText"
-            android:name="pl.idappstudio.howwelldoyouknoweachother.fragments.StageThreeOwnQuestionFragment"
-            android:layout_height="0dp"/>
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <TextView
+            android:text="Poczekaj chwilkę\nmuszimy wszystko załadować"
+            android:layout_width="300dp"
+            android:layout_height="wrap_content" android:id="@+id/gameText" app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="8dp"
+            android:textAlignment="center" android:textColor="@color/colorLigth"
+            android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/gameIcon"/>
+
+    <ImageView
+            android:layout_width="60dp"
+            android:layout_height="50dp" app:srcCompat="@mipmap/games_icon" android:id="@+id/gameIcon"
+            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="16dp"
+            app:layout_constraintTop_toBottomOf="@+id/userNameText" android:layout_marginTop="48dp"/>
+
+    <com.github.ybq.android.spinkit.SpinKitView
+            android:id="@+id/gameLoading"
+            style="@style/SpinKitView.ThreeBounce"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            app:SpinKit_Color="@color/colorWhite"
+            android:layout_marginEnd="16dp" app:layout_constraintEnd_toEndOf="parent" android:layout_marginStart="16dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:visibility="visible"
+            android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/gameText"/>
 
 </android.support.constraint.ConstraintLayout>

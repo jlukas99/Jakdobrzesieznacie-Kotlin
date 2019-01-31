@@ -121,7 +121,9 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
 
         friends_profile_startgame_btn.setOnClickListener {
 
-            GameUtil.startGame(game, friends, it.context)
+            if(game.uTurn) {
+                GameUtil.startGame(game, friends, it.context)
+            }
 
         }
 

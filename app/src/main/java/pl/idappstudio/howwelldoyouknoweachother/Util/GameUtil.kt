@@ -1,12 +1,15 @@
 package pl.idappstudio.howwelldoyouknoweachother.util
 
 import android.content.Context
+import android.util.Log
+import com.facebook.internal.Mutable
 import com.google.firebase.firestore.FirebaseFirestore
 import org.jetbrains.anko.startActivity
 import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity
 import pl.idappstudio.howwelldoyouknoweachother.model.*
 import java.util.*
 import kotlin.collections.ArrayList
+import kotlin.collections.HashMap
 
 object GameUtil {
 
@@ -159,6 +162,18 @@ object GameUtil {
 
     }
 
+    fun getQuestionData(s: String, onComplete: (QuestionData) -> Unit) {
+
+        db.document(s).get().addOnSuccessListener {
+
+            val questionItem = it.toObject(QuestionData::class.java)!!
+
+            onComplete(questionItem)
+
+        }
+
+    }
+
     fun startGame(game: GameData, friendsData: UserData, ctx: Context){
 
         checkStage(game, friendsData, ctx)
@@ -167,8 +182,10 @@ object GameUtil {
 
     fun sendOwnQuestion(questionData: ArrayList<UserQuestionData>, game: GameData, userData: UserData, friendData: UserData, onComplete: () -> Unit) {
 
-        val user = HashMap<String, ArrayList<UserQuestionData>>()
-        user.put("question", questionData)
+        val user = HashMap<String, UserQuestionData>()
+        user.put("question", questionData[0])
+        user.put("question1", questionData[1])
+        user.put("question2", questionData[2])
 
         db.collection("games").document(game.gameID).collection(userData.uid).document("3").set(user).addOnSuccessListener {
 

@@ -50,6 +50,8 @@ class StageThreeOwnQuestionFragment : Fragment(), TextWatcher {
 
     private var questionList: ArrayList<UserQuestionData> = ArrayList()
 
+    private var questionNumber = 0
+
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView: View = inflater.inflate(R.layout.fragment_stage_three_own_question, container, false)
 
@@ -211,7 +213,6 @@ class StageThreeOwnQuestionFragment : Fragment(), TextWatcher {
             }
 
             val questionData = UserQuestionData(q, ca, ba1, ba2, ba3, GameActivity.user.uid)
-
             questionList.add(questionData)
 
             nextQuestion()

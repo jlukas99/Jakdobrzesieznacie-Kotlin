@@ -8,6 +8,7 @@ import android.view.View
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
@@ -15,12 +16,10 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.activity_game.*
 import pl.idappstudio.howwelldoyouknoweachother.R
+import pl.idappstudio.howwelldoyouknoweachother.fragments.StageOneFragment
 import pl.idappstudio.howwelldoyouknoweachother.fragments.StageThreeOwnQuestionFragment
 import pl.idappstudio.howwelldoyouknoweachother.glide.GlideApp
-import pl.idappstudio.howwelldoyouknoweachother.model.FriendInfoData
-import pl.idappstudio.howwelldoyouknoweachother.model.GameData
-import pl.idappstudio.howwelldoyouknoweachother.model.StatsData
-import pl.idappstudio.howwelldoyouknoweachother.model.UserData
+import pl.idappstudio.howwelldoyouknoweachother.model.*
 import pl.idappstudio.howwelldoyouknoweachother.util.GameUtil
 
 
@@ -41,6 +40,8 @@ class GameActivity : AppCompatActivity() {
         lateinit var questionOne: TextView
         lateinit var questionTwo: TextView
         lateinit var questionThree: TextView
+
+        lateinit var questionList: QuestionData
 
     }
 
@@ -91,8 +92,14 @@ class GameActivity : AppCompatActivity() {
 
         } else if(game.uStage == 1){
 
-            supportFragmentManager.beginTransaction().replace(R.id.fragment, StageThreeOwnQuestionFragment()).commit()
-            hideLoading()
+            GameUtil.getQuestionData("games/${game.gameID}/${friends.uid}/3") {
+
+                questionList = it
+
+                supportFragmentManager.beginTransaction().replace(R.id.fragment, StageOneFragment()).commit()
+                hideLoading()
+
+            }
 
         } else {
 
@@ -138,7 +145,7 @@ class GameActivity : AppCompatActivity() {
 
             if (user.fb) {
 
-                GlideApp.with(applicationContext).load("http://graph.facebook.com/${user.image}/picture?type=large")
+                GlideApp.with(applicationContext).load("http://graph.facebook.com/${user.image}/picture?type=large").diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
                     .listener(object : RequestListener<Drawable> {
 
                         override fun onLoadFailed(
@@ -173,7 +180,7 @@ class GameActivity : AppCompatActivity() {
 
                 storageReference.addOnSuccessListener { Uri ->
 
-                    GlideApp.with(applicationContext).load(Uri.toString()).listener(object :
+                    GlideApp.with(applicationContext).load(Uri.toString()).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).listener(object :
                         RequestListener<Drawable> {
 
                         override fun onLoadFailed(
@@ -202,7 +209,7 @@ class GameActivity : AppCompatActivity() {
 
                 }.addOnFailureListener {
 
-                    GlideApp.with(applicationContext).load(R.mipmap.logo).listener(object :
+                    GlideApp.with(applicationContext).load(R.mipmap.logo).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).listener(object :
                         RequestListener<Drawable> {
 
                         override fun onLoadFailed(
@@ -255,7 +262,8 @@ class GameActivity : AppCompatActivity() {
 
             if (friends.fb) {
 
-                GlideApp.with(applicationContext).load("http://graph.facebook.com/${friends.image}/picture?type=large")
+                GlideApp.with(applicationContext).load("http://graph.facebook.com/${friends.image}/picture?type=large").diskCacheStrategy(
+                    DiskCacheStrategy.AUTOMATIC)
                     .listener(object : RequestListener<Drawable> {
 
                         override fun onLoadFailed(
@@ -288,7 +296,7 @@ class GameActivity : AppCompatActivity() {
 
                 storageReference.addOnSuccessListener { Uri ->
 
-                    GlideApp.with(applicationContext).load(Uri.toString()).listener(object :
+                    GlideApp.with(applicationContext).load(Uri.toString()).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).listener(object :
                         RequestListener<Drawable> {
 
                         override fun onLoadFailed(
@@ -315,7 +323,7 @@ class GameActivity : AppCompatActivity() {
 
                 }.addOnFailureListener {
 
-                    GlideApp.with(applicationContext).load(R.mipmap.logo).listener(object :
+                    GlideApp.with(applicationContext).load(R.mipmap.logo).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).listener(object :
                         RequestListener<Drawable> {
 
                         override fun onLoadFailed(

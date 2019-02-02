@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
@@ -108,7 +109,8 @@ class SearchAdapterFirestore(@NonNull options: FirestoreRecyclerOptions<InviteIt
 
             if (model.fb!!) {
 
-                GlideApp.with(holder.itemView.context).load("http://graph.facebook.com/${model.image}/picture?type=large")
+                GlideApp.with(holder.itemView.context).load("http://graph.facebook.com/${model.image}/picture?type=large").diskCacheStrategy(
+                    DiskCacheStrategy.AUTOMATIC)
                     .listener(object : RequestListener<Drawable> {
 
                         override fun onLoadFailed(
@@ -140,7 +142,7 @@ class SearchAdapterFirestore(@NonNull options: FirestoreRecyclerOptions<InviteIt
                         .downloadUrl
                 storageReference.addOnSuccessListener { Uri ->
 
-                    GlideApp.with(holder.itemView.context).load(Uri.toString()).listener(object : RequestListener<Drawable> {
+                    GlideApp.with(holder.itemView.context).load(Uri.toString()).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).listener(object : RequestListener<Drawable> {
 
                         override fun onLoadFailed(
                             e: GlideException?,
@@ -166,7 +168,7 @@ class SearchAdapterFirestore(@NonNull options: FirestoreRecyclerOptions<InviteIt
 
                 }.addOnFailureListener {
 
-                    GlideApp.with(holder.itemView.context).load(R.mipmap.logo).listener(object : RequestListener<Drawable> {
+                    GlideApp.with(holder.itemView.context).load(R.mipmap.logo).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).listener(object : RequestListener<Drawable> {
 
                         override fun onLoadFailed(
                             e: GlideException?,

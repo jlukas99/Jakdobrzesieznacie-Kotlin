@@ -13,6 +13,7 @@ import android.view.Window
 import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
@@ -119,11 +120,21 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
         setDialog()
         blockFunction()
 
-        friends_profile_startgame_btn.setOnClickListener {
+    }
 
-            if(game.uTurn) {
+    fun setOnClick(b: Boolean){
+
+        if(b) {
+
+            friends_profile_startgame_btn.setOnClickListener {
+
                 GameUtil.startGame(game, friends, it.context)
+
             }
+
+        } else {
+
+            friends_profile_startgame_btn.setOnClickListener { }
 
         }
 
@@ -169,7 +180,8 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
 
             if (friends.fb) {
 
-                GlideApp.with(applicationContext).load("http://graph.facebook.com/${friends.image}/picture?type=large")
+                GlideApp.with(applicationContext).load("http://graph.facebook.com/${friends.image}/picture?type=large").diskCacheStrategy(
+                    DiskCacheStrategy.AUTOMATIC)
                     .listener(object : RequestListener<Drawable> {
 
                         override fun onLoadFailed(
@@ -202,7 +214,7 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
 
                     storageReference.addOnSuccessListener { Uri ->
 
-                        GlideApp.with(applicationContext).load(Uri.toString()).listener(object :
+                        GlideApp.with(applicationContext).load(Uri.toString()).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).listener(object :
                             RequestListener<Drawable> {
 
                             override fun onLoadFailed(
@@ -229,7 +241,7 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
 
                     }.addOnFailureListener {
 
-                        GlideApp.with(applicationContext).load(R.mipmap.logo).listener(object :
+                        GlideApp.with(applicationContext).load(R.mipmap.logo).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).listener(object :
                             RequestListener<Drawable> {
 
                             override fun onLoadFailed(
@@ -333,6 +345,8 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
                             this, R.color.colorPrimary
                         ), android.graphics.PorterDuff.Mode.SRC_IN)
 
+                    setOnClick(true)
+
                 } else {
 
                     friends_profile_startgame_btn.text = "kolej znajomego"
@@ -340,6 +354,8 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
                         ContextCompat.getColor(
                             this, R.color.colorRed
                         ), android.graphics.PorterDuff.Mode.SRC_IN)
+
+                    setOnClick(false)
 
                 }
 

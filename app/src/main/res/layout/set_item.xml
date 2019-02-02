@@ -17,11 +17,11 @@
             android:insetTop="0dp" android:textSize="11sp" android:textAlignment="center"
             android:textAllCaps="true" android:typeface="normal" android:fontFamily="@font/varela_round"
             app:layout_constraintStart_toStartOf="parent"
-            app:icon="@drawable/ic_stat_name"
+            app:icon="@drawable/ic_question_icon"
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="0.0"
-            android:insetBottom="0dp" app:iconPadding="0dp"/>
+            android:insetBottom="0dp"/>
 
 
 </android.support.constraint.ConstraintLayout>

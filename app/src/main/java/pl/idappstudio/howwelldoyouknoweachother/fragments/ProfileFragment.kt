@@ -11,6 +11,7 @@ import android.widget.Button
 import android.widget.TextView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.DataSource
+import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.engine.GlideException
 import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
@@ -106,9 +107,10 @@ class ProfileFragment : Fragment() {
 
         } else {
 
-            if (currentUser.fb!!) {
+            if (currentUser.fb) {
 
-                GlideApp.with(this).load("http://graph.facebook.com/${currentUser.image}/picture?type=large")
+                GlideApp.with(this).load("http://graph.facebook.com/${currentUser.image}/picture?type=large").diskCacheStrategy(
+                    DiskCacheStrategy.AUTOMATIC)
                     .listener(object : RequestListener<Drawable> {
 
                         override fun onLoadFailed(
@@ -140,7 +142,7 @@ class ProfileFragment : Fragment() {
                         .downloadUrl
                 storageReference.addOnSuccessListener { Uri ->
 
-                    GlideApp.with(this).load(Uri.toString()).listener(object :
+                    GlideApp.with(this).load(Uri.toString()).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).listener(object :
                         RequestListener<Drawable> {
 
                         override fun onLoadFailed(
@@ -167,7 +169,7 @@ class ProfileFragment : Fragment() {
 
                 }.addOnFailureListener {
 
-                    GlideApp.with(this).load(R.mipmap.logo).listener(object :
+                    GlideApp.with(this).load(R.mipmap.logo).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).listener(object :
                         RequestListener<Drawable> {
 
                         override fun onLoadFailed(

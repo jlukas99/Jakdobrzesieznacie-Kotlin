@@ -6,6 +6,6 @@
         android:radius="100dp" />
 
     <solid
-        android:color="@color/colorCorrectAnswer" />
+        android:color="@color/colorBadAnswer" />
 
 </shape>

@@ -74,13 +74,13 @@
             app:layout_constraintEnd_toEndOf="@+id/userProfileImage"
             app:layout_constraintTop_toBottomOf="@+id/userProfileImage" android:layout_marginTop="8dp"/>
     <TextView
-            android:text="..."
+            android:text="... z ..."
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/etapText"
             android:textAlignment="center" android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="@+id/userProfileImage"
             app:layout_constraintTop_toTopOf="@+id/userProfileImage" android:textAllCaps="false"
-            android:textSize="16sp" app:layout_constraintVertical_bias="0.63"
+            android:textSize="16sp" app:layout_constraintVertical_bias="0.39"
             app:layout_constraintStart_toStartOf="@+id/linearLayout1"
             app:layout_constraintEnd_toEndOf="@+id/linearLayout1"/>
     <TextView
@@ -89,9 +89,8 @@
             android:layout_height="wrap_content" android:id="@+id/userPrecentText2"
             android:textAlignment="center"
             android:textAllCaps="true" android:textSize="10sp"
-            app:layout_constraintBottom_toBottomOf="@+id/etapText"
-            app:layout_constraintEnd_toEndOf="@+id/etapText"
-            app:layout_constraintStart_toStartOf="@+id/etapText" android:layout_marginBottom="18dp"/>
+            android:layout_marginBottom="18dp" app:layout_constraintBottom_toBottomOf="@+id/etapText"
+            app:layout_constraintStart_toStartOf="@+id/etapText" app:layout_constraintEnd_toEndOf="@+id/etapText"/>
     <com.github.ybq.android.spinkit.SpinKitView android:layout_width="0dp"
                                                 android:layout_height="0dp"
                                                 style="@style/SpinKitView.MultiplePulse"
@@ -102,6 +101,7 @@
                                                 app:layout_constraintBottom_toBottomOf="@+id/friendProfileImage"
                                                 android:layout_marginTop="8dp" android:layout_marginEnd="8dp"
                                                 android:layout_marginBottom="8dp" android:layout_marginStart="8dp"/>
+
     <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/friendProfileImage"
             android:layout_width="60dp"
@@ -112,6 +112,7 @@
             android:layout_marginEnd="16dp" app:layout_constraintEnd_toEndOf="@+id/linearLayout1"
             android:layout_marginTop="16dp" app:layout_constraintTop_toBottomOf="@+id/linearLayout1"
             app:layout_constraintStart_toEndOf="@+id/etapText" android:layout_marginStart="8dp"/>
+
     <TextView
             android:text="..."
             android:layout_width="wrap_content"
@@ -135,10 +136,10 @@
             android:layout_height="18dp" android:id="@+id/questionTwoText"
             app:layout_constraintTop_toBottomOf="@+id/etapText"
             android:background="@drawable/game_number_overlay" android:gravity="center_horizontal|center_vertical"
-            android:layout_marginTop="8dp" app:layout_constraintStart_toEndOf="@+id/userProfileImage"
+            app:layout_constraintStart_toEndOf="@+id/userProfileImage"
             android:layout_marginStart="8dp" android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toStartOf="@+id/friendProfileImage" android:textSize="10sp"
-            android:textColor="@color/colorWhite"/>
+            android:textColor="@color/colorWhite" android:layout_marginTop="2dp"/>
     <TextView
             android:text="3"
             android:layout_width="18dp"

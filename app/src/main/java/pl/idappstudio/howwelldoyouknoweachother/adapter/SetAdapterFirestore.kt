@@ -54,7 +54,7 @@ class SetAdapterFirestore(@NonNull options: FirestoreRecyclerOptions<SetItem>, p
 
         if(model.image == 700034) {
 
-            holder.itemView.set_btn.setIconResource(R.drawable.ic_stat_name)
+            holder.itemView.set_btn.setIconResource(R.drawable.ic_question_icon)
 
         } else if(model.premium!!) {
 

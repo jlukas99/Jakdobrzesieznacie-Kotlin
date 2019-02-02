@@ -3,12 +3,15 @@ package pl.idappstudio.howwelldoyouknoweachother.util
 import android.content.Context
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
+import com.google.android.gms.ads.reward.RewardedVideoAd
 import pl.idappstudio.howwelldoyouknoweachother.R
 
 class AdMobUtil(context: Context) {
 
     companion object {
+
         lateinit var interstitialAd: InterstitialAd
+
     }
 
     init {
@@ -16,9 +19,11 @@ class AdMobUtil(context: Context) {
     }
 
     fun createAd(context: Context) {
+
         interstitialAd = InterstitialAd(context)
         interstitialAd.adUnitId = context.resources.getString(R.string.adMob_menu_ad_id)
         interstitialAd.loadAd(AdRequest.Builder().build())
+
     }
 
     fun getAd(): InterstitialAd {

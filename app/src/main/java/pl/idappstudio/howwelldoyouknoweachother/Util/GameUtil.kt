@@ -1,13 +1,10 @@
 package pl.idappstudio.howwelldoyouknoweachother.util
 
 import android.content.Context
-import android.util.Log
-import com.facebook.internal.Mutable
 import com.google.firebase.firestore.FirebaseFirestore
 import org.jetbrains.anko.startActivity
 import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity
 import pl.idappstudio.howwelldoyouknoweachother.model.*
-import java.util.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
@@ -91,6 +88,7 @@ object GameUtil {
                                     val yourTurn: Boolean = it.getBoolean("$userId-turn")!!
                                     val friendSet: String = it.getString("$friendId-set")!!
                                     val yourSet: String = it.getString("$userId-set")!!
+                                    val newGame: Boolean = it.getBoolean("newGame")!!
 
                                     db.collection("set").document(yourSet).get().addOnSuccessListener {
 
@@ -108,7 +106,8 @@ object GameUtil {
                                                 uSet,
                                                 fSet,
                                                 gamemode,
-                                                ugameID
+                                                ugameID,
+                                                newGame
                                             )
 
                                             val gameData = UsersData(
@@ -136,29 +135,29 @@ object GameUtil {
         }
     }
 
-    fun checkStage(game: GameData, friend: UserData, ctx: Context){
+    fun sendAnswer(game: GameData, userData: UserData, friendData: UserData, a1: String, a2: String, a3: String, onComplete: () -> Unit){
 
-//        if(game.friendStage == 0 && game.yourStage == 0){
-//
-            newGame(ctx, friend.uid)
-//            return
-//
-//        }
-//
-//        if(game.friendStage == 1 && game.yourStage == 0){
-//
-//            newGame(ctx, friend.uid)
-//            return
-//
-//        }
-//
-//        return
+        val user = HashMap<String, String>()
+        user.put("answer1", a1)
+        user.put("answer2", a2)
+        user.put("answer3", a3)
 
-    }
+        db.collection("games").document(game.gameID).collection(userData.uid).document("1").set(user).addOnSuccessListener {
 
-    fun newGame(ctx: Context, id: String){
+            if(game.newGame){
 
-        ctx.startActivity<GameActivity>("id" to id)
+                FirestoreUtil.updateGameSettings(true, false, 3, 1, game.uSet.id, game.fSet.id, game.gamemode, game.gameID, userData.uid, friendData.uid)
+                onComplete()
+
+            } else {
+
+                FirestoreUtil.updateGameSettings(true, false, 2, 1, game.uSet.id, game.fSet.id, game.gamemode, game.gameID, userData.uid, friendData.uid)
+                onComplete()
+
+            }
+
+
+        }
 
     }
 
@@ -174,9 +173,37 @@ object GameUtil {
 
     }
 
-    fun startGame(game: GameData, friendsData: UserData, ctx: Context){
+    fun getQuestionDataStageTwo(s: String, s2: String, onComplete: (AnswerData, QuestionData) -> Unit){
 
-        checkStage(game, friendsData, ctx)
+        db.document(s).get().addOnSuccessListener {
+
+            val answerItem = it.toObject(AnswerData::class.java)!!
+
+            db.document(s2).get().addOnSuccessListener {
+
+                val questionItem2 = it.toObject(QuestionData::class.java)!!
+
+                onComplete(answerItem, questionItem2)
+
+            }
+
+        }
+
+    }
+
+    fun startGame(friendsData: UserData, ctx: Context){
+
+        ctx.startActivity<GameActivity>("id" to friendsData.uid)
+
+    }
+
+    fun updateStats(id: String, friendId: String, canswer: Int, banswer: Int, game: Int, onComplete: () -> Unit){
+
+        db.collection("users").document(id).collection("friends").document(friendId).update("canswer", canswer, "banswer", banswer, "games", game).addOnSuccessListener {
+
+            onComplete()
+
+        }
 
     }
 
@@ -193,6 +220,18 @@ object GameUtil {
             onComplete()
 
         }
+
+    }
+
+    fun notNewGame(game: GameData) {
+
+        db.collection("games").document(game.gameID).update("newGame", false)
+
+    }
+
+    fun updateGame(game: Int, user: String, friend: String){
+
+        db.collection("users").document(user).collection("friends").document(friend).update("games", game + 1)
 
     }
 

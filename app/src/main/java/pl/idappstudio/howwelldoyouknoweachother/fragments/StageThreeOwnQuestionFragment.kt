@@ -12,6 +12,7 @@ import android.text.Editable
 import android.text.TextWatcher
 import android.widget.*
 import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity
+import pl.idappstudio.howwelldoyouknoweachother.interfaces.nextFragment
 import pl.idappstudio.howwelldoyouknoweachother.model.InviteNotificationMessage
 import pl.idappstudio.howwelldoyouknoweachother.model.Message
 import pl.idappstudio.howwelldoyouknoweachother.model.NotificationType
@@ -19,10 +20,12 @@ import pl.idappstudio.howwelldoyouknoweachother.util.FirestoreUtil
 import pl.idappstudio.howwelldoyouknoweachother.util.GameUtil
 
 
-class StageThreeOwnQuestionFragment : Fragment(), TextWatcher {
+class StageThreeOwnQuestionFragment(private val listener: nextFragment) : Fragment(), TextWatcher {
 
     override fun afterTextChanged(s: Editable?) {
+
         checkEditText()
+
     }
 
     override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -49,8 +52,6 @@ class StageThreeOwnQuestionFragment : Fragment(), TextWatcher {
     private lateinit var nextQuestion: Button
 
     private var questionList: ArrayList<UserQuestionData> = ArrayList()
-
-    private var questionNumber = 0
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView: View = inflater.inflate(R.layout.fragment_stage_three_own_question, container, false)
@@ -327,19 +328,27 @@ class StageThreeOwnQuestionFragment : Fragment(), TextWatcher {
 
         if(questionList.size == 1){
 
-            GameActivity.questionOne.setBackgroundResource(R.drawable.number_correct_overlay)
+            listener.updateNumber(1, true)
             clear()
 
         } else if(questionList.size == 2){
 
-            GameActivity.questionTwo.setBackgroundResource(R.drawable.number_correct_overlay)
+            listener.updateNumber(2, true)
             clear()
 
         } else if(questionList.size == 3){
 
-            GameActivity.questionThree.setBackgroundResource(R.drawable.number_correct_overlay)
+            listener.updateNumber(3, true)
 
             GameUtil.sendOwnQuestion(questionList, GameActivity.game, GameActivity.user, GameActivity.friends){
+
+                if(GameActivity.userStats.games == 0 && GameActivity.stats.games == 1){
+
+                    GameUtil.notNewGame(GameActivity.game)
+
+                }
+
+                GameUtil.updateGame(GameActivity.userStats.games, GameActivity.user.uid, GameActivity.friends.uid)
 
                 val msg: Message = InviteNotificationMessage("Twoja kolej!", "${GameActivity.user.name} skończył swoją turę, czas na ciebie!", GameActivity.user.uid, GameActivity.friends.uid,GameActivity.user.name, NotificationType.GAME)
                 FirestoreUtil.sendMessage(msg, GameActivity.friends.uid)

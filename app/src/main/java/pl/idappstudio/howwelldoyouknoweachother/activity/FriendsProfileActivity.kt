@@ -128,7 +128,7 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
 
             friends_profile_startgame_btn.setOnClickListener {
 
-                GameUtil.startGame(game, friends, it.context)
+                GameUtil.startGame(friends, it.context)
 
             }
 
@@ -266,6 +266,230 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
 
                         }).into(friends_profile_image)
                     }
+            }
+        }
+    }
+
+    fun setUserStatsImage(){
+
+        if(user.image.contains("logo")){
+
+            Glide.with(this).load(R.mipmap.logo).listener(object :
+                RequestListener<Drawable> {
+
+                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                    return true
+                }
+
+                override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                    user_profile_image_stats_loading.visibility = View.GONE
+                    return false
+                }
+
+            }).into(user_profile_image_stats)
+
+        } else {
+
+            if (user.fb) {
+
+                GlideApp.with(applicationContext).load("http://graph.facebook.com/${user.image}/picture?type=large").diskCacheStrategy(
+                    DiskCacheStrategy.AUTOMATIC)
+                    .listener(object : RequestListener<Drawable> {
+
+                        override fun onLoadFailed(
+                            e: GlideException?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            return true
+                        }
+
+                        override fun onResourceReady(
+                            resource: Drawable?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            dataSource: DataSource?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            user_profile_image_stats_loading.visibility = View.GONE
+                            return false
+                        }
+
+                    }).into(user_profile_image_stats)
+
+            } else {
+
+                val storageReference =
+                    FirebaseStorage.getInstance().reference.child("profile_image").child(user.image + "-image")
+                        .downloadUrl
+
+                storageReference.addOnSuccessListener { Uri ->
+
+                    GlideApp.with(applicationContext).load(Uri.toString()).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).listener(object :
+                        RequestListener<Drawable> {
+
+                        override fun onLoadFailed(
+                            e: GlideException?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            return true
+                        }
+
+                        override fun onResourceReady(
+                            resource: Drawable?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            dataSource: DataSource?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            user_profile_image_stats_loading.visibility = View.GONE
+                            return false
+                        }
+
+                    }).into(user_profile_image_stats)
+
+                }.addOnFailureListener {
+
+                    GlideApp.with(applicationContext).load(R.mipmap.logo).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).listener(object :
+                        RequestListener<Drawable> {
+
+                        override fun onLoadFailed(
+                            e: GlideException?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            return true
+                        }
+
+                        override fun onResourceReady(
+                            resource: Drawable?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            dataSource: DataSource?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            user_profile_image_stats_loading.visibility = View.GONE
+                            return false
+                        }
+
+                    }).into(user_profile_image_stats)
+                }
+            }
+        }
+    }
+
+    fun setFriendStatsImage(){
+
+        if(friends.image.contains("logo")){
+
+            Glide.with(this).load(R.mipmap.logo).listener(object :
+                RequestListener<Drawable> {
+
+                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
+                    return true
+                }
+
+                override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
+                    friends_profile_image_stats_loading.visibility = View.GONE
+                    return false
+                }
+
+            }).into(friends_profile_image_stats)
+
+        } else {
+
+            if (friends.fb) {
+
+                GlideApp.with(applicationContext).load("http://graph.facebook.com/${friends.image}/picture?type=large").diskCacheStrategy(
+                    DiskCacheStrategy.AUTOMATIC)
+                    .listener(object : RequestListener<Drawable> {
+
+                        override fun onLoadFailed(
+                            e: GlideException?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            return true
+                        }
+
+                        override fun onResourceReady(
+                            resource: Drawable?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            dataSource: DataSource?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            friends_profile_image_stats_loading.visibility = View.GONE
+                            return false
+                        }
+
+                    }).into(friends_profile_image_stats)
+
+            } else {
+
+                val storageReference =
+                    FirebaseStorage.getInstance().reference.child("profile_image").child(friends.image + "-image")
+                        .downloadUrl
+
+                storageReference.addOnSuccessListener { Uri ->
+
+                    GlideApp.with(applicationContext).load(Uri.toString()).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).listener(object :
+                        RequestListener<Drawable> {
+
+                        override fun onLoadFailed(
+                            e: GlideException?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            return true
+                        }
+
+                        override fun onResourceReady(
+                            resource: Drawable?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            dataSource: DataSource?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            friends_profile_image_stats_loading.visibility = View.GONE
+                            return false
+                        }
+
+                    }).into(friends_profile_image_stats)
+
+                }.addOnFailureListener {
+
+                    GlideApp.with(applicationContext).load(R.mipmap.logo).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).listener(object :
+                        RequestListener<Drawable> {
+
+                        override fun onLoadFailed(
+                            e: GlideException?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            return true
+                        }
+
+                        override fun onResourceReady(
+                            resource: Drawable?,
+                            model: Any?,
+                            target: Target<Drawable>?,
+                            dataSource: DataSource?,
+                            isFirstResource: Boolean
+                        ): Boolean {
+                            friends_profile_image_stats_loading.visibility = View.GONE
+                            return false
+                        }
+
+                    }).into(friends_profile_image_stats)
+                }
             }
         }
     }
@@ -410,12 +634,23 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
         val b: Float = userStats.banswer.toFloat()
         val c: Int = userStats.games
 
-        friends_profile_stats_canswer.text = a.toInt().toString()
-        friends_profile_stats_banswer.text = b.toInt().toString()
-        friends_profile_stats_games.text = c.toString()
-        friends_profile_stats_precent.text = "${GameUtil.getPrecent(userStats)}%"
+        val a1: Float = stats.canswer.toFloat()
+        val b2: Float = stats.banswer.toFloat()
+        val c3: Int = stats.games
+
+        user_profile_stats_canswer.text = a.toInt().toString()
+        user_profile_stats_banswer.text = b.toInt().toString()
+        user_profile_stats_games.text = c.toString()
+        user_profile_stats_precent.text = "${GameUtil.getPrecent(userStats)}%"
+
+        friends_profile_stats_canswer.text = a1.toInt().toString()
+        friends_profile_stats_banswer.text = b2.toInt().toString()
+        friends_profile_stats_games.text = c3.toString()
+        friends_profile_stats_precent.text = "${GameUtil.getPrecent(stats)}%"
 
         setImage()
+        setUserStatsImage()
+        setFriendStatsImage()
 
         unlockFunction()
 

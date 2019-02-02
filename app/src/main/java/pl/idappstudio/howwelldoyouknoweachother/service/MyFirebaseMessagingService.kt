@@ -12,6 +12,7 @@ import android.graphics.BitmapFactory
 import android.media.RingtoneManager
 import android.os.Build
 import android.support.v4.app.NotificationCompat
+import com.google.firebase.auth.FirebaseAuth
 
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
@@ -33,12 +34,14 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         fun addTokenToFirestore(newRegistrationToken: String?) {
             if (newRegistrationToken == null) throw NullPointerException("FCM token is null.")
 
-            FirestoreUtil.getFCMRegistrationTokens { tokens ->
-                if (tokens.contains(newRegistrationToken))
-                    return@getFCMRegistrationTokens
+            if(FirebaseAuth.getInstance().currentUser != null) {
+                FirestoreUtil.getFCMRegistrationTokens { tokens ->
+                    if (tokens.contains(newRegistrationToken))
+                        return@getFCMRegistrationTokens
 
-                tokens.add(newRegistrationToken)
-                FirestoreUtil.setFCMRegistrationTokens(tokens)
+                    tokens.add(newRegistrationToken)
+                    FirestoreUtil.setFCMRegistrationTokens(tokens)
+                }
             }
         }
 

@@ -129,6 +129,7 @@ object FirestoreUtil {
                 user3["${FirebaseAuth.getInstance().currentUser?.uid.toString()}-turn"] = true
                 user3["$uid-set"] = "tK29qYKKfGtBBzl6PBiC"
                 user3["${FirebaseAuth.getInstance().currentUser?.uid.toString()}-set"] = "tK29qYKKfGtBBzl6PBiC"
+                user3["newGame"] = true
 
                 dbGame.document(uid+FirebaseAuth.getInstance().currentUser?.uid.toString()).set(user3).addOnSuccessListener {
 

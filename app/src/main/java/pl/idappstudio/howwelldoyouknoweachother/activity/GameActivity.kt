@@ -16,15 +16,61 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.activity_game.*
 import pl.idappstudio.howwelldoyouknoweachother.R
+import pl.idappstudio.howwelldoyouknoweachother.fragments.ClearFragment
 import pl.idappstudio.howwelldoyouknoweachother.fragments.StageOneFragment
 import pl.idappstudio.howwelldoyouknoweachother.fragments.StageThreeOwnQuestionFragment
+import pl.idappstudio.howwelldoyouknoweachother.fragments.StageTwoFragment
 import pl.idappstudio.howwelldoyouknoweachother.glide.GlideApp
+import pl.idappstudio.howwelldoyouknoweachother.interfaces.nextFragment
 import pl.idappstudio.howwelldoyouknoweachother.model.*
 import pl.idappstudio.howwelldoyouknoweachother.util.GameUtil
 
 
 
-class GameActivity : AppCompatActivity() {
+class GameActivity : AppCompatActivity(), nextFragment {
+
+    override fun next() {
+
+        supportFragmentManager.beginTransaction().replace(R.id.fragment, ClearFragment()).commit()
+        showLoading()
+
+        getFriendInformation()
+
+    }
+
+    override fun updateNumber(i: Int, boolean: Boolean){
+
+        if(i == 1){
+            if(boolean){
+                questionOne.setBackgroundResource(R.drawable.number_correct_overlay)
+                return
+            } else {
+                questionOne.setBackgroundResource(R.drawable.number_bad_overlay)
+                return
+            }
+        }
+
+        if(i == 2){
+            if(boolean){
+                questionTwo.setBackgroundResource(R.drawable.number_correct_overlay)
+                return
+            } else {
+                questionTwo.setBackgroundResource(R.drawable.number_bad_overlay)
+                return
+            }
+        }
+
+        if(i == 3){
+            if(boolean){
+                questionThree.setBackgroundResource(R.drawable.number_correct_overlay)
+                return
+            } else {
+                questionThree.setBackgroundResource(R.drawable.number_bad_overlay)
+                return
+            }
+        }
+
+    }
 
     companion object {
 
@@ -37,13 +83,27 @@ class GameActivity : AppCompatActivity() {
         lateinit var user: UserData
         lateinit var userStats: StatsData
 
-        lateinit var questionOne: TextView
-        lateinit var questionTwo: TextView
-        lateinit var questionThree: TextView
-
         lateinit var questionList: QuestionData
+        lateinit var answerList: AnswerData
+
+        var canswer: Int = 0
+        var banswer: Int = 0
+
+        fun updateStats(onComplete: () -> Unit){
+
+            GameUtil.updateStats(user.uid, friends.uid, GameActivity.userStats.canswer + canswer, GameActivity.userStats.banswer + banswer, GameActivity.userStats.games){
+
+                onComplete()
+
+            }
+
+        }
 
     }
+
+    lateinit var questionOne: TextView
+    lateinit var questionTwo: TextView
+    lateinit var questionThree: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,19 +136,32 @@ class GameActivity : AppCompatActivity() {
         gameText.visibility = View.GONE
         gameLoading.visibility = View.GONE
 
+        questionOne.background
+
     }
 
     private fun setFragment(){
 
+        questionOne.setBackgroundResource(R.drawable.game_number_overlay)
+        questionTwo.setBackgroundResource(R.drawable.game_number_overlay)
+        questionThree.setBackgroundResource(R.drawable.game_number_overlay)
+
         if(game.uStage == 3 || game.uStage == 0){
 
-            supportFragmentManager.beginTransaction().replace(R.id.fragment, StageThreeOwnQuestionFragment()).commit()
+            supportFragmentManager.beginTransaction().replace(R.id.fragment, StageThreeOwnQuestionFragment(this)).commit()
             hideLoading()
 
         } else if(game.uStage == 2){
 
-            supportFragmentManager.beginTransaction().replace(R.id.fragment, StageThreeOwnQuestionFragment()).commit()
-            hideLoading()
+            GameUtil.getQuestionDataStageTwo("games/${game.gameID}/${friends.uid}/1", "games/${game.gameID}/${user.uid}/3") { a, q ->
+
+                questionList = q
+                answerList = a
+
+                supportFragmentManager.beginTransaction().replace(R.id.fragment, StageTwoFragment(this)).commit()
+                hideLoading()
+
+            }
 
         } else if(game.uStage == 1){
 
@@ -96,7 +169,7 @@ class GameActivity : AppCompatActivity() {
 
                 questionList = it
 
-                supportFragmentManager.beginTransaction().replace(R.id.fragment, StageOneFragment()).commit()
+                supportFragmentManager.beginTransaction().replace(R.id.fragment, StageOneFragment(this)).commit()
                 hideLoading()
 
             }
@@ -117,7 +190,15 @@ class GameActivity : AppCompatActivity() {
         userNameText.text = user.name
         friendNameText.text = friends.name
 
-        etapText.text = "${game.uStage} z 3"
+        if(game.uStage == 0){
+
+            etapText.text = "3 z 3"
+
+        } else {
+
+            etapText.text = "${game.uStage} z 3"
+
+        }
 
     }
 

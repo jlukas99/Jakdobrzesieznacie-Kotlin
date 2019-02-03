@@ -89,6 +89,8 @@ object GameUtil {
                                     val friendSet: String = it.getString("$friendId-set")!!
                                     val yourSet: String = it.getString("$userId-set")!!
                                     val newGame: Boolean = it.getBoolean("newGame")!!
+                                    val userID: String = it.getString("$userId-id")!!
+                                    val friendID: String = it.getString("$friendId-id")!!
 
                                     db.collection("set").document(yourSet).get().addOnSuccessListener {
 
@@ -107,7 +109,9 @@ object GameUtil {
                                                 fSet,
                                                 gamemode,
                                                 ugameID,
-                                                newGame
+                                                newGame,
+                                                userID,
+                                                friendID
                                             )
 
                                             val gameData = UsersData(

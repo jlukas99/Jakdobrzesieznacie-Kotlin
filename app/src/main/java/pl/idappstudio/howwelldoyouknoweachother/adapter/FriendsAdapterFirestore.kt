@@ -16,7 +16,11 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
+import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.Query
+import com.google.firebase.firestore.QuerySnapshot
 import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.friends_item.view.*
 import org.jetbrains.anko.startActivity
@@ -49,73 +53,55 @@ class FriendsAdapterFirestore(@NonNull options: FirestoreRecyclerOptions<Friends
 
     override fun onBindViewHolder(@NonNull holder: InviteHolder, position: Int, @NonNull model: FriendsItem) {
 
-        db.document(model.uid.toString()).get().addOnCompleteListener {
+            db.document(model.uid.toString()).get().addOnCompleteListener {
 
-            if (it.isSuccessful && it.result != null){
+                if (it.isSuccessful && it.result != null) {
 
-                val doc = it.result
+                    val doc = it.result
 
-                if(doc != null){
+                    if (doc != null) {
 
-                    val image: String = doc.getString("image")!!
-                    val fb: Boolean = doc.getBoolean("fb")!!
-                    val gender: String = doc.getString("gender")!!
-                    val name = doc.get("name").toString()
-                    val type = doc.get("type").toString()
-                    val uid = doc.get("uid").toString()
+                        val image: String = doc.getString("image")!!
+                        val fb: Boolean = doc.getBoolean("fb")!!
+                        val gender: String = doc.getString("gender")!!
+                        val name = doc.get("name").toString()
+                        val type = doc.get("type").toString()
+                        val uid = doc.get("uid").toString()
 
-                    holder.itemView.profile_name.text = name
-                    holder.itemView.passa_count.text = model.days.toString()
+                        holder.itemView.profile_name.text = name
+                        holder.itemView.passa_count.text = model.days.toString()
 
-                    holder.itemView.btn_game.setOnClickListener {
+                        holder.itemView.btn_game.setOnClickListener {
 
-                        it.context.startActivity<FriendsProfileActivity>("id" to uid)
-
-                    }
-
-                    if(model.favorite!!){
-
-                        holder.itemView.btn_favorite.setImageResource(R.drawable.ic_heart_solid)
-
-                        holder.itemView.btn_favorite.setOnClickListener {
-
-                            FirestoreUtil.setFavorite(uid, false)
+                            it.context.startActivity<FriendsProfileActivity>("id" to uid)
 
                         }
 
-                    } else {
+                        if (model.favorite!!) {
 
-                        holder.itemView.btn_favorite.setImageResource(R.drawable.ic_heart_over)
+                            holder.itemView.btn_favorite.setImageResource(R.drawable.ic_heart_solid)
 
-                        holder.itemView.btn_favorite.setOnClickListener {
+                            holder.itemView.btn_favorite.setOnClickListener {
 
-                            FirestoreUtil.setFavorite(uid, true)
+                                FirestoreUtil.setFavorite(uid, false)
+
+                            }
+
+                        } else {
+
+                            holder.itemView.btn_favorite.setImageResource(R.drawable.ic_heart_over)
+
+                            holder.itemView.btn_favorite.setOnClickListener {
+
+                                FirestoreUtil.setFavorite(uid, true)
+
+                            }
 
                         }
 
-                    }
+                        if (image.contains("logo")) {
 
-                    if(image.contains("logo")){
-
-                        Glide.with(holder.itemView.context).load(R.mipmap.logo).listener(object : RequestListener<Drawable> {
-
-                            override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                                return true
-                            }
-
-                            override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                                holder.itemView.profileLoading.visibility = View.GONE
-                                return false
-                            }
-
-                        }).into(holder.itemView.friends_profile)
-
-                    } else {
-
-                        if (fb) {
-
-                            GlideApp.with(holder.itemView.context).load("http://graph.facebook.com/${image}/picture?type=large").diskCacheStrategy(
-                                DiskCacheStrategy.AUTOMATIC)
+                            Glide.with(holder.itemView.context).load(R.mipmap.logo)
                                 .listener(object : RequestListener<Drawable> {
 
                                     override fun onLoadFailed(
@@ -142,76 +128,108 @@ class FriendsAdapterFirestore(@NonNull options: FirestoreRecyclerOptions<Friends
 
                         } else {
 
-                            val storageReference =
-                                FirebaseStorage.getInstance().reference.child("profile_image").child(image + "-image")
-                                    .downloadUrl
-                            storageReference.addOnSuccessListener { Uri ->
+                            if (fb) {
 
-                                GlideApp.with(holder.itemView.context).load(Uri.toString()).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).listener(object : RequestListener<Drawable> {
+                                GlideApp.with(holder.itemView.context)
+                                    .load("http://graph.facebook.com/${image}/picture?type=large").diskCacheStrategy(
+                                        DiskCacheStrategy.AUTOMATIC
+                                    )
+                                    .listener(object : RequestListener<Drawable> {
 
-                                    override fun onLoadFailed(
-                                        e: GlideException?,
-                                        model: Any?,
-                                        target: Target<Drawable>?,
-                                        isFirstResource: Boolean
-                                    ): Boolean {
-                                        return true
-                                    }
+                                        override fun onLoadFailed(
+                                            e: GlideException?,
+                                            model: Any?,
+                                            target: Target<Drawable>?,
+                                            isFirstResource: Boolean
+                                        ): Boolean {
+                                            return true
+                                        }
 
-                                    override fun onResourceReady(
-                                        resource: Drawable?,
-                                        model: Any?,
-                                        target: Target<Drawable>?,
-                                        dataSource: DataSource?,
-                                        isFirstResource: Boolean
-                                    ): Boolean {
-                                        holder.itemView.profileLoading.visibility = View.GONE
-                                        return false
-                                    }
+                                        override fun onResourceReady(
+                                            resource: Drawable?,
+                                            model: Any?,
+                                            target: Target<Drawable>?,
+                                            dataSource: DataSource?,
+                                            isFirstResource: Boolean
+                                        ): Boolean {
+                                            holder.itemView.profileLoading.visibility = View.GONE
+                                            return false
+                                        }
 
-                                }).into(holder.itemView.friends_profile)
+                                    }).into(holder.itemView.friends_profile)
 
-                            }.addOnFailureListener {
+                            } else {
 
-                                GlideApp.with(holder.itemView.context).load(R.mipmap.logo).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).listener(object : RequestListener<Drawable> {
+                                val storageReference =
+                                    FirebaseStorage.getInstance().reference.child("profile_image")
+                                        .child(image + "-image")
+                                        .downloadUrl
+                                storageReference.addOnSuccessListener { Uri ->
 
-                                    override fun onLoadFailed(
-                                        e: GlideException?,
-                                        model: Any?,
-                                        target: Target<Drawable>?,
-                                        isFirstResource: Boolean
-                                    ): Boolean {
-                                        return true
-                                    }
+                                    GlideApp.with(holder.itemView.context).load(Uri.toString())
+                                        .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                                        .listener(object : RequestListener<Drawable> {
 
-                                    override fun onResourceReady(
-                                        resource: Drawable?,
-                                        model: Any?,
-                                        target: Target<Drawable>?,
-                                        dataSource: DataSource?,
-                                        isFirstResource: Boolean
-                                    ): Boolean {
-                                        holder.itemView.profileLoading.visibility = View.GONE
-                                        return false
-                                    }
+                                            override fun onLoadFailed(
+                                                e: GlideException?,
+                                                model: Any?,
+                                                target: Target<Drawable>?,
+                                                isFirstResource: Boolean
+                                            ): Boolean {
+                                                return true
+                                            }
 
-                                }).into(holder.itemView.friends_profile)
+                                            override fun onResourceReady(
+                                                resource: Drawable?,
+                                                model: Any?,
+                                                target: Target<Drawable>?,
+                                                dataSource: DataSource?,
+                                                isFirstResource: Boolean
+                                            ): Boolean {
+                                                holder.itemView.profileLoading.visibility = View.GONE
+                                                return false
+                                            }
 
+                                        }).into(holder.itemView.friends_profile)
+
+                                }.addOnFailureListener {
+
+                                    GlideApp.with(holder.itemView.context).load(R.mipmap.logo)
+                                        .diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
+                                        .listener(object : RequestListener<Drawable> {
+
+                                            override fun onLoadFailed(
+                                                e: GlideException?,
+                                                model: Any?,
+                                                target: Target<Drawable>?,
+                                                isFirstResource: Boolean
+                                            ): Boolean {
+                                                return true
+                                            }
+
+                                            override fun onResourceReady(
+                                                resource: Drawable?,
+                                                model: Any?,
+                                                target: Target<Drawable>?,
+                                                dataSource: DataSource?,
+                                                isFirstResource: Boolean
+                                            ): Boolean {
+                                                holder.itemView.profileLoading.visibility = View.GONE
+                                                return false
+                                            }
+
+                                        }).into(holder.itemView.friends_profile)
+
+                                }
                             }
                         }
+
                     }
 
                 }
-
-            } else {
-
-
-
             }
-
-        }
-
     }
+
 
     @NonNull
     override fun onCreateViewHolder(@NonNull parent: ViewGroup, viewType: Int): InviteHolder {

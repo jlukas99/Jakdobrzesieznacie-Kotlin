@@ -21,7 +21,9 @@ import com.bumptech.glide.request.RequestListener
 import com.bumptech.glide.request.target.Target
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
+import com.google.android.gms.ads.reward.RewardItem
 import com.google.android.gms.ads.reward.RewardedVideoAd
+import com.google.android.gms.ads.reward.RewardedVideoAdListener
 import com.google.firebase.storage.FirebaseStorage
 
 import pl.idappstudio.howwelldoyouknoweachother.R
@@ -123,29 +125,29 @@ class StageOneFragment(private val listener: nextFragment) : Fragment(), View.On
         nextQuestion = rootView.findViewById(R.id.nextQuestionBtn)
         rejectBadAnswer = rootView.findViewById(R.id.loadingAds)
 
-//        rejectBadAnswer.setOnClickListener { loadRewardedVideoAd() }
-//
-//        rewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this.context)
-//        rewardedVideoAd.rewardedVideoAdListener = object : RewardedVideoAdListener {
-//
-//            override fun onRewarded(p0: RewardItem?) { rejectAnswer() }
-//
-//            override fun onRewardedVideoAdLeftApplication() {}
-//
-//            override fun onRewardedVideoAdClosed() {}
-//
-//            override fun onRewardedVideoAdFailedToLoad(errorCode: Int) {}
-//
-//            override fun onRewardedVideoAdLoaded() { showAd() }
-//
-//            override fun onRewardedVideoAdOpened() {}
-//
-//            override fun onRewardedVideoStarted() {}
-//
-//            override fun onRewardedVideoCompleted() {}
-//
-//
-//        }
+        rejectBadAnswer.setOnClickListener { loadRewardedVideoAd() }
+
+        rewardedVideoAd = MobileAds.getRewardedVideoAdInstance(this.context)
+        rewardedVideoAd.rewardedVideoAdListener = object : RewardedVideoAdListener {
+
+            override fun onRewarded(p0: RewardItem?) { rejectAnswer() }
+
+            override fun onRewardedVideoAdLeftApplication() {}
+
+            override fun onRewardedVideoAdClosed() {}
+
+            override fun onRewardedVideoAdFailedToLoad(errorCode: Int) {}
+
+            override fun onRewardedVideoAdLoaded() { showAd() }
+
+            override fun onRewardedVideoAdOpened() {}
+
+            override fun onRewardedVideoStarted() {}
+
+            override fun onRewardedVideoCompleted() {}
+
+
+        }
 
 
         loadImage()
@@ -290,11 +292,11 @@ class StageOneFragment(private val listener: nextFragment) : Fragment(), View.On
 
         array.shuffle()
 
-//        if(array.size > 1){
-//
-//            rejectBadAnswer.visibility = View.VISIBLE
-//
-//        }
+        if(array.size > 2){
+
+            rejectBadAnswer.visibility = View.VISIBLE
+
+        }
 
         if(aAnswerText.text == ""){
 
@@ -378,59 +380,59 @@ class StageOneFragment(private val listener: nextFragment) : Fragment(), View.On
 
     }
 
-//    private fun rejectAnswer(){
-//
-//        setText()
-//
-//        badAnswer.shuffle()
-//
-//        Log.d("TAG", badAnswer[0])
-//
-//        if(aTextAnswer.text.equals(badAnswer[0])){
-//
-//            aAnswerButton.isEnabled = false
-//
-//            aAnswerButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
-//
-//            Log.d("TAG", "A")
-//
-//            return
-//        }
-//
-//        if(bTextAnswer.text.equals(badAnswer[0])){
-//
-//            bAnswerButton.isEnabled = false
-//
-//            bAnswerButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
-//
-//            Log.d("TAG", "B")
-//
-//            return
-//        }
-//
-//        if(cTextAnswer.text.equals(badAnswer[0])){
-//
-//            cAnswerButton.isEnabled = false
-//
-//            cAnswerButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
-//
-//            Log.d("TAG", "C")
-//
-//            return
-//        }
-//
-//        if(dTextAnswer.text.equals(badAnswer[0])){
-//
-//            dAnswerButton.isEnabled = false
-//
-//            dAnswerButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
-//
-//            Log.d("TAG", "D")
-//
-//            return
-//        }
-//
-//    }
+    private fun rejectAnswer(){
+
+        setText()
+
+        badAnswer.shuffle()
+
+        Log.d("TAG", badAnswer[0])
+
+        if(aAnswerText.text.equals(badAnswer[0])){
+
+            aAnswerButton.isEnabled = false
+
+            aAnswerButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
+
+            Log.d("TAG", "A")
+
+            return
+        }
+
+        if(bAnswerText.text.equals(badAnswer[0])){
+
+            bAnswerButton.isEnabled = false
+
+            bAnswerButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
+
+            Log.d("TAG", "B")
+
+            return
+        }
+
+        if(cAnswerText.text.equals(badAnswer[0])){
+
+            cAnswerButton.isEnabled = false
+
+            cAnswerButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
+
+            Log.d("TAG", "C")
+
+            return
+        }
+
+        if(dAnswerText.text.equals(badAnswer[0])){
+
+            dAnswerButton.isEnabled = false
+
+            dAnswerButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
+
+            Log.d("TAG", "D")
+
+            return
+        }
+
+    }
 
     private fun nextQuestion() {
 

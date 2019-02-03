@@ -5,7 +5,7 @@
                                              android:layout_width="match_parent"
                                              android:layout_height="50dp"
                                              android:layout_marginBottom="4dp" android:layout_marginTop="4dp"
-                                             android:id="@+id/friendConstraintLayout">
+                                             android:id="@+id/friendLayout">
 
     <ImageView
             android:layout_width="0dp"
@@ -42,7 +42,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/passa_count"
             android:maxLines="1" android:singleLine="true"
-            android:text="0"
+            android:text="..."
             app:layout_constraintStart_toEndOf="@+id/image_passa"
             android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toStartOf="@+id/btn_chat"
@@ -88,16 +88,17 @@
             android:layout_marginTop="16dp" app:layout_constraintTop_toTopOf="parent"
             android:layout_marginBottom="16dp" app:layout_constraintBottom_toBottomOf="parent"
             android:background="@color/colorTranspery"
-            android:layout_marginEnd="8dp" app:layout_constraintEnd_toStartOf="@+id/btn_favorite"/>
+            android:layout_marginEnd="8dp" app:layout_constraintEnd_toStartOf="@+id/btn_favorite"
+            android:visibility="gone"/>
 
     <ImageButton
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content" app:srcCompat="@drawable/ic_fire"
+            android:layout_width="10dp"
+            android:layout_height="10dp" app:srcCompat="@drawable/ic_gamepad"
             android:id="@+id/image_passa"
             android:background="@color/colorTranspery"
             app:layout_constraintStart_toStartOf="@+id/profile_name"
             app:layout_constraintTop_toBottomOf="@+id/profile_name" app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintVertical_bias="0.0"/>
+            app:layout_constraintVertical_bias="0.0" android:visibility="visible" android:scaleType="centerInside"/>
 
     <ImageButton
             android:layout_width="24dp"
@@ -106,6 +107,6 @@
             app:layout_constraintEnd_toStartOf="@+id/btn_game" android:layout_marginEnd="8dp"
             android:layout_marginTop="16dp" app:layout_constraintTop_toTopOf="parent"
             android:layout_marginBottom="16dp" app:layout_constraintBottom_toBottomOf="parent"
-            android:background="@color/colorTranspery"/>
+            android:background="@color/colorTranspery" android:visibility="gone"/>
 
 </android.support.constraint.ConstraintLayout>

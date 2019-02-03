@@ -3,6 +3,7 @@ package pl.idappstudio.howwelldoyouknoweachother.activity
 import android.graphics.drawable.Drawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
+import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.view.View
 import android.widget.TextView
@@ -23,9 +24,8 @@ import pl.idappstudio.howwelldoyouknoweachother.fragments.StageTwoFragment
 import pl.idappstudio.howwelldoyouknoweachother.glide.GlideApp
 import pl.idappstudio.howwelldoyouknoweachother.interfaces.nextFragment
 import pl.idappstudio.howwelldoyouknoweachother.model.*
+import pl.idappstudio.howwelldoyouknoweachother.saveInstance.FragmentStateHelper
 import pl.idappstudio.howwelldoyouknoweachother.util.GameUtil
-
-
 
 class GameActivity : AppCompatActivity(), nextFragment {
 
@@ -105,6 +105,8 @@ class GameActivity : AppCompatActivity(), nextFragment {
     lateinit var questionTwo: TextView
     lateinit var questionThree: TextView
 
+    lateinit var mContent: Fragment
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
@@ -149,6 +151,7 @@ class GameActivity : AppCompatActivity(), nextFragment {
         if(game.uStage == 3 || game.uStage == 0){
 
             supportFragmentManager.beginTransaction().replace(R.id.fragment, StageThreeOwnQuestionFragment(this)).commit()
+            mContent = supportFragmentManager.fragments.get(0)
             hideLoading()
 
         } else if(game.uStage == 2){
@@ -159,6 +162,7 @@ class GameActivity : AppCompatActivity(), nextFragment {
                 answerList = a
 
                 supportFragmentManager.beginTransaction().replace(R.id.fragment, StageTwoFragment(this)).commit()
+                mContent = supportFragmentManager.fragments.get(0)
                 hideLoading()
 
             }
@@ -170,6 +174,7 @@ class GameActivity : AppCompatActivity(), nextFragment {
                 questionList = it
 
                 supportFragmentManager.beginTransaction().replace(R.id.fragment, StageOneFragment(this)).commit()
+                mContent = supportFragmentManager.fragments.get(0)
                 hideLoading()
 
             }
@@ -453,6 +458,7 @@ class GameActivity : AppCompatActivity(), nextFragment {
 
         }
     }
+
 
     override fun onResume() {
         super.onResume()

@@ -121,7 +121,6 @@ object FirestoreUtil {
             db.document(uid).collection("friends").document(FirebaseAuth.getInstance().currentUser?.uid!!).set(user2).addOnSuccessListener {
 
                 val user3 = HashMap<String, Any>()
-                user3["set"] = "default"
                 user3["gamemode"] = "classic"
                 user3["$uid-stage"] = 0
                 user3["${FirebaseAuth.getInstance().currentUser?.uid.toString()}-stage"] = 0
@@ -130,6 +129,8 @@ object FirestoreUtil {
                 user3["$uid-set"] = "tK29qYKKfGtBBzl6PBiC"
                 user3["${FirebaseAuth.getInstance().currentUser?.uid.toString()}-set"] = "tK29qYKKfGtBBzl6PBiC"
                 user3["newGame"] = true
+                user3["${FirebaseAuth.getInstance().currentUser?.uid.toString()}-id"] = uid
+                user3["$uid-id"] = FirebaseAuth.getInstance().currentUser?.uid.toString()
 
                 dbGame.document(uid+FirebaseAuth.getInstance().currentUser?.uid.toString()).set(user3).addOnSuccessListener {
 

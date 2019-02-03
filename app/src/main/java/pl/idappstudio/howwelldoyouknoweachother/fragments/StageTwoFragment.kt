@@ -403,7 +403,7 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
 
                 bAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
 
-                listener.updateNumber(questionNumber, true)
+                listener.updateNumber(questionNumber, false)
 
                 bAnswerUserImage.visibility = View.VISIBLE
 
@@ -423,7 +423,7 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
 
                 dAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
 
-                listener.updateNumber(questionNumber, true)
+                listener.updateNumber(questionNumber, false)
 
                 dAnswerUserImage.visibility = View.VISIBLE
 
@@ -445,7 +445,7 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
 
                 bAnswerButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
 
-                listener.updateNumber(questionNumber, true)
+                listener.updateNumber(questionNumber, false)
 
                 bAnswerUserImage.visibility = View.VISIBLE
 
@@ -465,7 +465,7 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
 
                 dAnswerButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
 
-                listener.updateNumber(questionNumber, true)
+                listener.updateNumber(questionNumber, false)
 
                 dAnswerUserImage.visibility = View.VISIBLE
 

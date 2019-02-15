@@ -2,34 +2,26 @@
 
 package pl.idappstudio.howwelldoyouknoweachother.adapter
 
-import android.graphics.drawable.Drawable
 import android.support.annotation.NonNull
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.Target
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
-import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.invite_item.view.*
 import pl.idappstudio.howwelldoyouknoweachother.R
-import pl.idappstudio.howwelldoyouknoweachother.fragments.InvitesFragment
 import pl.idappstudio.howwelldoyouknoweachother.model.InviteItem
-import pl.idappstudio.howwelldoyouknoweachother.glide.GlideApp
 import pl.idappstudio.howwelldoyouknoweachother.util.FirestoreUtil
 import pl.idappstudio.howwelldoyouknoweachother.interfaces.CountInterface
+import pl.idappstudio.howwelldoyouknoweachother.util.GlideUtil
 
 
 class InviteAdapterFirestore(@NonNull options: FirestoreRecyclerOptions<InviteItem>, private val listener: CountInterface) : FirestoreRecyclerAdapter<InviteItem, InviteAdapterFirestore.InviteHolder>(options) {
 
     private var rv: RecyclerView? = null
+    private val glide = GlideUtil()
 
     fun setRV(rv: RecyclerView) {
         this.rv = rv
@@ -146,110 +138,10 @@ class InviteAdapterFirestore(@NonNull options: FirestoreRecyclerOptions<InviteIt
             }
         }
 
-        if(model.image!!.contains("logo")){
+        glide.setImage(model.fb!!, model.image!!, holder.itemView.context, holder.itemView.invite_profile) {
 
-            Glide.with(holder.itemView.context).load(R.mipmap.logo).listener(object : RequestListener<Drawable> {
+            holder.itemView.profileLoading.visibility = View.GONE
 
-                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                    return true
-                }
-
-                override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                    holder.itemView.profileLoading.visibility = View.GONE
-                    return false
-                }
-
-            }).into(holder.itemView.invite_profile)
-
-        } else {
-
-            if (model.fb!!) {
-
-                GlideApp.with(holder.itemView.context).load("http://graph.facebook.com/${model.image}/picture?type=large").diskCacheStrategy(
-                    DiskCacheStrategy.AUTOMATIC)
-                    .listener(object : RequestListener<Drawable> {
-
-                        override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            return true
-                        }
-
-                        override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: DataSource?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            holder.itemView.profileLoading.visibility = View.GONE
-                            return false
-                        }
-
-                    }).into(holder.itemView.invite_profile)
-
-            } else {
-
-                val storageReference =
-                    FirebaseStorage.getInstance().reference.child("profile_image").child(model.image + "-image")
-                        .downloadUrl
-                storageReference.addOnSuccessListener { Uri ->
-
-                    GlideApp.with(holder.itemView.context).load(Uri.toString()).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).listener(object : RequestListener<Drawable> {
-
-                        override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            return true
-                        }
-
-                        override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: DataSource?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            holder.itemView.profileLoading.visibility = View.GONE
-                            return false
-                        }
-
-                    }).into(holder.itemView.invite_profile)
-
-                }.addOnFailureListener {
-
-                    GlideApp.with(holder.itemView.context).load(R.mipmap.logo).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).listener(object : RequestListener<Drawable> {
-
-                        override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            return true
-                        }
-
-                        override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: DataSource?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            holder.itemView.profileLoading.visibility = View.GONE
-                            return false
-                        }
-
-                    }).into(holder.itemView.invite_profile)
-
-                }
-            }
         }
     }
 

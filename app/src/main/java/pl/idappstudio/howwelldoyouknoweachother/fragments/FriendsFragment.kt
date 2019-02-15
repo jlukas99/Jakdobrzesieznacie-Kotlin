@@ -76,7 +76,7 @@ class FriendsFragment : Fragment(), CountInterface {
             ), android.graphics.PorterDuff.Mode.SRC_IN)
 
         getFriends()
-        getGame()
+//        getGame()
 
         return rootView
     }
@@ -98,137 +98,20 @@ class FriendsFragment : Fragment(), CountInterface {
 
     }
 
-    private fun getGame() {
-
-        loadingRound.visibility = View.VISIBLE
-
-        val query: Query = db.document(FirebaseAuth.getInstance().currentUser?.uid.toString()).collection("friends")
-
-        val options: FirestoreRecyclerOptions<FriendsItem> = FirestoreRecyclerOptions.Builder<FriendsItem>().setQuery(query, FriendsItem::class.java).setLifecycleOwner(this).build()
-
-        adapterRound = GamesAdapterFirestore(options, this)
-        adapterRound.setRV(rvRound)
-
-        rvRound.setHasFixedSize(true)
-        rvRound.layoutManager = LinearLayoutManager(context)
-        rvRound.adapter = adapterRound
-
-    }
-
-//    private fun getKeys(onComplete: (ArrayList<String>) -> Unit){
+//    private fun getGame() {
 //
-//        val list2 = ArrayList<String>()
-//
-//        dbGames.whereEqualTo("${FirebaseAuth.getInstance().currentUser?.uid.toString()}-turn", true).limit(1).get().addOnSuccessListener {
-//
-//            if (it != null && !it.isEmpty) {
-//
-//                for (doc in it.documents){
-//
-//                    doc.data?.entries?.forEach { it2 ->
-//
-//                        list2.add(it2.key.toString())
-//
-//                        if(list2.size == 10){
-//
-//                            onComplete(list2)
-//
-//                        }
-//
-//                    }
-//
-//                }
-//
-//            }
-//
-//        }
-//
-//    }
-
-//    private fun getGames(onComplete: (Boolean) -> Unit) {
-//
-//        image_round.visibility = View.GONE
-//        text_none_round.visibility = View.GONE
 //        loadingRound.visibility = View.VISIBLE
 //
-//        getKeys {it2 ->
+//        val query: Query = db.document(FirebaseAuth.getInstance().currentUser?.uid.toString()).collection("friends")
 //
-//            dbGames.whereEqualTo("${FirebaseAuth.getInstance().currentUser?.uid.toString()}-turn", true)
-//                .whereEqualTo("newGame", false).addSnapshotListener(EventListener<QuerySnapshot> {it, e ->
+//        val options: FirestoreRecyclerOptions<FriendsItem> = FirestoreRecyclerOptions.Builder<FriendsItem>().setQuery(query, FriendsItem::class.java).setLifecycleOwner(this).build()
 //
-//                if (e != null) {
-//                    return@EventListener
-//                }
+//        adapterRound = GamesAdapterFirestore(options, this)
+//        adapterRound.setRV(rvRound)
 //
-//                if (it != null && !it.isEmpty) {
-//
-//                    gamesList.clear()
-//
-//                    for (doc in it.documents){
-//
-//                        val id: String = doc.getString(it2[7])!!
-//                        val set: String = doc.getString(it2[3])!!
-//                        val stage: Int = doc.getLong(it2[5])!!.toInt()
-//                        val turn: Boolean = doc.getBoolean(it2[0])!!
-//                        val id2: String = doc.getString(it2[9])!!
-//                        val set2: String = doc.getString(it2[2])!!
-//                        val stage2: Int = doc.getLong(it2[1])!!.toInt()
-//                        val turn2: Boolean = doc.getBoolean(it2[6])!!
-//                        val gamemode: String = doc.getString(it2[8])!!
-//                        val newGame: Boolean = doc.getBoolean(it2[4])!!
-//
-//                        val list = GamesItem(id, set, stage, turn, id2, set2, stage2, turn2, gamemode, newGame)
-//                        gamesList.add(list)
-//
-//                        if(gamesList.size == it.size()){
-//                            onComplete(true)
-//                        }
-//
-//                    }
-//
-//                } else {
-//
-//                    onComplete(false)
-//
-//                }
-//
-//            })
-//
-//        }
-//
-//    }
-//
-//    private fun setAdapterGame(){
-//
-//        getGames {
-//
-//            if(it) {
-//
-//                adapterRound = GamesAdapterFirestore(this, gamesList)
-//                adapterRound.setRV(rvRound)
-//
-//                rvRound.setHasFixedSize(true)
-//                rvRound.layoutManager = LinearLayoutManager(context)
-//                rvRound.adapter = adapterRound
-//
-//                loadingRound.visibility = View.GONE
-//                image_round.visibility = View.VISIBLE
-//                text_none_round.visibility = View.VISIBLE
-//                rvRound.visibility = View.VISIBLE
-//
-//                rvRound.requestLayout()
-//
-//            } else {
-//
-//                loadingRound.visibility = View.GONE
-//                image_round.visibility = View.VISIBLE
-//                text_none_round.visibility = View.VISIBLE
-//
-//                rvRound.requestLayout()
-//
-//            }
-//
-//        }
+//        rvRound.setHasFixedSize(true)
+//        rvRound.layoutManager = LinearLayoutManager(context)
+//        rvRound.adapter = adapterRound
 //
 //    }
 

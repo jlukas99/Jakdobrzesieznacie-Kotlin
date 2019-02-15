@@ -1,31 +1,22 @@
 package pl.idappstudio.howwelldoyouknoweachother.activity
 
-import android.graphics.drawable.Drawable
 import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.view.View
 import android.widget.TextView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.Target
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.storage.FirebaseStorage
 import kotlinx.android.synthetic.main.activity_game.*
 import pl.idappstudio.howwelldoyouknoweachother.R
 import pl.idappstudio.howwelldoyouknoweachother.fragments.ClearFragment
 import pl.idappstudio.howwelldoyouknoweachother.fragments.StageOneFragment
 import pl.idappstudio.howwelldoyouknoweachother.fragments.StageThreeOwnQuestionFragment
 import pl.idappstudio.howwelldoyouknoweachother.fragments.StageTwoFragment
-import pl.idappstudio.howwelldoyouknoweachother.glide.GlideApp
 import pl.idappstudio.howwelldoyouknoweachother.interfaces.nextFragment
 import pl.idappstudio.howwelldoyouknoweachother.model.*
-import pl.idappstudio.howwelldoyouknoweachother.saveInstance.FragmentStateHelper
 import pl.idappstudio.howwelldoyouknoweachother.util.GameUtil
+import pl.idappstudio.howwelldoyouknoweachother.util.GlideUtil
 
 class GameActivity : AppCompatActivity(), nextFragment {
 
@@ -38,10 +29,10 @@ class GameActivity : AppCompatActivity(), nextFragment {
 
     }
 
-    override fun updateNumber(i: Int, boolean: Boolean){
+    override fun updateNumber(i: Int, b: Boolean){
 
         if(i == 1){
-            if(boolean){
+            if(b){
                 questionOne.setBackgroundResource(R.drawable.number_correct_overlay)
                 return
             } else {
@@ -51,7 +42,7 @@ class GameActivity : AppCompatActivity(), nextFragment {
         }
 
         if(i == 2){
-            if(boolean){
+            if(b){
                 questionTwo.setBackgroundResource(R.drawable.number_correct_overlay)
                 return
             } else {
@@ -61,7 +52,7 @@ class GameActivity : AppCompatActivity(), nextFragment {
         }
 
         if(i == 3){
-            if(boolean){
+            if(b){
                 questionThree.setBackgroundResource(R.drawable.number_correct_overlay)
                 return
             } else {
@@ -106,6 +97,8 @@ class GameActivity : AppCompatActivity(), nextFragment {
     lateinit var questionThree: TextView
 
     lateinit var mContent: Fragment
+
+    private val glide = GlideUtil()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -189,8 +182,11 @@ class GameActivity : AppCompatActivity(), nextFragment {
 
     private fun setInterface(onComplete: () -> Unit){
 
-        setUserImage { onComplete() }
-        setFriendImage()
+        setImage {
+
+            onComplete()
+
+        }
 
         userNameText.text = user.name
         friendNameText.text = friends.name
@@ -207,235 +203,22 @@ class GameActivity : AppCompatActivity(), nextFragment {
 
     }
 
-    private fun setUserImage(onComplete: () -> Unit){
+    private fun setImage(onComplete: () -> Unit){
 
-        if(user.image.contains("logo")){
+        glide.setImage(user.fb, user.image, this, userProfileImage){
 
-            Glide.with(this).load(R.mipmap.logo).listener(object :
-                RequestListener<Drawable> {
+            userLoadingImage.visibility = View.GONE
 
-                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                    onComplete()
-                    return true
-                }
-
-                override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                    userLoadingImage.visibility = View.GONE
-                    onComplete()
-                    return false
-                }
-
-            }).into(userProfileImage)
-
-        } else {
-
-            if (user.fb) {
-
-                GlideApp.with(applicationContext).load("http://graph.facebook.com/${user.image}/picture?type=large").diskCacheStrategy(DiskCacheStrategy.AUTOMATIC)
-                    .listener(object : RequestListener<Drawable> {
-
-                        override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            onComplete()
-                            return true
-                        }
-
-                        override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: DataSource?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            userLoadingImage.visibility = View.GONE
-                            onComplete()
-                            return false
-                        }
-
-                    }).into(userProfileImage)
-
-            } else {
-
-                val storageReference =
-                    FirebaseStorage.getInstance().reference.child("profile_image").child(user.image + "-image")
-                        .downloadUrl
-
-                storageReference.addOnSuccessListener { Uri ->
-
-                    GlideApp.with(applicationContext).load(Uri.toString()).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).listener(object :
-                        RequestListener<Drawable> {
-
-                        override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            onComplete()
-                            return true
-                        }
-
-                        override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: DataSource?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            userLoadingImage.visibility = View.GONE
-                            onComplete()
-                            return false
-                        }
-
-                    }).into(userProfileImage)
-
-                }.addOnFailureListener {
-
-                    GlideApp.with(applicationContext).load(R.mipmap.logo).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).listener(object :
-                        RequestListener<Drawable> {
-
-                        override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            onComplete()
-                            return true
-                        }
-
-                        override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: DataSource?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            userLoadingImage.visibility = View.GONE
-                            onComplete()
-                            return false
-                        }
-
-                    }).into(userProfileImage)
-                }
-            }
         }
-    }
 
-    private fun setFriendImage(){
+        glide.setImage(friends.fb, friends.image, this, friendProfileImage){
 
-        if(friends.image.contains("logo")){
+            friendLoadingImage.visibility = View.GONE
 
-            Glide.with(this).load(R.mipmap.logo).listener(object :
-                RequestListener<Drawable> {
-
-                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                    return true
-                }
-
-                override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                    friendLoadingImage.visibility = View.GONE
-                    return false
-                }
-
-            }).into(friendProfileImage)
-
-        } else {
-
-            if (friends.fb) {
-
-                GlideApp.with(applicationContext).load("http://graph.facebook.com/${friends.image}/picture?type=large").diskCacheStrategy(
-                    DiskCacheStrategy.AUTOMATIC)
-                    .listener(object : RequestListener<Drawable> {
-
-                        override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            return true
-                        }
-
-                        override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: DataSource?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            friendLoadingImage.visibility = View.GONE
-                            return false
-                        }
-
-                    }).into(friendProfileImage)
-
-            } else {
-
-                val storageReference =
-                    FirebaseStorage.getInstance().reference.child("profile_image").child(friends.image + "-image")
-                        .downloadUrl
-
-                storageReference.addOnSuccessListener { Uri ->
-
-                    GlideApp.with(applicationContext).load(Uri.toString()).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).listener(object :
-                        RequestListener<Drawable> {
-
-                        override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            return true
-                        }
-
-                        override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: DataSource?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            userLoadingImage.visibility = View.GONE
-                            return false
-                        }
-
-                    }).into(friendProfileImage)
-
-                }.addOnFailureListener {
-
-                    GlideApp.with(applicationContext).load(R.mipmap.logo).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).listener(object :
-                        RequestListener<Drawable> {
-
-                        override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            return true
-                        }
-
-                        override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: DataSource?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            friendLoadingImage.visibility = View.GONE
-                            return false
-                        }
-
-                    }).into(friendProfileImage)
-                }
-            }
         }
+
+        onComplete()
+
     }
 
     private fun getFriendInformation(){

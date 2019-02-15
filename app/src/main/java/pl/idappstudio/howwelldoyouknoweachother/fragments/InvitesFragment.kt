@@ -55,6 +55,8 @@ class InvitesFragment : Fragment(), CountInterface {
     private lateinit var adapter: InviteAdapterFirestore
     private lateinit var adapter2: SearchAdapterFirestore
 
+    private var friendsList = ArrayList<String>()
+
     private var isHide = false
     private var isHide2 = false
 
@@ -131,10 +133,46 @@ class InvitesFragment : Fragment(), CountInterface {
 
         })
 
-        getInvites()
-        getSearch()
+        getFriends {
+
+            getInvites()
+            getSearch()
+
+        }
 
         return rootView
+    }
+
+    private fun getFriends(onComplete: () -> Unit){
+
+        db.collection("users").document(FirebaseAuth.getInstance().currentUser?.uid.toString()).collection("friends").get().addOnSuccessListener {
+
+            var i = 0
+
+            friendsList.clear()
+
+            friendsList.add(FirebaseAuth.getInstance().currentUser?.uid.toString())
+
+            if(it.isEmpty){
+                onComplete()
+            }
+
+            for(doc in it.documents){
+
+                friendsList.add(doc.id)
+
+                i++
+
+                if(i == it.size()){
+
+                    onComplete()
+
+                }
+
+            }
+
+        }
+
     }
 
     private fun getInvites() {
@@ -152,6 +190,8 @@ class InvitesFragment : Fragment(), CountInterface {
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
 
+        adapter.startListening()
+
     }
 
     private fun getSearch() {
@@ -168,12 +208,14 @@ class InvitesFragment : Fragment(), CountInterface {
 
         val options:FirestoreRecyclerOptions<InviteItem> = FirestoreRecyclerOptions.Builder<InviteItem>().setQuery(query, InviteItem::class.java).setLifecycleOwner(this).build()
 
-        adapter2 = SearchAdapterFirestore(options, this)
+        adapter2 = SearchAdapterFirestore(options, this, friendsList)
         adapter2.setRV(recyclerSearch)
 
         recyclerSearch.setHasFixedSize(true)
         recyclerSearch.layoutManager = LinearLayoutManager(context)
         recyclerSearch.adapter = adapter2
+
+        adapter2.startListening()
 
     }
 
@@ -328,14 +370,6 @@ class InvitesFragment : Fragment(), CountInterface {
             }
 
         }
-
-    }
-
-    override fun onStart() {
-        super.onStart()
-
-        adapter.startListening()
-        adapter2.startListening()
 
     }
 

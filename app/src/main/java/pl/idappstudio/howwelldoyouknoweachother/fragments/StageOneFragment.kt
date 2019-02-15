@@ -1,7 +1,6 @@
 package pl.idappstudio.howwelldoyouknoweachother.fragments
 
 
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.v4.app.Fragment
@@ -13,26 +12,19 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.Target
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.reward.RewardItem
 import com.google.android.gms.ads.reward.RewardedVideoAd
 import com.google.android.gms.ads.reward.RewardedVideoAdListener
-import com.google.firebase.storage.FirebaseStorage
 
 import pl.idappstudio.howwelldoyouknoweachother.R
 import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity
 import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity.Companion.friends
 import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity.Companion.user
-import pl.idappstudio.howwelldoyouknoweachother.glide.GlideApp
 import pl.idappstudio.howwelldoyouknoweachother.interfaces.nextFragment
 import pl.idappstudio.howwelldoyouknoweachother.util.GameUtil
+import pl.idappstudio.howwelldoyouknoweachother.util.GlideUtil
 
 class StageOneFragment(private val listener: nextFragment) : Fragment(), View.OnClickListener {
 
@@ -76,6 +68,8 @@ class StageOneFragment(private val listener: nextFragment) : Fragment(), View.On
     private lateinit var rejectBadAnswer: Button
 
     private lateinit var rewardedVideoAd: RewardedVideoAd
+
+    private val glide = GlideUtil()
 
     private var badAnswer: ArrayList<String> = ArrayList()
     private var userAnswer: ArrayList<String> = ArrayList()
@@ -673,216 +667,18 @@ class StageOneFragment(private val listener: nextFragment) : Fragment(), View.On
 
     private fun setUserImage(v: ImageView){
 
-        if(user.image.contains("logo")){
+        glide.setImage(user.fb, user.image,this.context!!, v) {
 
-            Glide.with(this).load(R.mipmap.logo).listener(object :
-                RequestListener<Drawable> {
-
-                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                    return true
-                }
-
-                override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                    return false
-                }
-
-            }).into(v)
-
-        } else {
-
-            if (user.fb) {
-
-                GlideApp.with(this.context!!).load("http://graph.facebook.com/${user.image}/picture?type=large").diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .listener(object : RequestListener<Drawable> {
-
-                        override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            return true
-                        }
-
-                        override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: DataSource?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            return false
-                        }
-
-                    }).into(v)
-
-            } else {
-
-                val storageReference =
-                    FirebaseStorage.getInstance().reference.child("profile_image").child(user.image + "-image")
-                        .downloadUrl
-
-                storageReference.addOnSuccessListener { Uri ->
-
-                    GlideApp.with(this.context!!).load(Uri.toString()).diskCacheStrategy(DiskCacheStrategy.ALL).listener(object :
-                        RequestListener<Drawable> {
-
-                        override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            return true
-                        }
-
-                        override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: DataSource?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            return false
-                        }
-
-                    }).into(v)
-
-                }.addOnFailureListener {
-
-                    GlideApp.with(this.context!!).load(R.mipmap.logo).diskCacheStrategy(DiskCacheStrategy.ALL).listener(object :
-                        RequestListener<Drawable> {
-
-                        override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            return true
-                        }
-
-                        override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: DataSource?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            return false
-                        }
-
-                    }).into(v)
-                }
-            }
         }
+
     }
 
     private fun setFriendImage(v: ImageView){
 
-        if(friends.image.contains("logo")){
+        glide.setImage(friends.fb, friends.image,this.context!!, v) {
 
-            Glide.with(this).load(R.mipmap.logo).listener(object :
-                RequestListener<Drawable> {
-
-                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                    return true
-                }
-
-                override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                    return false
-                }
-
-            }).into(v)
-
-        } else {
-
-            if (friends.fb) {
-
-                GlideApp.with(this.context!!).load("http://graph.facebook.com/${friends.image}/picture?type=large").diskCacheStrategy(DiskCacheStrategy.ALL)
-                    .listener(object : RequestListener<Drawable> {
-
-                        override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            return true
-                        }
-
-                        override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: DataSource?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            return false
-                        }
-
-                    }).into(v)
-
-            } else {
-
-                val storageReference =
-                    FirebaseStorage.getInstance().reference.child("profile_image").child(friends.image + "-image")
-                        .downloadUrl
-
-                storageReference.addOnSuccessListener { Uri ->
-
-                    GlideApp.with(this.context!!).load(Uri.toString()).diskCacheStrategy(DiskCacheStrategy.ALL).listener(object :
-                        RequestListener<Drawable> {
-
-                        override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            return true
-                        }
-
-                        override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: DataSource?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            return false
-                        }
-
-                    }).into(v)
-
-                }.addOnFailureListener {
-
-                    GlideApp.with(this.context!!).load(R.mipmap.logo).diskCacheStrategy(DiskCacheStrategy.ALL).listener(object :
-                        RequestListener<Drawable> {
-
-                        override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            return true
-                        }
-
-                        override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: DataSource?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            return false
-                        }
-
-                    }).into(v)
-                }
-            }
         }
+
     }
 
 }

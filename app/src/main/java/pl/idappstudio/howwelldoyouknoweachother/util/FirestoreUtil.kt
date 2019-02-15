@@ -21,7 +21,11 @@ object FirestoreUtil {
 
     fun initialize(){
 
-        getCurrentUser { currentUser = it }
+        getCurrentUser {
+
+            currentUser = it
+
+        }
 
     }
 
@@ -52,8 +56,45 @@ object FirestoreUtil {
 
     fun getCurrentUser(onComplete: (UserData) -> Unit) {
         currentUserDocRef.get().addOnSuccessListener {
+            currentUser = it.toObject(UserData::class.java)!!
             onComplete(it.toObject(UserData::class.java)!!)
         }
+    }
+
+    fun getStats(onComplete: (StatsData) -> Unit){
+
+        currentUserDocRef.collection("friends").get().addOnSuccessListener {
+
+            var canswer = 0
+            var banswer = 0
+            var games = 0
+
+            var i = 0
+
+            if(it.isEmpty){
+
+                onComplete(StatsData(0, 0, 0))
+
+            }
+
+            for (doc in it.documents){
+
+                canswer += doc.getLong("canswer")?.toInt()!!
+                banswer += doc.getLong("banswer")?.toInt()!!
+                games += doc.getLong("games")?.toInt()!!
+
+                i++
+
+                if(it.size() == i){
+
+                    onComplete(StatsData(canswer, banswer, games))
+
+                }
+
+            }
+
+        }
+
     }
 
     fun sendInvite(uid: String, inviteHolder: SearchAdapterFirestore.InviteHolder, onComplete: (Boolean, SearchAdapterFirestore.InviteHolder) -> Unit) {

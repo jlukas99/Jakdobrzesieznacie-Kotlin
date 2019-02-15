@@ -1,7 +1,6 @@
 package pl.idappstudio.howwelldoyouknoweachother.fragments
 
 
-import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.view.LayoutInflater
@@ -9,16 +8,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import com.bumptech.glide.Glide
-import com.bumptech.glide.load.DataSource
-import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.engine.GlideException
-import com.bumptech.glide.request.RequestListener
-import com.bumptech.glide.request.target.Target
 import com.github.ybq.android.spinkit.SpinKitView
 import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.storage.FirebaseStorage
 import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.android.synthetic.main.fragment_profile.*
 import org.jetbrains.anko.clearTask
 import org.jetbrains.anko.newTask
 import org.jetbrains.anko.support.v4.intentFor
@@ -26,8 +19,9 @@ import org.jetbrains.anko.support.v4.startActivity
 import pl.idappstudio.howwelldoyouknoweachother.R
 import pl.idappstudio.howwelldoyouknoweachother.activity.LoginMenuActivity
 import pl.idappstudio.howwelldoyouknoweachother.activity.SettingsActivity
-import pl.idappstudio.howwelldoyouknoweachother.glide.GlideApp
+import pl.idappstudio.howwelldoyouknoweachother.util.GlideUtil
 import pl.idappstudio.howwelldoyouknoweachother.util.FirestoreUtil
+import pl.idappstudio.howwelldoyouknoweachother.util.GameUtil
 
 class ProfileFragment : Fragment() {
 
@@ -41,6 +35,8 @@ class ProfileFragment : Fragment() {
     private lateinit var share: Button
 
     private val currentUser = FirestoreUtil.currentUser
+
+    private val glide = GlideUtil()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -90,112 +86,24 @@ class ProfileFragment : Fragment() {
         loading.visibility = View.VISIBLE
 
         name.text = currentUser.name
-        if(currentUser.image.contains("logo")){
 
-            Glide.with(this).load(R.mipmap.logo).listener(object : RequestListener<Drawable> {
+        FirestoreUtil.getStats {
 
-                override fun onLoadFailed(e: GlideException?, model: Any?, target: Target<Drawable>?, isFirstResource: Boolean): Boolean {
-                    return true
-                }
+            val a: Float = it.canswer.toFloat()
+            val b: Float = it.banswer.toFloat()
+            val c: Int = it.games
 
-                override fun onResourceReady(resource: Drawable?, model: Any?, target: Target<Drawable>?, dataSource: DataSource?, isFirstResource: Boolean): Boolean {
-                    loading.visibility = View.GONE
-                    return false
-                }
+            friends_profile_stats_canswer.text = a.toInt().toString()
+            friends_profile_stats_banswer.text = b.toInt().toString()
+            friends_profile_stats_games.text = c.toString()
+            profile_stats_friend_precent.text = "${GameUtil.getPrecent(it)}%"
 
-            }).into(image)
+        }
 
-        } else {
+        glide.setImage(currentUser.fb, currentUser.image, this.context!!, image){
 
-            if (currentUser.fb) {
+            loading.visibility = View.GONE
 
-                GlideApp.with(this).load("http://graph.facebook.com/${currentUser.image}/picture?type=large").diskCacheStrategy(
-                    DiskCacheStrategy.AUTOMATIC)
-                    .listener(object : RequestListener<Drawable> {
-
-                        override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            return true
-                        }
-
-                        override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: DataSource?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            loading.visibility = View.GONE
-                            return false
-                        }
-
-                    }).into(image)
-
-            } else {
-
-                val storageReference =
-                    FirebaseStorage.getInstance().reference.child("profile_image").child(currentUser.image + "-image")
-                        .downloadUrl
-                storageReference.addOnSuccessListener { Uri ->
-
-                    GlideApp.with(this).load(Uri.toString()).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).listener(object :
-                        RequestListener<Drawable> {
-
-                        override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            return true
-                        }
-
-                        override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: DataSource?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            loading.visibility = View.GONE
-                            return false
-                        }
-
-                    }).into(image)
-
-                }.addOnFailureListener {
-
-                    GlideApp.with(this).load(R.mipmap.logo).diskCacheStrategy(DiskCacheStrategy.AUTOMATIC).listener(object :
-                        RequestListener<Drawable> {
-
-                        override fun onLoadFailed(
-                            e: GlideException?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            return true
-                        }
-
-                        override fun onResourceReady(
-                            resource: Drawable?,
-                            model: Any?,
-                            target: Target<Drawable>?,
-                            dataSource: DataSource?,
-                            isFirstResource: Boolean
-                        ): Boolean {
-                            loading.visibility = View.GONE
-                            return false
-                        }
-
-                    }).into(image)
-
-                }
-            }
         }
 
     }

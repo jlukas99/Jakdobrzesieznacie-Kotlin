@@ -9,6 +9,7 @@ import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.support.design.widget.Snackbar
+import android.util.Log
 import android.view.View
 import com.facebook.*
 import com.facebook.appevents.AppEventsLogger
@@ -28,7 +29,13 @@ import pl.idappstudio.howwelldoyouknoweachother.R
 import pl.idappstudio.howwelldoyouknoweachother.service.MyFirebaseMessagingService
 import pl.idappstudio.howwelldoyouknoweachother.util.AdMobUtil
 import pl.idappstudio.howwelldoyouknoweachother.util.FirestoreUtil
+import com.facebook.GraphRequest
+import com.facebook.AccessToken
+import org.json.JSONArray
+import org.json.JSONException
+import org.json.JSONObject
 import java.util.*
+
 
 class LoginMenuActivity : Activity() {
 
@@ -103,12 +110,14 @@ class LoginMenuActivity : Activity() {
 
             alertDialog.show()
 
-            LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email","public_profile"))
+            LoginManager.getInstance().logInWithReadPermissions(this, Arrays.asList("email","user_gender","user_friends","public_profile"))
             LoginManager.getInstance().registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
 
                 override fun onSuccess(loginResult: LoginResult) {
 
                     handleFacebookAccessToken(loginResult.accessToken)
+                    makeGraphRequest(loginResult.accessToken)
+                    getFacebookFriends(loginResult.accessToken)
 
                 }
 
@@ -135,6 +144,44 @@ class LoginMenuActivity : Activity() {
 
     }
 
+    fun makeGraphRequest(token: AccessToken) : String {
+
+        var gender = ""
+
+        val request = GraphRequest.newMeRequest(token) { a, response ->
+
+            try {
+               gender = a.getString("gender")
+            } catch (e: JSONException) {
+                e.printStackTrace()
+            }
+
+        }
+
+        val parameters = Bundle()
+        parameters.putString("fields", "gender")
+        request.parameters = parameters
+        request.executeAsync()
+
+        return gender
+    }
+
+    private fun getFacebookFriends(token:AccessToken) {
+        val request = GraphRequest.newMyFriendsRequest(token) { array, response ->
+
+            for (i in 0 until array.length()) {
+
+                Log.d("DEBUG", array.getJSONObject(i).getString("id"))
+
+            }
+        }
+
+        val parameters = Bundle()
+        parameters.putString("fields", "id")
+        request.parameters = parameters
+        request.executeAsync()
+    }
+
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         callbackManager.onActivityResult(requestCode, resultCode, data)
@@ -150,9 +197,15 @@ class LoginMenuActivity : Activity() {
 
                     val uid = auth.currentUser?.uid.toString()
                     val genderInt = profile.firstName.lastIndex
-                    val gender: String
+                    var gender: String
 
-                    gender = if(profile.firstName.substring(genderInt) == "a") "famle" else "male"
+                    gender = makeGraphRequest(token)
+
+                    if(gender == "") {
+
+                        gender = if (profile.firstName.substring(genderInt) == "a") "famle" else "male"
+
+                    }
 
                     FirestoreUtil.registerCurrentUser(uid, profile.name, profile.id, true, gender, "free") {
 
@@ -184,6 +237,25 @@ class LoginMenuActivity : Activity() {
 
     override fun onResume() {
         super.onResume()
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        hideNavigationBar()
+    }
+
+    private fun hideNavigationBar() {
+
+        val flags = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                or View.SYSTEM_UI_FLAG_FULLSCREEN)
+
+        window.decorView.systemUiVisibility = flags
+
+        val decorView = window.decorView
+        decorView.setOnSystemUiVisibilityChangeListener { visibility ->
+            if (visibility and View.SYSTEM_UI_FLAG_FULLSCREEN == 0) {
+                decorView.systemUiVisibility = flags
+            }
+        }
     }
 }

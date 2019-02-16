@@ -9,14 +9,20 @@ import android.widget.TextView
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_game.*
 import pl.idappstudio.howwelldoyouknoweachother.R
-import pl.idappstudio.howwelldoyouknoweachother.fragments.ClearFragment
-import pl.idappstudio.howwelldoyouknoweachother.fragments.StageOneFragment
-import pl.idappstudio.howwelldoyouknoweachother.fragments.StageThreeOwnQuestionFragment
-import pl.idappstudio.howwelldoyouknoweachother.fragments.StageTwoFragment
+import pl.idappstudio.howwelldoyouknoweachother.fragments.*
 import pl.idappstudio.howwelldoyouknoweachother.interfaces.nextFragment
 import pl.idappstudio.howwelldoyouknoweachother.model.*
 import pl.idappstudio.howwelldoyouknoweachother.util.GameUtil
 import pl.idappstudio.howwelldoyouknoweachother.util.GlideUtil
+import android.os.Build
+
+
+
+
+
+
+
+
 
 class GameActivity : AppCompatActivity(), nextFragment {
 
@@ -143,9 +149,27 @@ class GameActivity : AppCompatActivity(), nextFragment {
 
         if(game.uStage == 3 || game.uStage == 0){
 
-            supportFragmentManager.beginTransaction().replace(R.id.fragment, StageThreeOwnQuestionFragment(this)).commit()
-            mContent = supportFragmentManager.fragments.get(0)
-            hideLoading()
+            if(game.uSet.category == "own_question") {
+
+                supportFragmentManager.beginTransaction().replace(R.id.fragment, StageThreeOwnQuestionFragment(this))
+                    .commit()
+                mContent = supportFragmentManager.fragments.get(0)
+                hideLoading()
+
+            } else {
+
+                GameUtil.getQuestionDataStageThree("set/${game.uSet.id}/${user.gender}") {
+
+                    questionList = it
+
+                    supportFragmentManager.beginTransaction().replace(R.id.fragment, StageThreeFragment(this))
+                        .commit()
+                    mContent = supportFragmentManager.fragments.get(0)
+                    hideLoading()
+
+                }
+
+            }
 
         } else if(game.uStage == 2){
 
@@ -163,6 +187,8 @@ class GameActivity : AppCompatActivity(), nextFragment {
         } else if(game.uStage == 1){
 
             GameUtil.getQuestionData("games/${game.gameID}/${friends.uid}/3") {
+
+
 
                 questionList = it
 
@@ -242,14 +268,32 @@ class GameActivity : AppCompatActivity(), nextFragment {
         }
     }
 
-
     override fun onResume() {
         super.onResume()
 
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        hideNavigationBar()
 
         getFriendInformation()
 
+    }
+
+    private fun hideNavigationBar() {
+
+        val flags = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                or View.SYSTEM_UI_FLAG_FULLSCREEN)
+
+            window.decorView.systemUiVisibility = flags
+
+            val decorView = window.decorView
+            decorView.setOnSystemUiVisibilityChangeListener { visibility ->
+                if (visibility and View.SYSTEM_UI_FLAG_FULLSCREEN == 0) {
+                    decorView.systemUiVisibility = flags
+                }
+            }
     }
 
 }

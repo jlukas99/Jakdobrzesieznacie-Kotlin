@@ -123,9 +123,6 @@ class StageThreeOwnQuestionFragment(private val listener: nextFragment) : Fragme
                 return
             }
 
-            lockEditText()
-            questionText.isEnabled = false
-
             val q = questionText.text.toString()
             var ca = ""
             var ba1 = ""
@@ -212,6 +209,40 @@ class StageThreeOwnQuestionFragment(private val listener: nextFragment) : Fragme
                 ba3 = cAnswerText.text.toString()
 
             }
+
+            if(ca.equals(ba1, true) || ca.equals(ba2, true) || ca.equals(ba3, true) ||
+                ba1.equals(ca, true) || ba1.equals(ba2, true) || ba1.equals(ba3, true)) {
+
+                snackbar = Snackbar.make(this.view!!, "Odpowiedzi nie mogą się powtarzać", 2500)
+                snackbar.view.setBackgroundColor(resources.getColor(R.color.colorRed))
+                snackbar.show()
+
+                return
+
+            }
+
+            if((ba2 != "") && (ba2.equals(ca, true) || ba2.equals(ba1, true) || ba2.equals(ba3, true))){
+
+                snackbar = Snackbar.make(this.view!!, "Odpowiedzi nie mogą się powtarzać", 2500)
+                snackbar.view.setBackgroundColor(resources.getColor(R.color.colorRed))
+                snackbar.show()
+
+                return
+
+            }
+
+            if((ba3 != "") && (ba3.equals(ca, true) || ba3.equals(ba2, true) || ba3.equals(ba1, true))){
+
+                snackbar = Snackbar.make(this.view!!, "Odpowiedzi nie mogą się powtarzać", 2500)
+                snackbar.view.setBackgroundColor(resources.getColor(R.color.colorRed))
+                snackbar.show()
+
+                return
+            }
+
+
+            lockEditText()
+            questionText.isEnabled = false
 
             val questionData = UserQuestionData(q, ca, ba1, ba2, ba3, GameActivity.user.uid)
             questionList.add(questionData)

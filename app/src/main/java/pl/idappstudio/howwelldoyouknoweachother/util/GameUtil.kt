@@ -1,6 +1,7 @@
 package pl.idappstudio.howwelldoyouknoweachother.util
 
 import android.content.Context
+import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
 import org.jetbrains.anko.startActivity
 import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity
@@ -165,19 +166,413 @@ object GameUtil {
 
     }
 
+    fun sendAnswerStageThree(game: GameData, userData: UserData, friendData: UserData, a1: String, a2: String, a3: String, id1: String, id2: String, id3: String, onComplete: () -> Unit){
+
+        val user = HashMap<String, String>()
+        user.put("answer1", a1)
+        user.put("answer2", a2)
+        user.put("answer3", a3)
+        user.put("id1", id1)
+        user.put("id2", id2)
+        user.put("id3", id3)
+
+        db.collection("games").document(game.gameID).collection(userData.uid).document("3").set(user).addOnSuccessListener {
+
+            FirestoreUtil.updateGameSettings(false, true, 3, 1, game.uSet.id, game.fSet.id, game.gamemode, game.gameID, userData.uid, friendData.uid)
+            onComplete()
+
+
+        }
+
+    }
+
+    fun getQuestionDataStageThree(s: String, onComplete: (QuestionData) -> Unit) {
+
+        db.collection(s).get().addOnSuccessListener {
+
+            val questionList = ArrayList<UserQuestionData>()
+
+            for(doc in it.documents){
+
+                val question = doc.getString("question")!!
+
+                val a = doc.getString("a")!!
+                val b = doc.getString("b")!!
+
+                if(doc.getString("c") != null){
+
+                    val c = doc.getString("c")!!
+
+                    if(doc.getString("d") != null){
+
+                        val d = doc.getString("d")!!
+                        questionList.add(UserQuestionData(question, a, b ,c , d, doc.id))
+
+                    } else {
+
+                        questionList.add(UserQuestionData(question, a, b ,c , "", doc.id))
+
+                    }
+
+                } else {
+
+                    questionList.add(UserQuestionData(question, a, b ,"" , "", doc.id))
+
+                }
+
+                if(it.size() == questionList.size){
+
+                    questionList.shuffle()
+
+                    val questionData = ArrayList<UserQuestionData>()
+
+                    for(i in 0..2){
+
+                        questionData.add(questionList[i])
+
+                        if(questionData.size == 3){
+
+                            val questionItem = QuestionData(questionData[0], questionData[1], questionData[2])
+
+                            onComplete(questionItem)
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+        }
+
+    }
+
+    fun getQuestionData2(s: String, onComplete: (AnswerData, AnswerData, QuestionData) -> Unit) {
+
+        db.document(s).get().addOnSuccessListener {
+
+                val questionList = ArrayList<UserQuestionData>()
+                val answerList = AnswerData(it.getString("answer1").toString(), it.getString("answer2").toString(), it.getString("answer3").toString())
+                val idList = AnswerData(it.getString("id1").toString(), it.getString("id2").toString(), it.getString("id3").toString())
+                val questionID = ArrayList<String>()
+
+                questionID.add(it.getString("id1").toString())
+                questionID.add(it.getString("id2").toString())
+                questionID.add(it.getString("id3").toString())
+
+                for(i in questionID){
+
+                    db.document(i).get().addOnSuccessListener {it2 ->
+
+                        val question = it2.getString("question")!!
+
+                        val a = it2.getString("a")!!
+                        val b = it2.getString("b")!!
+
+                        if(it2.getString("c") != null){
+
+                            val c = it2.getString("c")!!
+
+                            if(it2.getString("d") != null){
+
+                                val d = it2.getString("d")!!
+
+                                questionList.add(UserQuestionData(question, a, b ,c , d, it2.id))
+
+                            } else {
+
+                                questionList.add(UserQuestionData(question, a, b ,c , "", it2.id))
+
+                            }
+
+                        } else {
+
+                            questionList.add(UserQuestionData(question, a, b ,"" , "", it2.id))
+
+                        }
+
+                        if(questionList.size == 3){
+
+                            val questionItem = QuestionData(questionList[0], questionList[1], questionList[2])
+
+                            onComplete(idList, answerList, questionItem)
+
+                        }
+
+                    }
+
+                }
+
+        }
+
+    }
+
     fun getQuestionData(s: String, onComplete: (QuestionData) -> Unit) {
 
         db.document(s).get().addOnSuccessListener {
 
-            val questionItem = it.toObject(QuestionData::class.java)!!
+            if(it.getString("id1") != null){
 
-            onComplete(questionItem)
+                getQuestionData2(s){ id, a, b ->
+
+                    var question1 = UserQuestionData("", "", "", "", "", "")
+                    var question2 = UserQuestionData("", "", "", "", "", "")
+                    var question3 = UserQuestionData("", "", "", "", "", "")
+
+                    val id1 = id.answer1.substring(id.answer1.lastIndexOf("/") + 1)
+                    val id2 = id.answer2.substring(id.answer2.lastIndexOf("/") + 1)
+                    val id3 = id.answer3.substring(id.answer3.lastIndexOf("/") + 1)
+
+                    val array2 = ArrayList<UserQuestionData>()
+
+                    array2.add(b.question)
+                    array2.add(b.question1)
+                    array2.add(b.question2)
+
+                    for(i in array2){
+
+                        if(i.questionId == id1){
+
+                            if(a.answer1 == i.canswer){
+
+                                question1 = UserQuestionData(i.question, i.canswer, i.banswer, i.banswer2, i.banswer3, id1)
+
+                            }
+
+                            if(a.answer1 == i.banswer){
+
+                                question1 = UserQuestionData(i.question, i.banswer, i.canswer, i.banswer2, i.banswer3, id1)
+
+                            }
+
+                            if(a.answer1 == i.banswer2){
+
+                                question1 = UserQuestionData(i.question, i.banswer2, i.banswer, i.canswer, i.banswer3, id1)
+
+                            }
+
+                            if(a.answer1 == i.banswer3){
+
+                                question1 = UserQuestionData(i.question, i.banswer3, i.banswer, i.banswer2, i.canswer, id1)
+
+                            }
+
+                        }
+
+                        if(i.questionId == id2){
+
+                            if(a.answer2 == i.canswer){
+
+                                question2 = UserQuestionData(i.question, i.canswer, i.banswer, i.banswer2, i.banswer3, id2)
+
+                            }
+
+                            if(a.answer2 == i.banswer){
+
+                                question2 = UserQuestionData(i.question, i.banswer, i.canswer, i.banswer2, i.banswer3, id2)
+
+                            }
+
+                            if(a.answer2 == i.banswer2){
+
+                                question2 = UserQuestionData(i.question, i.banswer2, i.banswer, i.canswer, i.banswer3, id2)
+
+                            }
+
+                            if(a.answer2 == i.banswer3){
+
+                                question2 = UserQuestionData(i.question, i.banswer3, i.banswer, i.banswer2, i.canswer, id2)
+
+                            }
+
+                        }
+
+                        if(i.questionId == id3){
+
+                            if(a.answer3 == i.canswer){
+
+                                question3 = UserQuestionData(i.question, i.canswer, i.banswer, i.banswer2, i.banswer3, id3)
+
+                            }
+
+                            if(a.answer3 == i.banswer){
+
+                                question3 = UserQuestionData(i.question, i.banswer, i.canswer, i.banswer2, i.banswer3, id3)
+
+                            }
+
+                            if(a.answer3 == i.banswer2){
+
+                                question3 = UserQuestionData(i.question, i.banswer2, i.banswer, i.canswer, i.banswer3, id3)
+
+                            }
+
+                            if(a.answer3 == i.banswer3){
+
+                                question3 = UserQuestionData(i.question, i.banswer3, i.banswer, i.banswer2, i.canswer, id3)
+
+                            }
+
+                        }
+
+                        if(question1.questionId != "" && question2.questionId != "" && question3.questionId != ""){
+
+                            onComplete(QuestionData(question1, question2, question3))
+                            break
+
+                        }
+
+                    }
+
+                }
+
+            } else {
+
+                val questionItem = it.toObject(QuestionData::class.java)!!
+
+                onComplete(questionItem)
+
+            }
 
         }
 
     }
 
     fun getQuestionDataStageTwo(s: String, s2: String, onComplete: (AnswerData, QuestionData) -> Unit){
+
+            db.document(s).get().addOnSuccessListener {
+
+                val answerItem = it.toObject(AnswerData::class.java)!!
+
+                db.document(s2).get().addOnSuccessListener {
+
+                    if(it.getString("id1") != null){
+
+                        getQuestionDataStageTwo2(s2){ id, a, b ->
+
+                            var question1 = UserQuestionData("", "", "", "", "", "")
+                            var question2 = UserQuestionData("", "", "", "", "", "")
+                            var question3 = UserQuestionData("", "", "", "", "", "")
+
+                            val id1 = id.answer1.substring(id.answer1.lastIndexOf("/") + 1)
+                            val id2 = id.answer2.substring(id.answer2.lastIndexOf("/") + 1)
+                            val id3 = id.answer3.substring(id.answer3.lastIndexOf("/") + 1)
+
+                            val array2 = ArrayList<UserQuestionData>()
+
+                            array2.add(b.question)
+                            array2.add(b.question1)
+                            array2.add(b.question2)
+
+                            for(i in array2){
+
+                                if(i.questionId == id1){
+
+                                    if(a.answer1 == i.canswer){
+
+                                        question1 = UserQuestionData(i.question, i.canswer, i.banswer, i.banswer2, i.banswer3, id1)
+
+                                    }
+
+                                    if(a.answer1 == i.banswer){
+
+                                        question1 = UserQuestionData(i.question, i.banswer, i.canswer, i.banswer2, i.banswer3, id1)
+
+                                    }
+
+                                    if(a.answer1 == i.banswer2){
+
+                                        question1 = UserQuestionData(i.question, i.banswer2, i.banswer, i.canswer, i.banswer3, id1)
+
+                                    }
+
+                                    if(a.answer1 == i.banswer3){
+
+                                        question1 = UserQuestionData(i.question, i.banswer3, i.banswer, i.banswer2, i.canswer, id1)
+
+                                    }
+
+                                }
+
+                                if(i.questionId == id2){
+
+                                    if(a.answer2 == i.canswer){
+
+                                        question2 = UserQuestionData(i.question, i.canswer, i.banswer, i.banswer2, i.banswer3, id2)
+
+                                    }
+
+                                    if(a.answer2 == i.banswer){
+
+                                        question2 = UserQuestionData(i.question, i.banswer, i.canswer, i.banswer2, i.banswer3, id2)
+
+                                    }
+
+                                    if(a.answer2 == i.banswer2){
+
+                                        question2 = UserQuestionData(i.question, i.banswer2, i.banswer, i.canswer, i.banswer3, id2)
+
+                                    }
+
+                                    if(a.answer2 == i.banswer3){
+
+                                        question2 = UserQuestionData(i.question, i.banswer3, i.banswer, i.banswer2, i.canswer, id2)
+
+                                    }
+
+                                }
+
+                                if(i.questionId == id3){
+
+                                    if(a.answer3 == i.canswer){
+
+                                        question3 = UserQuestionData(i.question, i.canswer, i.banswer, i.banswer2, i.banswer3, id3)
+
+                                    }
+
+                                    if(a.answer3 == i.banswer){
+
+                                        question3 = UserQuestionData(i.question, i.banswer, i.canswer, i.banswer2, i.banswer3, id3)
+
+                                    }
+
+                                    if(a.answer3 == i.banswer2){
+
+                                        question3 = UserQuestionData(i.question, i.banswer2, i.banswer, i.canswer, i.banswer3, id3)
+
+                                    }
+
+                                    if(a.answer3 == i.banswer3){
+
+                                        question3 = UserQuestionData(i.question, i.banswer3, i.banswer, i.banswer2, i.canswer, id3)
+
+                                    }
+
+                                }
+
+                                if(question1.questionId != "" && question2.questionId != "" && question3.questionId != ""){
+
+                                    onComplete(answerItem, QuestionData(question1, question2, question3))
+                                    break
+
+                                }
+
+                            }
+
+                        }
+
+                    } else {
+
+                        val questionItem2 = it.toObject(QuestionData::class.java)!!
+
+                        onComplete(answerItem, questionItem2)
+
+                    }
+
+            }
+
+        }
 
         db.document(s).get().addOnSuccessListener {
 
@@ -188,6 +583,66 @@ object GameUtil {
                 val questionItem2 = it.toObject(QuestionData::class.java)!!
 
                 onComplete(answerItem, questionItem2)
+
+            }
+
+        }
+
+    }
+
+    fun getQuestionDataStageTwo2(s: String, onComplete: (AnswerData, AnswerData, QuestionData) -> Unit) {
+
+        db.document(s).get().addOnSuccessListener {
+
+            val questionList = ArrayList<UserQuestionData>()
+            val answerList = AnswerData(it.getString("answer1").toString(), it.getString("answer2").toString(), it.getString("answer3").toString())
+            val idList = AnswerData(it.getString("id1").toString(), it.getString("id2").toString(), it.getString("id3").toString())
+            val questionID = ArrayList<String>()
+
+            questionID.add(it.getString("id1").toString())
+            questionID.add(it.getString("id2").toString())
+            questionID.add(it.getString("id3").toString())
+
+            for(i in questionID){
+
+                db.document(i).get().addOnSuccessListener {it2 ->
+
+                    val question = it2.getString("question")!!
+
+                    val a = it2.getString("a")!!
+                    val b = it2.getString("b")!!
+
+                    if(it2.getString("c") != null){
+
+                        val c = it2.getString("c")!!
+
+                        if(it2.getString("d") != null){
+
+                            val d = it2.getString("d")!!
+
+                            questionList.add(UserQuestionData(question, a, b ,c , d, it2.id))
+
+                        } else {
+
+                            questionList.add(UserQuestionData(question, a, b ,c , "", it2.id))
+
+                        }
+
+                    } else {
+
+                        questionList.add(UserQuestionData(question, a, b ,"" , "", it2.id))
+
+                    }
+
+                    if(questionList.size == 3){
+
+                        val questionItem = QuestionData(questionList[0], questionList[1], questionList[2])
+
+                        onComplete(idList, answerList, questionItem)
+
+                    }
+
+                }
 
             }
 

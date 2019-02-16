@@ -131,7 +131,7 @@ class SettingsActivity : AppCompatActivity() {
 
         cardView_change_avatar.setOnClickListener {
 
-            if(!FirestoreUtil.currentUser.fb!!){
+            if(!FirestoreUtil.currentUser.fb){
 
                 val intent = Intent().apply {
 
@@ -242,7 +242,7 @@ class SettingsActivity : AppCompatActivity() {
 
         cardView_change_gender.setOnClickListener {
 
-            if(!FirestoreUtil.currentUser.fb!!) {
+            if(!FirestoreUtil.currentUser.fb) {
 
                 val builder = AlertDialog.Builder(this)
                 with(builder) {
@@ -375,6 +375,25 @@ class SettingsActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         FirestoreUtil.initialize()
-        window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_LAYOUT_STABLE or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+        hideNavigationBar()
+    }
+
+    private fun hideNavigationBar() {
+
+        val flags = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
+                or View.SYSTEM_UI_FLAG_FULLSCREEN)
+
+        window.decorView.systemUiVisibility = flags
+
+        val decorView = window.decorView
+        decorView.setOnSystemUiVisibilityChangeListener { visibility ->
+            if (visibility and View.SYSTEM_UI_FLAG_FULLSCREEN == 0) {
+                decorView.systemUiVisibility = flags
+            }
+        }
     }
 }

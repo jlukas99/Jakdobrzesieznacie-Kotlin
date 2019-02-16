@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -292,11 +291,25 @@ class StageOneFragment(private val listener: nextFragment) : Fragment(), View.On
 
         }
 
-        if(aAnswerText.text == ""){
+        if(canswer.equals("tak") || canswer.equals("nie")){
 
-                for(a in array){
+            aAnswerText.text = "Tak"
 
-                    if(a != ""){
+            aAnswerButton.isEnabled = true
+            aAnswerButton.visibility = View.VISIBLE
+
+            bAnswerText.text = "Nie"
+
+            bAnswerButton.isEnabled = true
+            bAnswerButton.visibility = View.VISIBLE
+
+        } else {
+
+            if (aAnswerText.text == "") {
+
+                for (a in array) {
+
+                    if (a != "") {
 
                         aAnswerText.text = a
                         array.remove(a)
@@ -312,11 +325,11 @@ class StageOneFragment(private val listener: nextFragment) : Fragment(), View.On
 
             }
 
-        if(bAnswerText.text == ""){
+            if (bAnswerText.text == "") {
 
-                for(a in array){
+                for (a in array) {
 
-                    if(a != ""){
+                    if (a != "") {
 
                         bAnswerText.text = a
                         array.remove(a)
@@ -332,11 +345,11 @@ class StageOneFragment(private val listener: nextFragment) : Fragment(), View.On
 
             }
 
-        if(cAnswerText.text == ""){
+            if (cAnswerText.text == "") {
 
-                for(a in array){
+                for (a in array) {
 
-                    if(a != ""){
+                    if (a != "") {
 
                         cAnswerText.text = a
                         array.remove(a)
@@ -352,11 +365,11 @@ class StageOneFragment(private val listener: nextFragment) : Fragment(), View.On
 
             }
 
-        if(dAnswerText.text == ""){
+            if (dAnswerText.text == "") {
 
-                for(a in array){
+                for (a in array) {
 
-                    if(a != ""){
+                    if (a != "") {
 
                         dAnswerText.text = a
                         array.remove(a)
@@ -371,6 +384,7 @@ class StageOneFragment(private val listener: nextFragment) : Fragment(), View.On
                 }
 
             }
+        }
 
     }
 
@@ -380,15 +394,11 @@ class StageOneFragment(private val listener: nextFragment) : Fragment(), View.On
 
         badAnswer.shuffle()
 
-        Log.d("TAG", badAnswer[0])
-
         if(aAnswerText.text.equals(badAnswer[0])){
 
             aAnswerButton.isEnabled = false
 
             aAnswerButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
-
-            Log.d("TAG", "A")
 
             return
         }
@@ -399,8 +409,6 @@ class StageOneFragment(private val listener: nextFragment) : Fragment(), View.On
 
             bAnswerButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
 
-            Log.d("TAG", "B")
-
             return
         }
 
@@ -410,8 +418,6 @@ class StageOneFragment(private val listener: nextFragment) : Fragment(), View.On
 
             cAnswerButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
 
-            Log.d("TAG", "C")
-
             return
         }
 
@@ -420,8 +426,6 @@ class StageOneFragment(private val listener: nextFragment) : Fragment(), View.On
             dAnswerButton.isEnabled = false
 
             dAnswerButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
-
-            Log.d("TAG", "D")
 
             return
         }

@@ -3,9 +3,7 @@ package pl.idappstudio.howwelldoyouknoweachother.fragments
 
 import android.os.Bundle
 import android.support.constraint.ConstraintLayout
-import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,13 +13,31 @@ import android.widget.TextView
 
 import pl.idappstudio.howwelldoyouknoweachother.R
 import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity
-import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity.Companion.friends
-import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity.Companion.user
 import pl.idappstudio.howwelldoyouknoweachother.interfaces.nextFragment
+import pl.idappstudio.howwelldoyouknoweachother.model.InviteNotificationMessage
+import pl.idappstudio.howwelldoyouknoweachother.model.Message
+import pl.idappstudio.howwelldoyouknoweachother.model.NotificationType
 import pl.idappstudio.howwelldoyouknoweachother.util.FirestoreUtil
+import pl.idappstudio.howwelldoyouknoweachother.util.GameUtil
 import pl.idappstudio.howwelldoyouknoweachother.util.GlideUtil
 
-class StageTwoFragment(private val listener: nextFragment) : Fragment() {
+class StageThreeFragment(private val listener: nextFragment) : android.support.v4.app.Fragment(), View.OnClickListener {
+
+    override fun onClick(v: View?) {
+
+        if(v != null){
+
+            lockButton()
+
+            nextQuestion.isEnabled = true
+
+            checkAnswer(v)
+
+        }
+
+    }
+
+    private val glide = GlideUtil()
 
     private lateinit var stageTitle: TextView
 
@@ -37,20 +53,14 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
     private lateinit var cAnswerUserImage: ImageView
     private lateinit var dAnswerUserImage: ImageView
 
-    private lateinit var aAnswerFriendImage: ImageView
-    private lateinit var bAnswerFriendImage: ImageView
-    private lateinit var cAnswerFriendImage: ImageView
-    private lateinit var dAnswerFriendImage: ImageView
-
     private lateinit var aAnswerButton: ConstraintLayout
     private lateinit var bAnswerButton: ConstraintLayout
     private lateinit var cAnswerButton: ConstraintLayout
     private lateinit var dAnswerButton: ConstraintLayout
 
     private lateinit var nextQuestion: Button
-    private lateinit var skipStage: Button
 
-    private val glide = GlideUtil()
+    private var userAnswer: ArrayList<String> = ArrayList()
 
     private var questionNumber = 1
 
@@ -60,10 +70,8 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
     private var banswer2 = ""
     private var banswer3 = ""
 
-    private var answer = ""
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-        val rootView: View = inflater.inflate(R.layout.fragment_stage_two, container, false)
+        val rootView = inflater.inflate(R.layout.fragment_stage_three_question, container, false)
 
         stageTitle = rootView.findViewById(R.id.gameStageTitle)
 
@@ -79,26 +87,17 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
         cAnswerUserImage = rootView.findViewById(R.id.cAnswerUserProfile)
         dAnswerUserImage = rootView.findViewById(R.id.dAnswerUserProfile)
 
-        aAnswerFriendImage = rootView.findViewById(R.id.aAnswerFriendProfile)
-        bAnswerFriendImage = rootView.findViewById(R.id.bAnswerFriendProfile)
-        cAnswerFriendImage = rootView.findViewById(R.id.cAnswerFriendProfile)
-        dAnswerFriendImage = rootView.findViewById(R.id.dAnswerFriendProfile)
-
         aAnswerButton = rootView.findViewById(R.id.answer_btn_a)
         bAnswerButton = rootView.findViewById(R.id.answer_btn_b)
         cAnswerButton = rootView.findViewById(R.id.answer_btn_c)
         dAnswerButton = rootView.findViewById(R.id.answer_btn_d)
 
+        aAnswerButton.setOnClickListener(this)
+        bAnswerButton.setOnClickListener(this)
+        cAnswerButton.setOnClickListener(this)
+        dAnswerButton.setOnClickListener(this)
+
         nextQuestion = rootView.findViewById(R.id.nextQuestionBtn)
-        skipStage = rootView.findViewById(R.id.skipStage)
-
-        skipStage.setOnClickListener {
-
-            FirestoreUtil.updateGameSettings(true, false, 3, 1, GameActivity.game.uSet.id, GameActivity.game.fSet.id, GameActivity.game.gamemode, GameActivity.game.gameID, GameActivity.user.uid, GameActivity.friends.uid)
-
-            listener.next()
-
-        }
 
         loadImage()
 
@@ -109,25 +108,23 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
         return rootView
     }
 
+
     private fun resetButton(){
 
-        nextQuestion.text = "nastepna odpowiedz"
+        nextQuestion.text = "Odpowiedz na Pytanie"
         nextQuestion.background.setColorFilter(
             ContextCompat.getColor(
-                this.context!!, R.color.colorPrimary
+                this.context!!, R.color.colorBadAnswer
             ), android.graphics.PorterDuff.Mode.SRC_IN)
 
-        stageTitle.text = "Odpowiedzi Znajomego"
+        stageTitle.text = "Odpowiedz na pytania"
+
+        nextQuestion.isEnabled = false
 
         aAnswerButton.background = resources.getDrawable(R.drawable.card_background_dark)
         bAnswerButton.background = resources.getDrawable(R.drawable.card_background_dark)
         cAnswerButton.background = resources.getDrawable(R.drawable.card_background_dark)
         dAnswerButton.background = resources.getDrawable(R.drawable.card_background_dark)
-
-        aAnswerFriendImage.visibility = View.INVISIBLE
-        bAnswerFriendImage.visibility = View.INVISIBLE
-        cAnswerFriendImage.visibility = View.INVISIBLE
-        dAnswerFriendImage.visibility = View.INVISIBLE
 
         aAnswerUserImage.visibility = View.INVISIBLE
         bAnswerUserImage.visibility = View.INVISIBLE
@@ -141,12 +138,121 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
 
     }
 
+    private fun nextQuestion() {
+
+        if (questionNumber == 3) {
+
+            nextQuestion.text = "zakończ swoją turę"
+            nextQuestion.background.setColorFilter(
+                ContextCompat.getColor(
+                    this.context!!, R.color.colorCorrectAnswer
+                ), android.graphics.PorterDuff.Mode.SRC_IN
+            )
+
+        } else {
+
+            nextQuestion.text = "następne pytanie"
+            nextQuestion.background.setColorFilter(
+                ContextCompat.getColor(
+                    this.context!!, R.color.colorPrimary
+                ), android.graphics.PorterDuff.Mode.SRC_IN
+            )
+
+        }
+
+
+        nextQuestion.setOnClickListener {
+
+            questionNumber++
+
+            if (questionNumber != 4) {
+
+                lockButton()
+                setText()
+
+            } else {
+
+                GameUtil.sendAnswerStageThree(GameActivity.game, GameActivity.user, GameActivity.friends, userAnswer[0], userAnswer[1], userAnswer[2],
+                    "set/${GameActivity.game.uSet.id}/${GameActivity.user.gender}/${GameActivity.questionList.question.questionId}",
+                    "set/${GameActivity.game.uSet.id}/${GameActivity.user.gender}/${GameActivity.questionList.question1.questionId}",
+                    "set/${GameActivity.game.uSet.id}/${GameActivity.user.gender}/${GameActivity.questionList.question2.questionId}"){
+
+                    if(GameActivity.userStats.games == 0 && GameActivity.stats.games == 1){
+
+                        GameUtil.notNewGame(GameActivity.game)
+
+                    }
+
+                    GameUtil.updateGame(GameActivity.userStats.games, GameActivity.user.uid, GameActivity.friends.uid)
+
+                    val msg: Message = InviteNotificationMessage("Twoja kolej!", "${GameActivity.user.name} skończył swoją turę, czas na ciebie!", GameActivity.user.uid, GameActivity.friends.uid,GameActivity.user.name, NotificationType.GAME)
+                    FirestoreUtil.sendMessage(msg, GameActivity.friends.uid)
+
+                    this.activity?.finish()
+
+                }
+
+            }
+        }
+
+    }
+
+    private fun checkAnswer(view: View){
+
+        if(view == aAnswerButton){
+
+            userAnswer.add(aAnswerText.text.toString())
+
+            aAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
+
+            listener.updateNumber(questionNumber, true)
+
+            aAnswerUserImage.visibility = View.VISIBLE
+
+        } else if(view == bAnswerButton){
+
+            userAnswer.add(bAnswerText.text.toString())
+
+            bAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
+
+            listener.updateNumber(questionNumber, true)
+
+            bAnswerUserImage.visibility = View.VISIBLE
+
+        } else if(view == cAnswerButton){
+
+            userAnswer.add(cAnswerText.text.toString())
+
+            cAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
+
+            listener.updateNumber(questionNumber, true)
+
+            cAnswerUserImage.visibility = View.VISIBLE
+
+        } else if(view == dAnswerButton){
+
+            userAnswer.add(dAnswerText.text.toString())
+
+            dAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
+
+            listener.updateNumber(questionNumber, true)
+
+            dAnswerUserImage.visibility = View.VISIBLE
+
+        }
+
+        nextQuestion()
+
+    }
+
     private fun lockButton(){
 
         aAnswerButton.isEnabled = false
         bAnswerButton.isEnabled = false
         cAnswerButton.isEnabled = false
         dAnswerButton.isEnabled = false
+
+        nextQuestion.isEnabled = false
 
     }
 
@@ -167,8 +273,6 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
             banswer2 = GameActivity.questionList.question.banswer2
             banswer3 = GameActivity.questionList.question.banswer3
 
-            answer = GameActivity.answerList.answer1
-
         } else if(questionNumber == 2){
 
             question = GameActivity.questionList.question1.question
@@ -177,8 +281,6 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
             banswer2 = GameActivity.questionList.question1.banswer2
             banswer3 = GameActivity.questionList.question1.banswer3
 
-            answer = GameActivity.answerList.answer2
-
         } else if(questionNumber == 3){
 
             question = GameActivity.questionList.question2.question
@@ -186,8 +288,6 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
             banswer = GameActivity.questionList.question2.banswer
             banswer2 = GameActivity.questionList.question2.banswer2
             banswer3 = GameActivity.questionList.question2.banswer3
-
-            answer = GameActivity.answerList.answer3
 
         }
 
@@ -214,15 +314,30 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
 
         array.shuffle()
 
-        if(aAnswerText.text == ""){
+        if(canswer.equals("tak") || canswer.equals("nie")){
 
-                for(a in array){
+            aAnswerText.text = "Tak"
 
-                    if(a != ""){
+            aAnswerButton.isEnabled = true
+            aAnswerButton.visibility = View.VISIBLE
+
+            bAnswerText.text = "Nie"
+
+            bAnswerButton.isEnabled = true
+            bAnswerButton.visibility = View.VISIBLE
+
+        } else {
+
+            if (aAnswerText.text == "") {
+
+                for (a in array) {
+
+                    if (a != "") {
 
                         aAnswerText.text = a
                         array.remove(a)
 
+                        aAnswerButton.isEnabled = true
                         aAnswerButton.visibility = View.VISIBLE
 
                         break
@@ -233,15 +348,16 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
 
             }
 
-        if(bAnswerText.text == ""){
+            if (bAnswerText.text == "") {
 
-                for(a in array){
+                for (a in array) {
 
-                    if(a != ""){
+                    if (a != "") {
 
                         bAnswerText.text = a
                         array.remove(a)
 
+                        bAnswerButton.isEnabled = true
                         bAnswerButton.visibility = View.VISIBLE
 
                         break
@@ -252,15 +368,16 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
 
             }
 
-        if(cAnswerText.text == ""){
+            if (cAnswerText.text == "") {
 
-                for(a in array){
+                for (a in array) {
 
-                    if(a != ""){
+                    if (a != "") {
 
                         cAnswerText.text = a
                         array.remove(a)
 
+                        cAnswerButton.isEnabled = true
                         cAnswerButton.visibility = View.VISIBLE
 
                         break
@@ -271,15 +388,16 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
 
             }
 
-        if(dAnswerText.text == ""){
+            if (dAnswerText.text == "") {
 
-                for(a in array){
+                for (a in array) {
 
-                    if(a != ""){
+                    if (a != "") {
 
                         dAnswerText.text = a
                         array.remove(a)
 
+                        dAnswerButton.isEnabled = true
                         dAnswerButton.visibility = View.VISIBLE
 
                         break
@@ -287,41 +405,6 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
                     }
 
                 }
-
-            }
-
-        checkAnswer()
-
-    }
-
-    private fun nextQuestion() {
-
-        if (questionNumber == 3) {
-
-            nextQuestion.text = "nastepny etap"
-            nextQuestion.background.setColorFilter(
-                ContextCompat.getColor(
-                    this.context!!, R.color.colorCorrectAnswer
-                ), android.graphics.PorterDuff.Mode.SRC_IN
-            )
-
-            skipStage.visibility = View.GONE
-
-        }
-
-        nextQuestion.setOnClickListener {
-
-            questionNumber++
-
-            if (questionNumber != 4) {
-
-                setText()
-
-            } else {
-
-                FirestoreUtil.updateGameSettings(true, false, 3, 1, GameActivity.game.uSet.id, GameActivity.game.fSet.id, GameActivity.game.gamemode, GameActivity.game.gameID, GameActivity.user.uid, GameActivity.friends.uid)
-
-                listener.next()
 
             }
         }
@@ -334,7 +417,6 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
 
             if(i == 0){
 
-                setFriendImage(aAnswerFriendImage)
                 setUserImage(aAnswerUserImage)
 
                 continue@loop
@@ -343,7 +425,6 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
 
             if(i == 1){
 
-                setFriendImage(bAnswerFriendImage)
                 setUserImage(bAnswerUserImage)
 
                 continue@loop
@@ -352,7 +433,6 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
 
             if(i == 2){
 
-                setFriendImage(cAnswerFriendImage)
                 setUserImage(cAnswerUserImage)
 
                 continue@loop
@@ -361,7 +441,6 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
 
             if(i == 3){
 
-                setFriendImage(dAnswerFriendImage)
                 setUserImage(dAnswerUserImage)
 
                 continue@loop
@@ -372,153 +451,13 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
 
     }
 
-    private fun checkAnswer(){
-
-        if(answer == canswer){
-
-            if(aAnswerText.text.toString() == canswer){
-
-                aAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
-
-                listener.updateNumber(questionNumber, true)
-
-                aAnswerUserImage.visibility = View.VISIBLE
-
-            }
-
-            if(bAnswerText.text.toString() == canswer){
-
-                bAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
-
-                listener.updateNumber(questionNumber, true)
-
-                bAnswerUserImage.visibility = View.VISIBLE
-
-            }
-
-            if(cAnswerText.text.toString() == canswer){
-
-                cAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
-
-                listener.updateNumber(questionNumber, true)
-
-                cAnswerUserImage.visibility = View.VISIBLE
-
-            }
-
-            if(dAnswerText.text.toString() == canswer){
-
-                dAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
-
-                listener.updateNumber(questionNumber, true)
-
-                dAnswerUserImage.visibility = View.VISIBLE
-
-            }
-
-        } else {
-
-            if(aAnswerText.text.toString() == answer){
-
-                aAnswerButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
-
-                listener.updateNumber(questionNumber, false)
-
-                aAnswerUserImage.visibility = View.VISIBLE
-
-            }
-
-            if(bAnswerText.text.toString() == answer){
-
-                bAnswerButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
-
-                listener.updateNumber(questionNumber, false)
-
-                bAnswerUserImage.visibility = View.VISIBLE
-
-            }
-
-            if(cAnswerText.text.toString() == answer){
-
-                cAnswerButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
-
-                listener.updateNumber(questionNumber, false)
-
-                cAnswerUserImage.visibility = View.VISIBLE
-
-            }
-
-            if(dAnswerText.text.toString() == answer){
-
-                dAnswerButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
-
-                listener.updateNumber(questionNumber, false)
-
-                dAnswerUserImage.visibility = View.VISIBLE
-
-            }
-
-        }
-
-        checkCorrectAnswer()
-        nextQuestion()
-
-    }
-
-    private fun checkCorrectAnswer(){
-
-        if(aAnswerText.text == canswer){
-
-            aAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
-            aAnswerFriendImage.visibility = View.VISIBLE
-
-            return
-
-        }
-
-        if(bAnswerText.text == canswer){
-
-            bAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
-            bAnswerFriendImage.visibility = View.VISIBLE
-
-            return
-
-        }
-
-        if(cAnswerText.text == canswer){
-
-            cAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
-            cAnswerFriendImage.visibility = View.VISIBLE
-
-            return
-
-        }
-
-        if(dAnswerText.text == canswer){
-
-            dAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
-            dAnswerFriendImage.visibility = View.VISIBLE
-
-            return
-
-        }
-
-    }
-
     private fun setUserImage(v: ImageView){
 
-        glide.setImage(user.fb, user.image,this.context!!, v) {
+        glide.setImage(GameActivity.user.fb, GameActivity.user.image,this.context!!, v) {
 
         }
 
     }
 
-    private fun setFriendImage(v: ImageView){
-
-        glide.setImage(friends.fb, friends.image,this.context!!, v) {
-
-        }
-
-    }
 
 }

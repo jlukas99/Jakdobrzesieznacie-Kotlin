@@ -44,7 +44,7 @@ class FriendsFragment : Fragment(), CountInterface {
     private lateinit var loadingRound: SpinKitView
 
     private lateinit var adapterRound: GamesAdapterFirestore
-    private lateinit var adapterFriends: FriendsAdapterFirestore
+    private var adapterFriends: FriendsAdapterFirestore? = null
 
     private val db = FirebaseFirestore.getInstance().collection("users")
     private val dbGames = FirebaseFirestore.getInstance().collection("games")
@@ -90,7 +90,7 @@ class FriendsFragment : Fragment(), CountInterface {
         val options: FirestoreRecyclerOptions<FriendsItem> = FirestoreRecyclerOptions.Builder<FriendsItem>().setQuery(query, FriendsItem::class.java).setLifecycleOwner(this).build()
 
         adapterFriends = FriendsAdapterFirestore(options, this)
-        adapterFriends.setRV(rvFriends)
+        adapterFriends?.setRV(rvFriends)
 
         rvFriends.setHasFixedSize(true)
         rvFriends.layoutManager = LinearLayoutManager(context)
@@ -183,13 +183,18 @@ class FriendsFragment : Fragment(), CountInterface {
 
     override fun onStart() {
         super.onStart()
-        adapterFriends.startListening()
+        if(adapterFriends != null) {
+            adapterFriends?.startListening()
+        }
 
     }
 
     override fun onStop() {
         super.onStop()
-        adapterFriends.stopListening()
+
+        if(adapterFriends != null) {
+            adapterFriends?.stopListening()
+        }
     }
 
     override fun onResume() {

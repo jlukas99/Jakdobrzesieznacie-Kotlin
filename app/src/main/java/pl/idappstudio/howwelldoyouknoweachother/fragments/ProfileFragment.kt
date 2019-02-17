@@ -34,6 +34,11 @@ class ProfileFragment : Fragment() {
     private lateinit var settings: Button
     private lateinit var share: Button
 
+    private lateinit var friends_profile_stats_canswer: TextView
+    private lateinit var friends_profile_stats_banswer: TextView
+    private lateinit var friends_profile_stats_games: TextView
+    private lateinit var profile_stats_friend_precent: TextView
+
     private val currentUser = FirestoreUtil.currentUser
 
     private val glide = GlideUtil()
@@ -50,6 +55,11 @@ class ProfileFragment : Fragment() {
         logout = rootView.findViewById(R.id.profile_logout_btn)
         settings = rootView.findViewById(R.id.profile_settings_button)
         share = rootView.findViewById(R.id.profile_share_button)
+
+        friends_profile_stats_canswer = rootView.findViewById(R.id.friends_profile_stats_canswer)
+        friends_profile_stats_banswer = rootView.findViewById(R.id.friends_profile_stats_banswer)
+        friends_profile_stats_games = rootView.findViewById(R.id.friends_profile_stats_games)
+        profile_stats_friend_precent = rootView.findViewById(R.id.profile_stats_friend_precent)
 
         logout.setOnClickListener {
 

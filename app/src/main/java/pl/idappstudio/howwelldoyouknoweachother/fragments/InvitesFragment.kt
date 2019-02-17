@@ -52,8 +52,8 @@ class InvitesFragment : Fragment(), CountInterface {
     private lateinit var recyclerView: RecyclerView
     private lateinit var recyclerSearch: RecyclerView
 
-    private lateinit var adapter: InviteAdapterFirestore
-    private lateinit var adapter2: SearchAdapterFirestore
+    private var adapter: InviteAdapterFirestore? = null
+    private var adapter2: SearchAdapterFirestore? = null
 
     private var friendsList = ArrayList<String>()
 
@@ -184,13 +184,13 @@ class InvitesFragment : Fragment(), CountInterface {
         val options: FirestoreRecyclerOptions<InviteItem> = FirestoreRecyclerOptions.Builder<InviteItem>().setQuery(query, InviteItem::class.java).setLifecycleOwner(this).build()
 
         adapter = InviteAdapterFirestore(options, this)
-        adapter.setRV(recyclerView)
+        adapter?.setRV(recyclerView)
 
         recyclerView.setHasFixedSize(true)
         recyclerView.layoutManager = LinearLayoutManager(context)
         recyclerView.adapter = adapter
 
-        adapter.startListening()
+        adapter?.startListening()
 
     }
 
@@ -209,13 +209,13 @@ class InvitesFragment : Fragment(), CountInterface {
         val options:FirestoreRecyclerOptions<InviteItem> = FirestoreRecyclerOptions.Builder<InviteItem>().setQuery(query, InviteItem::class.java).setLifecycleOwner(this).build()
 
         adapter2 = SearchAdapterFirestore(options, this, friendsList)
-        adapter2.setRV(recyclerSearch)
+        adapter2?.setRV(recyclerSearch)
 
         recyclerSearch.setHasFixedSize(true)
         recyclerSearch.layoutManager = LinearLayoutManager(context)
         recyclerSearch.adapter = adapter2
 
-        adapter2.startListening()
+        adapter2?.startListening()
 
     }
 
@@ -375,8 +375,14 @@ class InvitesFragment : Fragment(), CountInterface {
 
     override fun onStop() {
         super.onStop()
-        adapter.stopListening()
-        adapter2.stopListening()
+
+        if(adapter != null) {
+            adapter?.stopListening()
+        }
+
+        if(adapter2 != null) {
+            adapter2?.stopListening()
+        }
     }
 
     override fun onResume() {

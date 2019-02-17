@@ -471,7 +471,7 @@ class StageThreeOwnQuestionFragment(private val listener: nextFragment) : Fragme
     }
 
     companion object {
-        fun newInstance(): StatesFragment = StatesFragment()
+        fun newInstance(): AchivmentsFragment = AchivmentsFragment()
     }
 
 }

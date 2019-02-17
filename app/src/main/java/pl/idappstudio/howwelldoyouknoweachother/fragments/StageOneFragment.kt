@@ -142,9 +142,6 @@ class StageOneFragment(private val listener: nextFragment) : Fragment(), View.On
 
         }
 
-
-        loadImage()
-
         lockButton()
 
         setText()
@@ -216,6 +213,7 @@ class StageOneFragment(private val listener: nextFragment) : Fragment(), View.On
     private fun setText(){
 
         resetButton()
+        loadImage()
 
         aAnswerText.text = ""
         bAnswerText.text = ""
@@ -671,17 +669,13 @@ class StageOneFragment(private val listener: nextFragment) : Fragment(), View.On
 
     private fun setUserImage(v: ImageView){
 
-        glide.setImage(user.fb, user.image,this.context!!, v) {
-
-        }
+        glide.setImage(user.fb, user.image, this.requireContext(), v) {}
 
     }
 
     private fun setFriendImage(v: ImageView){
 
-        glide.setImage(friends.fb, friends.image,this.context!!, v) {
-
-        }
+        glide.setImage(friends.fb, friends.image, this.requireContext(), v) {}
 
     }
 

@@ -54,25 +54,36 @@ class MenuActivity : AppCompatActivity() {
         openFragment(FriendsFragment())
 
         navigation.setOnNavigationItemSelectedListener {
+
             when (it.itemId) {
                 R.id.navigation_pack -> {
-                    openFragment(PackFragment())
+                    if(!it.isChecked) {
+                        openFragment(PackFragment())
+                    }
                     true
                 }
                 R.id.navigation_states -> {
-                    openFragment(StatesFragment())
+                    if(!it.isChecked) {
+                        openFragment(AchivmentsFragment())
+                    }
                     true
                 }
                 R.id.navigation_play -> {
-                    openFragment(FriendsFragment())
+                    if(!it.isChecked) {
+                        openFragment(FriendsFragment())
+                    }
                     true
                 }
                 R.id.navigation_add_friends -> {
-                    openFragment(InvitesFragment())
+                    if(!it.isChecked) {
+                        openFragment(InvitesFragment())
+                    }
                     true
                 }
                 R.id.navigation_profile -> {
-                    openFragment(ProfileFragment())
+                    if(!it.isChecked) {
+                        openFragment(ProfileFragment())
+                    }
                     true
                 }
                 else -> false
@@ -93,6 +104,7 @@ class MenuActivity : AppCompatActivity() {
     }
 
     private fun openFragment(fragment: Fragment) {
+
         supportFragmentManager.beginTransaction()
             .disallowAddToBackStack()
             .replace(R.id.container, fragment)

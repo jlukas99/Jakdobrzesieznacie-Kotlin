@@ -1,6 +1,5 @@
 package pl.idappstudio.howwelldoyouknoweachother.util
 
-import android.app.Activity
 import android.content.Context
 import android.widget.ImageView
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -23,38 +22,46 @@ class GlideUtil {
 
         if(b){
 
-            GlideApp.with(ctx).load("http://graph.facebook.com/${image}/picture?type=large")
-                .apply(options)
-                .into(target)
+            if(target.isAttachedToWindow) {
 
-            onComplete()
-
-        } else {
-
-            if(image == "logo"){
-
-                target.setImageResource(R.mipmap.logo_colored)
-
-                onComplete()
-                return
-            }
-
-            val storageReference =
-                FirebaseStorage.getInstance().reference.child("profile_image").child(image + "-image").downloadUrl
-
-            storageReference.addOnSuccessListener { Uri ->
-
-                GlideApp.with(ctx).load(Uri.toString())
+                GlideApp.with(ctx).load("http://graph.facebook.com/${image}/picture?type=large")
                     .apply(options)
                     .into(target)
 
                 onComplete()
 
-            }.addOnFailureListener {
+            }
 
-                target.setImageResource(R.mipmap.logo_colored)
+        } else {
 
-                onComplete()
+            if(target.isAttachedToWindow) {
+
+                if (image == "logo") {
+
+                    target.setImageResource(R.mipmap.logo_colored)
+
+                    onComplete()
+                    return
+                }
+
+                val storageReference =
+                    FirebaseStorage.getInstance().reference.child("profile_image").child(image + "-image").downloadUrl
+
+                storageReference.addOnSuccessListener { Uri ->
+
+                    GlideApp.with(ctx).load(Uri.toString())
+                        .apply(options)
+                        .into(target)
+
+                    onComplete()
+
+                }.addOnFailureListener {
+
+                    target.setImageResource(R.mipmap.logo_colored)
+
+                    onComplete()
+
+                }
 
             }
 

@@ -8,21 +8,13 @@ import android.view.View
 import android.widget.TextView
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_game.*
+import org.jetbrains.anko.activityManager
 import pl.idappstudio.howwelldoyouknoweachother.R
 import pl.idappstudio.howwelldoyouknoweachother.fragments.*
 import pl.idappstudio.howwelldoyouknoweachother.interfaces.nextFragment
 import pl.idappstudio.howwelldoyouknoweachother.model.*
 import pl.idappstudio.howwelldoyouknoweachother.util.GameUtil
 import pl.idappstudio.howwelldoyouknoweachother.util.GlideUtil
-import android.os.Build
-
-
-
-
-
-
-
-
 
 class GameActivity : AppCompatActivity(), nextFragment {
 
@@ -151,10 +143,12 @@ class GameActivity : AppCompatActivity(), nextFragment {
 
             if(game.uSet.category == "own_question") {
 
-                supportFragmentManager.beginTransaction().replace(R.id.fragment, StageThreeOwnQuestionFragment(this))
-                    .commit()
-                mContent = supportFragmentManager.fragments.get(0)
-                hideLoading()
+                if(!isFinishing) {
+                    supportFragmentManager.beginTransaction()
+                        .replace(R.id.fragment, StageThreeOwnQuestionFragment(this)).commit()
+                    mContent = supportFragmentManager.fragments.get(0)
+                    hideLoading()
+                }
 
             } else {
 
@@ -162,10 +156,12 @@ class GameActivity : AppCompatActivity(), nextFragment {
 
                     questionList = it
 
-                    supportFragmentManager.beginTransaction().replace(R.id.fragment, StageThreeFragment(this))
-                        .commit()
-                    mContent = supportFragmentManager.fragments.get(0)
-                    hideLoading()
+                    if(!isFinishing) {
+                        supportFragmentManager.beginTransaction().replace(R.id.fragment, StageThreeFragment(this))
+                            .commit()
+                        mContent = supportFragmentManager.fragments.get(0)
+                        hideLoading()
+                    }
 
                 }
 
@@ -178,9 +174,11 @@ class GameActivity : AppCompatActivity(), nextFragment {
                 questionList = q
                 answerList = a
 
-                supportFragmentManager.beginTransaction().replace(R.id.fragment, StageTwoFragment(this)).commit()
-                mContent = supportFragmentManager.fragments.get(0)
-                hideLoading()
+                if(!isFinishing) {
+                    supportFragmentManager.beginTransaction().replace(R.id.fragment, StageTwoFragment(this)).commit()
+                    mContent = supportFragmentManager.fragments.get(0)
+                    hideLoading()
+                }
 
             }
 
@@ -191,10 +189,11 @@ class GameActivity : AppCompatActivity(), nextFragment {
 
 
                 questionList = it
-
-                supportFragmentManager.beginTransaction().replace(R.id.fragment, StageOneFragment(this)).commit()
-                mContent = supportFragmentManager.fragments.get(0)
-                hideLoading()
+                if(!isFinishing) {
+                    supportFragmentManager.beginTransaction().replace(R.id.fragment, StageOneFragment(this)).commit()
+                    mContent = supportFragmentManager.fragments.get(0)
+                    hideLoading()
+                }
 
             }
 

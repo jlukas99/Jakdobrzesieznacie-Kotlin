@@ -213,7 +213,6 @@ class StageOneFragment(private val listener: nextFragment) : Fragment(), View.On
     private fun setText(){
 
         resetButton()
-        loadImage()
 
         aAnswerText.text = ""
         bAnswerText.text = ""
@@ -384,6 +383,8 @@ class StageOneFragment(private val listener: nextFragment) : Fragment(), View.On
             }
         }
 
+        loadImage()
+
     }
 
     private fun rejectAnswer(){
@@ -477,45 +478,15 @@ class StageOneFragment(private val listener: nextFragment) : Fragment(), View.On
 
     private fun loadImage(){
 
-        loop@for(i in 0..3){
+        glide.setImage(user.fb, user.image, this.requireContext(), aAnswerUserImage) {}
+        glide.setImage(user.fb, user.image, this.requireContext(), bAnswerUserImage) {}
+        glide.setImage(user.fb, user.image, this.requireContext(), cAnswerUserImage) {}
+        glide.setImage(user.fb, user.image, this.requireContext(), dAnswerUserImage) {}
 
-            if(i == 0){
-
-                setFriendImage(aAnswerFriendImage)
-                setUserImage(aAnswerUserImage)
-
-                continue@loop
-
-            }
-
-            if(i == 1){
-
-                setFriendImage(bAnswerFriendImage)
-                setUserImage(bAnswerUserImage)
-
-                continue@loop
-
-            }
-
-            if(i == 2){
-
-                setFriendImage(cAnswerFriendImage)
-                setUserImage(cAnswerUserImage)
-
-                continue@loop
-
-            }
-
-            if(i == 3){
-
-                setFriendImage(dAnswerFriendImage)
-                setUserImage(dAnswerUserImage)
-
-                continue@loop
-
-            }
-
-        }
+        glide.setImage(friends.fb, friends.image, this.requireContext(), aAnswerFriendImage) {}
+        glide.setImage(friends.fb, friends.image, this.requireContext(), bAnswerFriendImage) {}
+        glide.setImage(friends.fb, friends.image, this.requireContext(), cAnswerFriendImage) {}
+        glide.setImage(friends.fb, friends.image, this.requireContext(), dAnswerFriendImage) {}
 
     }
 
@@ -664,18 +635,6 @@ class StageOneFragment(private val listener: nextFragment) : Fragment(), View.On
             return
 
         }
-
-    }
-
-    private fun setUserImage(v: ImageView){
-
-        glide.setImage(user.fb, user.image, this.requireContext(), v) {}
-
-    }
-
-    private fun setFriendImage(v: ImageView){
-
-        glide.setImage(friends.fb, friends.image, this.requireContext(), v) {}
 
     }
 

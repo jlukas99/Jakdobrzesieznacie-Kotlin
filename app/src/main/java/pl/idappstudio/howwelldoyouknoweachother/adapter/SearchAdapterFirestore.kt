@@ -2,6 +2,7 @@
 
 package pl.idappstudio.howwelldoyouknoweachother.adapter
 
+import android.os.Handler
 import android.support.annotation.NonNull
 import android.support.design.widget.Snackbar
 import android.support.v4.content.ContextCompat.getColor
@@ -11,10 +12,8 @@ import android.view.View
 import android.view.ViewGroup
 import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
-import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.search_item.view.*
 import pl.idappstudio.howwelldoyouknoweachother.R
-import pl.idappstudio.howwelldoyouknoweachother.fragments.InvitesFragment
 import pl.idappstudio.howwelldoyouknoweachother.interfaces.CountInterface
 import pl.idappstudio.howwelldoyouknoweachother.model.InviteItem
 import pl.idappstudio.howwelldoyouknoweachother.util.FirestoreUtil
@@ -101,6 +100,7 @@ class SearchAdapterFirestore(@NonNull options: FirestoreRecyclerOptions<InviteIt
             holder.itemView.profileLoading.visibility = View.GONE
 
         }
+
     }
 
     @NonNull

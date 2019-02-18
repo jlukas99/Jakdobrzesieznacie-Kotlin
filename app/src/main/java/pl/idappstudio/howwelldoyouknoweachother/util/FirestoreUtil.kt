@@ -8,6 +8,10 @@ import pl.idappstudio.howwelldoyouknoweachother.adapter.InviteAdapterFirestore
 import pl.idappstudio.howwelldoyouknoweachother.adapter.SearchAdapterFirestore
 import pl.idappstudio.howwelldoyouknoweachother.model.*
 
+
+
+
+
 object FirestoreUtil {
 
     private val firestoreInstance: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
@@ -32,7 +36,7 @@ object FirestoreUtil {
     fun registerCurrentUser(uid: String, name: String, image: String, fb: Boolean, gender: String, type: String, onComplete: () -> Unit) {
         currentUserDocRef.get().addOnSuccessListener { documentSnapshot ->
             if (!documentSnapshot.exists()) {
-                val newUser = UserData(uid, name, image, fb, gender, type, mutableListOf())
+                val newUser = UserData(uid, name, image, fb, gender, type, true, true, mutableListOf())
                 currentUserDocRef.set(newUser).addOnSuccessListener {
                     onComplete()
                 }
@@ -56,8 +60,19 @@ object FirestoreUtil {
 
     fun getCurrentUser(onComplete: (UserData) -> Unit) {
         currentUserDocRef.get().addOnSuccessListener {
-            currentUser = it.toObject(UserData::class.java)!!
-            onComplete(it.toObject(UserData::class.java)!!)
+
+            if(it.exists()) {
+
+                currentUser = it.toObject(UserData::class.java)!!
+                onComplete(it.toObject(UserData::class.java)!!)
+
+            } else {
+
+                onComplete(UserData())
+
+            }
+        }.addOnFailureListener {
+            onComplete(UserData())
         }
     }
 
@@ -122,6 +137,18 @@ object FirestoreUtil {
     fun setFavorite(uid: String, b: Boolean) {
 
         db.document(currentUser.uid).collection("friends").document(uid).update("favorite", b)
+
+    }
+
+    fun setPublic(uid: String, b: Boolean) {
+
+        db.document(currentUser.uid).update("public", b)
+
+    }
+
+    fun setNotification(uid: String, b: Boolean) {
+
+        db.document(currentUser.uid).update("notification", b)
 
     }
 
@@ -218,5 +245,7 @@ object FirestoreUtil {
     fun setFCMRegistrationTokens(registrationTokens: MutableList<String>) {
         currentUserDocRef.update(mapOf("registrationTokens" to registrationTokens))
     }
+
+
 
 }

@@ -29,10 +29,35 @@ import pl.idappstudio.howwelldoyouknoweachother.adapter.SearchAdapterFirestore
 import pl.idappstudio.howwelldoyouknoweachother.interfaces.CountInterface
 import pl.idappstudio.howwelldoyouknoweachother.model.InviteItem
 import pl.idappstudio.howwelldoyouknoweachother.util.FirestoreUtil
+import android.content.Intent
+import com.facebook.CallbackManager
+import com.facebook.FacebookCallback
+import com.facebook.FacebookException
+import com.facebook.FacebookSdk
+import com.facebook.share.model.GameRequestContent
+import com.facebook.share.widget.GameRequestDialog
+
+
+
 
 class InvitesFragment : Fragment(), CountInterface {
 
-    override fun click(s: String, b: Boolean, name: String, image: Int) {}
+    override fun click(s: String, b: Boolean, name: String, image: Int) {
+
+//      val content = GameRequestContent.Builder()
+//        .setMessage("Zagraj ze mną :D")
+//        .build()
+//        requestDialog?.show(content)
+
+    }
+
+//    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+//        super.onActivityResult(requestCode, resultCode, data)
+//        callbackManager?.onActivityResult(requestCode, resultCode, data)
+//    }
+
+//    var requestDialog: GameRequestDialog? = null
+//    var callbackManager: CallbackManager? = null
 
     private lateinit var btnHide: ImageButton
     private lateinit var btnHide2: ImageButton
@@ -70,6 +95,24 @@ class InvitesFragment : Fragment(), CountInterface {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView:View = inflater.inflate(R.layout.fragment_invites, container, false)
+
+//        FacebookSdk.sdkInitialize(this.context)
+//        callbackManager = CallbackManager.Factory.create()
+//        requestDialog = GameRequestDialog(this)
+//        requestDialog?.registerCallback(callbackManager,
+//            object : FacebookCallback<GameRequestDialog.Result> {
+//                override fun onSuccess(result:GameRequestDialog.Result) {
+//
+//                    val id = result.requestRecipients.size
+//
+//                }
+//
+//                override fun onCancel() {}
+//
+//                override fun onError(error: FacebookException) {}
+//
+//            }
+//        )
 
         loading = rootView.findViewById(R.id.loading)
         loading2 = rootView.findViewById(R.id.loading2)
@@ -198,7 +241,7 @@ class InvitesFragment : Fragment(), CountInterface {
 
         val query: Query = if(searchInput.text.isNullOrBlank()){
 
-            db.collection("users").orderBy("name", Query.Direction.ASCENDING)
+            db.collection("users").whereEqualTo("public", true)
 
         } else {
 
@@ -307,7 +350,7 @@ class InvitesFragment : Fragment(), CountInterface {
 
         if(searchInput.text.isNullOrBlank()){
 
-            db.collection("users").orderBy("name", Query.Direction.ASCENDING).get().addOnCompleteListener { task ->
+            db.collection("users").whereEqualTo("public", true).get().addOnCompleteListener { task ->
 
                 if(!task.result?.isEmpty!!){
 

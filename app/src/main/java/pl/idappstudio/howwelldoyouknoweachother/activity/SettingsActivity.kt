@@ -15,6 +15,7 @@ import android.net.Uri
 import android.provider.MediaStore
 import android.support.design.widget.Snackbar
 import android.widget.ArrayAdapter
+import android.widget.CompoundButton
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
 import pl.idappstudio.howwelldoyouknoweachother.util.StorgeUtil
@@ -38,6 +39,37 @@ class SettingsActivity : AppCompatActivity() {
         exit_settings.setOnClickListener { finish() }
 
         version_text.text = getVersion()
+
+        public_profile_switch.isActivated = FirestoreUtil.currentUser.public
+        notification_switch.isActivated = FirestoreUtil.currentUser.notification
+
+        public_profile_switch.setOnCheckedChangeListener { compoundButton: CompoundButton, b: Boolean ->
+
+            if(b){
+
+                FirestoreUtil.setPublic(FirestoreUtil.currentUser.uid, true)
+
+            } else {
+
+                FirestoreUtil.setPublic(FirestoreUtil.currentUser.uid, false)
+
+            }
+
+        }
+
+        notification_switch.setOnCheckedChangeListener { compoundButton: CompoundButton, b: Boolean ->
+
+            if(b){
+
+                FirestoreUtil.setNotification(FirestoreUtil.currentUser.uid, true)
+
+            } else {
+
+                FirestoreUtil.setNotification(FirestoreUtil.currentUser.uid, false)
+
+            }
+
+        }
 
         cardView_change_nick.setOnClickListener {
 

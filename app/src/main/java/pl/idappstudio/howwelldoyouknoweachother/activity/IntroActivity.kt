@@ -38,8 +38,17 @@ class IntroActivity : Activity() {
         } else {
             FirestoreUtil.getCurrentUser {
 
-                startActivity<MenuActivity>()
-                finish()
+                if(it.uid != "") {
+
+                    startActivity<MenuActivity>()
+                    finish()
+
+                } else {
+
+                    startActivity<LoginMenuActivity>()
+                    finish()
+
+                }
 
             }
         }

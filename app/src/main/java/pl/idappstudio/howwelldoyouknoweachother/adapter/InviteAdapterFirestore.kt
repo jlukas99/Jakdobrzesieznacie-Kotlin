@@ -2,6 +2,7 @@
 
 package pl.idappstudio.howwelldoyouknoweachother.adapter
 
+import android.content.Context
 import android.support.annotation.NonNull
 import android.support.design.widget.Snackbar
 import android.support.v7.widget.RecyclerView
@@ -18,7 +19,7 @@ import pl.idappstudio.howwelldoyouknoweachother.interfaces.CountInterface
 import pl.idappstudio.howwelldoyouknoweachother.util.GlideUtil
 
 
-class InviteAdapterFirestore(@NonNull options: FirestoreRecyclerOptions<InviteItem>, private val listener: CountInterface) : FirestoreRecyclerAdapter<InviteItem, InviteAdapterFirestore.InviteHolder>(options) {
+class InviteAdapterFirestore(@NonNull options: FirestoreRecyclerOptions<InviteItem>, private val listener: CountInterface, private val view: View) : FirestoreRecyclerAdapter<InviteItem, InviteAdapterFirestore.InviteHolder>(options) {
 
     private var rv: RecyclerView? = null
     private val glide = GlideUtil()
@@ -65,7 +66,7 @@ class InviteAdapterFirestore(@NonNull options: FirestoreRecyclerOptions<InviteIt
 
                     if(holder.itemView.rootView != null) {
 
-                        val snackbar: Snackbar? = Snackbar.make(holder.itemView.rootView, "Zaakceptowano zaproszenie od ${model.name}", 2500)
+                        val snackbar: Snackbar? = Snackbar.make(view, "Zaakceptowano zaproszenie od ${model.name}", 2500)
                         snackbar?.view?.setBackgroundColor(holder.itemView.resources.getColor(R.color.colorAccent))
                         snackbar?.show()
 
@@ -86,7 +87,7 @@ class InviteAdapterFirestore(@NonNull options: FirestoreRecyclerOptions<InviteIt
                         holder.itemView.btn_delete.visibility = View.VISIBLE
 
                         val snackbar: Snackbar? =
-                            Snackbar.make(holder.itemView.rootView, "Nie udało się dodać do znajomych!", 2500)
+                            Snackbar.make(view, "Nie udało się dodać do znajomych!", 2500)
                         snackbar?.view?.setBackgroundColor(holder.itemView.resources.getColor(R.color.colorYellow))
                         snackbar?.show()
 
@@ -110,7 +111,7 @@ class InviteAdapterFirestore(@NonNull options: FirestoreRecyclerOptions<InviteIt
                 holder.itemView.btn_delete.visibility = View.GONE
 
                 val snackbar: Snackbar? =
-                    Snackbar.make(holder.itemView.rootView, "Usunięto zaproszenie od ${model.name}", 2500)
+                    Snackbar.make(view, "Usunięto zaproszenie od ${model.name}", 2500)
                 snackbar?.view?.setBackgroundColor(holder.itemView.resources.getColor(R.color.colorRed))
                 snackbar?.show()
 
@@ -129,7 +130,7 @@ class InviteAdapterFirestore(@NonNull options: FirestoreRecyclerOptions<InviteIt
                     holder.itemView.btn_delete.visibility = View.VISIBLE
 
                     val snackbar2: Snackbar? =
-                        Snackbar.make(holder.itemView.rootView, "Nie udało się usunąć zaproszenie", 2500)
+                        Snackbar.make(view, "Nie udało się usunąć zaproszenie", 2500)
                     snackbar2?.view?.setBackgroundColor(holder.itemView.resources.getColor(R.color.colorRed))
                     snackbar2?.show()
 

@@ -34,6 +34,7 @@ import com.facebook.AccessToken
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
+import pl.idappstudio.howwelldoyouknoweachother.util.FacebookUtil
 import java.util.*
 
 
@@ -117,7 +118,6 @@ class LoginMenuActivity : Activity() {
 
                     handleFacebookAccessToken(loginResult.accessToken)
                     makeGraphRequest(loginResult.accessToken)
-                    getFacebookFriends(loginResult.accessToken)
 
                 }
 
@@ -132,11 +132,26 @@ class LoginMenuActivity : Activity() {
 
                 override fun onError(error: FacebookException) {
 
+                    if (error is FacebookAuthorizationException) {
+                        if (AccessToken.getCurrentAccessToken() != null) {
+                            LoginManager.getInstance().logOut()
+
+                            alertDialog.dismiss()
+
+                            val snackbar: Snackbar? = Snackbar.make(view, "Wylogowano z poprzedniego konta, spróbuj zalogować się ponownie!", 2500)
+                            snackbar?.view?.setBackgroundColor(resources.getColor(R.color.colorRed))
+                            snackbar?.show()
+
+                            return
+                        }
+                    }
+
                     alertDialog.dismiss()
 
                     val snackbar: Snackbar? = Snackbar.make(view, "Nie udało się zalogować!", 2500)
                     snackbar?.view?.setBackgroundColor(resources.getColor(R.color.colorRed))
                     snackbar?.show()
+
                 }
             })
 
@@ -164,22 +179,6 @@ class LoginMenuActivity : Activity() {
         request.executeAsync()
 
         return gender
-    }
-
-    private fun getFacebookFriends(token:AccessToken) {
-        val request = GraphRequest.newMyFriendsRequest(token) { array, response ->
-
-            for (i in 0 until array.length()) {
-
-                Log.d("DEBUG", array.getJSONObject(i).getString("id"))
-
-            }
-        }
-
-        val parameters = Bundle()
-        parameters.putString("fields", "id")
-        request.parameters = parameters
-        request.executeAsync()
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
@@ -217,6 +216,10 @@ class LoginMenuActivity : Activity() {
 
                         val registrationToken = FirebaseInstanceId.getInstance().token
                         MyFirebaseMessagingService.addTokenToFirestore(registrationToken)
+
+                        if(it) {
+                            FacebookUtil.getFacebookFriends(token, profile.name)
+                        }
 
                         startActivity(intentFor<MenuActivity>().newTask().clearTask())
 

@@ -33,16 +33,16 @@ object FirestoreUtil {
 
     }
 
-    fun registerCurrentUser(uid: String, name: String, image: String, fb: Boolean, gender: String, type: String, onComplete: () -> Unit) {
+    fun registerCurrentUser(uid: String, name: String, image: String, fb: Boolean, gender: String, type: String, onComplete: (Boolean) -> Unit) {
         currentUserDocRef.get().addOnSuccessListener { documentSnapshot ->
             if (!documentSnapshot.exists()) {
                 val newUser = UserData(uid, name, image, fb, gender, type, true, true, mutableListOf())
                 currentUserDocRef.set(newUser).addOnSuccessListener {
-                    onComplete()
+                    onComplete(true)
                 }
             }
             else
-                onComplete()
+                onComplete(false)
         }
     }
 
@@ -161,6 +161,126 @@ object FirestoreUtil {
         dbGame.document(gameID).update("$yourID-set", yourSet)
         dbGame.document(gameID).update("$friendID-set", friendSet)
         dbGame.document(gameID).update("gamemode", gamemode)
+
+    }
+
+    fun getUser(uid: String, onComplete: (UserData) -> Unit){
+
+        db.whereEqualTo("image", uid).get().addOnSuccessListener {
+
+            if(it.isEmpty){
+                onComplete(UserData())
+            }
+
+            for(doc in it) {
+
+                onComplete(doc.toObject(UserData::class.java))
+
+            }
+
+        }.addOnFailureListener {
+
+            onComplete(UserData())
+
+        }
+
+    }
+
+    fun getFriendsList(onComplete: (ArrayList<String>) -> Unit){
+
+        val list = ArrayList<String>()
+
+        list.clear()
+
+        currentUserDocRef.collection("friends").get().addOnSuccessListener {
+
+            if(it.isEmpty){
+
+                onComplete(list)
+
+            }
+
+            for(doc in it){
+
+                list.add(doc.id)
+
+                if(it.size() == list.size){
+
+                    onComplete(list)
+
+                }
+
+            }
+
+        }
+
+    }
+
+    fun addFacebookFriend(uid: String, list: ArrayList<String>, onComplete: () -> Unit){
+
+        if(list.contains(uid)){
+
+            onComplete()
+
+        }
+
+        val user = HashMap<String, Any>()
+        user["uid"] = uid
+        user["favorite"] = false
+        user["days"] = 0
+        user["canswer"] = 0
+        user["banswer"] = 0
+        user["games"] = 0
+        user["gameId"] = uid+FirebaseAuth.getInstance().currentUser?.uid.toString()
+
+        db.document(FirebaseAuth.getInstance().currentUser?.uid!!).collection("friends").document(uid).set(user).addOnSuccessListener {it2 ->
+
+            val user2 = HashMap<String, Any>()
+            user2["uid"] = FirebaseAuth.getInstance().currentUser?.uid.toString()
+            user2["favorite"] = false
+            user2["days"] = 0
+            user2["canswer"] = 0
+            user2["banswer"] = 0
+            user2["games"] = 0
+            user2["gameId"] = uid+FirebaseAuth.getInstance().currentUser?.uid.toString()
+
+            db.document(uid).collection("friends").document(FirebaseAuth.getInstance().currentUser?.uid!!).set(user2).addOnSuccessListener {
+
+                val user3 = HashMap<String, Any>()
+                user3["gamemode"] = "classic"
+                user3["$uid-stage"] = 0
+                user3["${FirebaseAuth.getInstance().currentUser?.uid.toString()}-stage"] = 0
+                user3["$uid-turn"] = true
+                user3["${FirebaseAuth.getInstance().currentUser?.uid.toString()}-turn"] = true
+                user3["$uid-set"] = "tK29qYKKfGtBBzl6PBiC"
+                user3["${FirebaseAuth.getInstance().currentUser?.uid.toString()}-set"] = "tK29qYKKfGtBBzl6PBiC"
+                user3["newGame"] = true
+                user3["${FirebaseAuth.getInstance().currentUser?.uid.toString()}-id"] = uid
+                user3["$uid-id"] = FirebaseAuth.getInstance().currentUser?.uid.toString()
+
+                dbGame.document(uid+FirebaseAuth.getInstance().currentUser?.uid.toString()).set(user3).addOnSuccessListener {
+
+                    initialize()
+
+                    onComplete()
+
+                }.addOnFailureListener {
+
+                    onComplete()
+
+                }
+
+            }.addOnFailureListener {
+
+                onComplete()
+
+            }
+
+        }.addOnFailureListener {
+
+            onComplete()
+
+        }
 
     }
 

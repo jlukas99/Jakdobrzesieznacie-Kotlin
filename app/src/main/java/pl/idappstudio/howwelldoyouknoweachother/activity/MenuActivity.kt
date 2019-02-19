@@ -12,13 +12,11 @@ import kotlinx.android.synthetic.main.activity_menu.*
 import pl.idappstudio.howwelldoyouknoweachother.R
 import pl.idappstudio.howwelldoyouknoweachother.fragments.*
 import pl.idappstudio.howwelldoyouknoweachother.util.AdMobUtil
-import android.graphics.Bitmap
-import android.graphics.drawable.BitmapDrawable
-import android.graphics.drawable.Drawable
 import pl.idappstudio.howwelldoyouknoweachother.util.FirestoreUtil
 
-
 class MenuActivity : AppCompatActivity() {
+
+    var b: Boolean = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -49,7 +47,16 @@ class MenuActivity : AppCompatActivity() {
             }
         }
 
-        fab_play.fabIcon = iconNav()
+        navigation.selectedItemId = R.id.navigation_play
+
+        fab.setOnClickListener {
+
+            if(!navigation.menu.getItem(2).isChecked) {
+                openFragment(FriendsFragment())
+                navigation.selectedItemId = R.id.navigation_play
+            }
+
+        }
 
         openFragment(FriendsFragment())
 
@@ -58,31 +65,36 @@ class MenuActivity : AppCompatActivity() {
             when (it.itemId) {
                 R.id.navigation_pack -> {
                     if(!it.isChecked) {
+
                         openFragment(PackFragment())
+
                     }
                     true
                 }
                 R.id.navigation_states -> {
                     if(!it.isChecked) {
+
                         openFragment(AchivmentsFragment())
+
                     }
                     true
                 }
                 R.id.navigation_play -> {
-                    if(!it.isChecked) {
-                        openFragment(FriendsFragment())
-                    }
                     true
                 }
                 R.id.navigation_add_friends -> {
                     if(!it.isChecked) {
+
                         openFragment(InvitesFragment())
+
                     }
                     true
                 }
                 R.id.navigation_profile -> {
                     if(!it.isChecked) {
+
                         openFragment(ProfileFragment())
+
                     }
                     true
                 }
@@ -90,25 +102,17 @@ class MenuActivity : AppCompatActivity() {
             }
         }
 
-        navigation.menu.getItem(2).isChecked = true
-
-    }
-
-    private fun iconNav() : Drawable {
-
-        val dr = resources.getDrawable(R.mipmap.games_icon)
-        val bitmap = (dr as BitmapDrawable).bitmap
-
-        return BitmapDrawable(resources, Bitmap.createScaledBitmap(bitmap, 100, 100, true))
+        navigation.menu.getItem(2).isEnabled = false
 
     }
 
     private fun openFragment(fragment: Fragment) {
 
-        supportFragmentManager.beginTransaction()
-            .disallowAddToBackStack()
-            .replace(R.id.container, fragment)
-            .commit()
+            supportFragmentManager.beginTransaction()
+                .disallowAddToBackStack()
+                .replace(R.id.container, fragment)
+                .commit()
+
     }
 
     override fun onResume() {

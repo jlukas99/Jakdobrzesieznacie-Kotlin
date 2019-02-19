@@ -84,30 +84,63 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         if (group == "INVITE") {
 
-            val notificationBuilder = NotificationCompat.Builder(this, channelId)
-                .setSmallIcon(R.drawable.ic_add_friends_icon)
-                .setBadgeIconType(NotificationCompat.BADGE_ICON_SMALL)
-                .setLargeIcon(bitmapIcon)
-                .setShowWhen(true)
-                .setContentTitle(title)
-                .setColor(resources.getColor(R.color.colorAccent))
-                .setContentText(messageBody)
-                .setAutoCancel(true)
-                .setPriority(NotificationCompat.PRIORITY_MAX)
-                .setContentIntent(notifyPendingIntent)
-                .setDefaults(Notification.DEFAULT_SOUND or Notification.DEFAULT_LIGHTS or Notification.DEFAULT_VIBRATE)
+            val notificationBuilder: NotificationCompat.Builder
 
-            val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+            if(title == "Znajomy z Facebook'a"){
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                notificationBuilder = NotificationCompat.Builder(this, channelId)
+                    .setSmallIcon(R.mipmap.ic_facebook)
+                    .setBadgeIconType(NotificationCompat.BADGE_ICON_SMALL)
+                    .setLargeIcon(bitmapIcon)
+                    .setShowWhen(true)
+                    .setContentTitle(title)
+                    .setColor(resources.getColor(R.color.colorFacebook))
+                    .setContentText(messageBody)
+                    .setAutoCancel(true)
+                    .setPriority(NotificationCompat.PRIORITY_MAX)
+                    .setContentIntent(notifyPendingIntent)
+                    .setDefaults(Notification.DEFAULT_SOUND or Notification.DEFAULT_LIGHTS or Notification.DEFAULT_VIBRATE)
 
-                val channel = NotificationChannel(channelId, "zaproszenie", NotificationManager.IMPORTANCE_HIGH)
+                val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
-                notificationManager.createNotificationChannel(channel)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+                    val channel = NotificationChannel(channelId, "zaproszenie facebook", NotificationManager.IMPORTANCE_HIGH)
+
+                    notificationManager.createNotificationChannel(channel)
+
+                }
+
+                notificationManager.notify(notificationId, notificationBuilder.build())
+
+            } else {
+
+                notificationBuilder = NotificationCompat.Builder(this, channelId)
+                    .setSmallIcon(R.drawable.ic_add_friends_icon)
+                    .setBadgeIconType(NotificationCompat.BADGE_ICON_SMALL)
+                    .setLargeIcon(bitmapIcon)
+                    .setShowWhen(true)
+                    .setContentTitle(title)
+                    .setColor(resources.getColor(R.color.colorAccent))
+                    .setContentText(messageBody)
+                    .setAutoCancel(true)
+                    .setPriority(NotificationCompat.PRIORITY_MAX)
+                    .setContentIntent(notifyPendingIntent)
+                    .setDefaults(Notification.DEFAULT_SOUND or Notification.DEFAULT_LIGHTS or Notification.DEFAULT_VIBRATE)
+
+                val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+
+                    val channel = NotificationChannel(channelId, "zaproszenie", NotificationManager.IMPORTANCE_HIGH)
+
+                    notificationManager.createNotificationChannel(channel)
+
+                }
+
+                notificationManager.notify(notificationId, notificationBuilder.build())
 
             }
-
-            notificationManager.notify(notificationId, notificationBuilder.build())
 
         } else {
 

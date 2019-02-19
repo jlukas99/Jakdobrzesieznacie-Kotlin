@@ -145,6 +145,7 @@ class GameActivity : AppCompatActivity(), nextFragment {
 
                 if(!isFinishing) {
                     supportFragmentManager.beginTransaction()
+                        .disallowAddToBackStack()
                         .replace(R.id.fragment, StageThreeOwnQuestionFragment(this)).commit()
                     mContent = supportFragmentManager.fragments.get(0)
                     hideLoading()
@@ -157,8 +158,9 @@ class GameActivity : AppCompatActivity(), nextFragment {
                     questionList = it
 
                     if(!isFinishing) {
-                        supportFragmentManager.beginTransaction().replace(R.id.fragment, StageThreeFragment(this))
-                            .commit()
+                        supportFragmentManager.beginTransaction()
+                            .disallowAddToBackStack()
+                            .replace(R.id.fragment, StageThreeFragment(this)).commit()
                         mContent = supportFragmentManager.fragments.get(0)
                         hideLoading()
                     }
@@ -175,7 +177,9 @@ class GameActivity : AppCompatActivity(), nextFragment {
                 answerList = a
 
                 if(!isFinishing) {
-                    supportFragmentManager.beginTransaction().replace(R.id.fragment, StageTwoFragment(this)).commit()
+                    supportFragmentManager.beginTransaction()
+                        .disallowAddToBackStack()
+                        .replace(R.id.fragment, StageTwoFragment(this)).commit()
                     mContent = supportFragmentManager.fragments.get(0)
                     hideLoading()
                 }
@@ -190,7 +194,9 @@ class GameActivity : AppCompatActivity(), nextFragment {
 
                 questionList = it
                 if(!isFinishing) {
-                    supportFragmentManager.beginTransaction().replace(R.id.fragment, StageOneFragment(this)).commit()
+                    supportFragmentManager.beginTransaction()
+                        .disallowAddToBackStack()
+                        .replace(R.id.fragment, StageOneFragment(this)).commit()
                     mContent = supportFragmentManager.fragments.get(0)
                     hideLoading()
                 }

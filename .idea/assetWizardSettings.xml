@@ -94,9 +94,8 @@
                         <option name="values">
                           <map>
                             <entry key="assetSourceType" value="FILE" />
-                            <entry key="outputName" value="ic_iconmonstr_medal_6" />
-                            <entry key="overrideSize" value="true" />
-                            <entry key="sourceFile" value="C:\Users\johnn\Downloads\iconmonstr-medal-6.svg" />
+                            <entry key="outputName" value="ic_add_friends" />
+                            <entry key="sourceFile" value="C:\Users\johnn\Dysk Google (johnnylukas99@gmail.com)\iDapp Studio\Jak dobrze sie znacie\Assets\icon\ic_add_friends.svg" />
                           </map>
                         </option>
                       </PersistentState>

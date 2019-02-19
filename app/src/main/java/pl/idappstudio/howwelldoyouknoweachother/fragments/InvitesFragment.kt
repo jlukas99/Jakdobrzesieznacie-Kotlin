@@ -3,7 +3,6 @@
 package pl.idappstudio.howwelldoyouknoweachother.fragments
 
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.view.LayoutInflater
@@ -29,13 +28,6 @@ import pl.idappstudio.howwelldoyouknoweachother.adapter.SearchAdapterFirestore
 import pl.idappstudio.howwelldoyouknoweachother.interfaces.CountInterface
 import pl.idappstudio.howwelldoyouknoweachother.model.InviteItem
 import pl.idappstudio.howwelldoyouknoweachother.util.FirestoreUtil
-import android.content.Intent
-import com.facebook.CallbackManager
-import com.facebook.FacebookCallback
-import com.facebook.FacebookException
-import com.facebook.FacebookSdk
-import com.facebook.share.model.GameRequestContent
-import com.facebook.share.widget.GameRequestDialog
 
 
 
@@ -77,6 +69,8 @@ class InvitesFragment : Fragment(), CountInterface {
     private lateinit var recyclerView: RecyclerView
     private lateinit var recyclerSearch: RecyclerView
 
+    private lateinit var container2: View
+
     private var adapter: InviteAdapterFirestore? = null
     private var adapter2: SearchAdapterFirestore? = null
 
@@ -95,6 +89,8 @@ class InvitesFragment : Fragment(), CountInterface {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView:View = inflater.inflate(R.layout.fragment_invites, container, false)
+
+        container2 = activity!!.findViewById(R.id.container)
 
 //        FacebookSdk.sdkInitialize(this.context)
 //        callbackManager = CallbackManager.Factory.create()
@@ -226,7 +222,7 @@ class InvitesFragment : Fragment(), CountInterface {
 
         val options: FirestoreRecyclerOptions<InviteItem> = FirestoreRecyclerOptions.Builder<InviteItem>().setQuery(query, InviteItem::class.java).setLifecycleOwner(this).build()
 
-        adapter = InviteAdapterFirestore(options, this)
+        adapter = InviteAdapterFirestore(options, this, container2)
         adapter?.setRV(recyclerView)
 
         recyclerView.setHasFixedSize(true)

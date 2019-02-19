@@ -31,11 +31,16 @@ class IntroActivity : Activity() {
         AdMobUtil(this@IntroActivity)
 
         if (FirebaseAuth.getInstance().currentUser == null) {
+
             Timer("StartActivity", false).schedule(1000) {
+
                 startActivity<LoginMenuActivity>()
                 finish()
+
             }
+
         } else {
+
             FirestoreUtil.getCurrentUser {
 
                 if(it.uid != "") {
@@ -51,6 +56,7 @@ class IntroActivity : Activity() {
                 }
 
             }
+
         }
 
     }

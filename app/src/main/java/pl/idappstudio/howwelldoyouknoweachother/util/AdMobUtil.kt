@@ -3,7 +3,6 @@ package pl.idappstudio.howwelldoyouknoweachother.util
 import android.content.Context
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
-import com.google.android.gms.ads.reward.RewardedVideoAd
 import pl.idappstudio.howwelldoyouknoweachother.R
 
 class AdMobUtil(context: Context) {

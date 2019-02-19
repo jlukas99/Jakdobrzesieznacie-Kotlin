@@ -13,63 +13,119 @@
             android:background="@drawable/background_dark_overlay"
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"/>
-    <FrameLayout
-            android:id="@+id/container"
+    <fragment
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:name="pl.idappstudio.howwelldoyouknoweachother.fragments.FriendsFragment"
+            android:id="@+id/container" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" android:layout_marginBottom="24dp"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <android.support.design.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="56dp">
-    </FrameLayout>
+            android:id="@+id/coordinatorLayout"
+            app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent" android:elevation="8dp">
 
-    <android.support.constraint.ConstraintLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" android:id="@+id/constraintLayout">
+        <!-- Other components and views -->
+        <android.support.design.bottomappbar.BottomAppBar
+                android:id="@+id/bar"
+                android:layout_height="58dp"
+                android:layout_gravity="bottom"
+                app:backgroundTint="@color/colorPrimaryDark"
+                app:hideOnScroll="true"
+                android:theme="@style/Widget.MaterialComponents.BottomAppBar" android:layout_width="match_parent"
+                android:gravity="center_horizontal|center_vertical">
 
-        <View
+        </android.support.design.bottomappbar.BottomAppBar>
+
+        <!--<android.support.design.widget.BottomNavigationView-->
+                <!--android:id="@+id/navigation"-->
+                <!--android:layout_width="match_parent"-->
+                <!--android:layout_height="58dp"-->
+                <!--app:layout_constraintBottom_toBottomOf="parent"-->
+                <!--app:layout_constraintLeft_toLeftOf="parent"-->
+                <!--app:layout_constraintRight_toRightOf="parent"-->
+                <!--app:menu="@menu/navigation"-->
+                <!--app:itemIconTint="@drawable/icon_state"-->
+                <!--app:itemTextColor="@drawable/icon_state"-->
+                <!--style="@style/BottomNavigationView"-->
+                <!--android:background="@color/colorTranspery"-->
+                <!--app:itemBackground="@color/colorTranspery"-->
+                <!--app:labelVisibilityMode="labeled"-->
+                <!--app:elevation="0dp" android:animateLayoutChanges="true"-->
+                <!--app:layout_anchorGravity="center_vertical|center_horizontal" app:layout_anchor="@id/bar"/>-->
+
+        <android.support.design.widget.FloatingActionButton
+                android:id="@+id/fab"
                 android:layout_width="wrap_content"
-                android:layout_height="10dp"
-                android:background="@drawable/shadow" android:id="@+id/view8"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintHorizontal_bias="0.0"
-                app:layout_constraintBottom_toTopOf="@+id/navigation"
-                app:layout_constraintVertical_bias="1.0"/>
+                android:layout_height="wrap_content"
+                app:layout_anchor="@id/bar" android:src="@mipmap/games_icon"
+                app:rippleColor="@color/colorDarkDialog"
+        />
         <android.support.design.widget.BottomNavigationView
                 android:id="@+id/navigation"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
                 app:menu="@menu/navigation"
-                app:labelVisibilityMode="labeled" app:itemIconTint="@drawable/icon_state"
-                app:itemTextColor="@drawable/icon_state"
-                style="@style/BottomNavigationView"
-                android:background="@color/colorPrimaryDark"
-                app:itemBackground="@color/colorPrimaryDark" app:itemIconSize="28dp">
+                app:labelVisibilityMode="labeled" app:layout_anchor="@id/bar"
+                app:layout_anchorGravity="center_vertical|center_horizontal" app:itemIconTint="@drawable/icon_state"
+                app:itemTextColor="@drawable/icon_state" android:background="@color/colorTranspery"
+                app:itemTextAppearanceActive="@style/TextAppearance.BottomNavigationView.Active"
+                app:itemTextAppearanceInactive="@style/TextAppearance.BottomNavigationView.Inactive"
+                app:itemIconSize="24dp"/>
 
-        </android.support.design.widget.BottomNavigationView>
+    </android.support.design.widget.CoordinatorLayout>
 
-    </android.support.constraint.ConstraintLayout>
+    <!--<android.support.constraint.ConstraintLayout-->
+            <!--android:layout_width="match_parent"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"-->
+            <!--app:layout_constraintEnd_toEndOf="parent" android:id="@+id/constraintLayout">-->
 
-    <com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton
-            android:id="@+id/fab_play"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            app:fabType="roundedSquare"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="16dp"
-            android:layout_marginTop="8dp"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="1.0"
-            android:layout_marginEnd="32dp" android:layout_marginStart="32dp"
-            app:layout_constraintStart_toStartOf="parent"
-            android:shadowColor="@color/colorShadowStart"
-            android:shadowDy="3" android:shadowRadius="6" android:shadowDx="0"/>
+        <!--<View-->
+                <!--android:layout_width="wrap_content"-->
+                <!--android:layout_height="10dp"-->
+                <!--android:background="@drawable/shadow" android:id="@+id/view8"-->
+                <!--app:layout_constraintStart_toStartOf="parent"-->
+                <!--app:layout_constraintEnd_toEndOf="parent"-->
+                <!--app:layout_constraintTop_toTopOf="parent"-->
+                <!--app:layout_constraintHorizontal_bias="0.0"-->
+                <!--app:layout_constraintBottom_toTopOf="@+id/navigation"-->
+                <!--app:layout_constraintVertical_bias="1.0"/>-->
+        <!--<android.support.design.widget.BottomNavigationView-->
+                <!--android:id="@+id/navigation"-->
+                <!--android:layout_width="0dp"-->
+                <!--android:layout_height="wrap_content"-->
+                <!--app:layout_constraintBottom_toBottomOf="parent"-->
+                <!--app:layout_constraintLeft_toLeftOf="parent"-->
+                <!--app:layout_constraintRight_toRightOf="parent"-->
+                <!--app:menu="@menu/navigation"-->
+                <!--app:labelVisibilityMode="labeled" app:itemIconTint="@drawable/icon_state"-->
+                <!--app:itemTextColor="@drawable/icon_state"-->
+                <!--style="@style/BottomNavigationView"-->
+                <!--android:background="@color/colorPrimaryDark"-->
+                <!--app:itemBackground="@color/colorPrimaryDark" app:itemIconSize="28dp">-->
+
+        <!--</android.support.design.widget.BottomNavigationView>-->
+
+    <!--</android.support.constraint.ConstraintLayout>-->
+
+    <!--<com.robertlevonyan.views.customfloatingactionbutton.FloatingActionButton-->
+            <!--android:id="@+id/fab_play"-->
+            <!--android:layout_width="wrap_content"-->
+            <!--android:layout_height="wrap_content"-->
+            <!--app:fabType="roundedSquare"-->
+            <!--app:layout_constraintEnd_toEndOf="parent"-->
+            <!--app:layout_constraintBottom_toBottomOf="parent" android:layout_marginBottom="16dp"-->
+            <!--android:layout_marginTop="8dp"-->
+            <!--app:layout_constraintTop_toTopOf="parent" app:layout_constraintVertical_bias="1.0"-->
+            <!--android:layout_marginEnd="32dp" android:layout_marginStart="32dp"-->
+            <!--app:layout_constraintStart_toStartOf="parent"-->
+            <!--android:shadowColor="@color/colorShadowStart"-->
+            <!--android:shadowDy="3" android:shadowRadius="6" android:shadowDx="0"/>-->
 
 
 </android.support.constraint.ConstraintLayout>

@@ -35,7 +35,7 @@
             app:layout_constraintTop_toTopOf="parent" android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.0"
             android:layout_marginStart="8dp" app:layout_constraintStart_toEndOf="@+id/friends_profile"
-            android:layout_marginEnd="8dp" android:maxLength="30"/>
+            android:layout_marginEnd="8dp" android:maxLength="30" android:transitionName="anim_name_profile"/>
 
 
     <TextView
@@ -57,7 +57,8 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintVertical_bias="0.0" android:scaleType="centerCrop"
-            app:civ_border_color="@color/colorWhite" app:civ_border_width="1dp"/>
+            app:civ_border_color="@color/colorWhite" app:civ_border_width="1dp"
+            android:transitionName="anim_image_profile"/>
 
 
     <ImageButton
@@ -88,7 +89,8 @@
             android:layout_marginTop="16dp" app:layout_constraintTop_toTopOf="parent"
             android:layout_marginBottom="16dp" app:layout_constraintBottom_toBottomOf="parent"
             android:background="@color/colorTranspery"
-            android:layout_marginEnd="8dp" app:layout_constraintEnd_toStartOf="@+id/btn_favorite"/>
+            android:layout_marginEnd="8dp" app:layout_constraintEnd_toStartOf="@+id/btn_favorite"
+            android:transitionName="anim_message_button_profile"/>
 
     <ImageButton
             android:layout_width="wrap_content"
@@ -106,6 +108,6 @@
             app:layout_constraintEnd_toStartOf="@+id/btn_game" android:layout_marginEnd="8dp"
             android:layout_marginTop="16dp" app:layout_constraintTop_toTopOf="parent"
             android:layout_marginBottom="16dp" app:layout_constraintBottom_toBottomOf="parent"
-            android:background="@color/colorTranspery"/>
+            android:background="@color/colorTranspery" android:transitionName="anim_favorite_button_profile"/>
 
 </android.support.constraint.ConstraintLayout>

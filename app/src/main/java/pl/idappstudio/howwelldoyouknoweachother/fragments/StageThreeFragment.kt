@@ -13,6 +13,7 @@ import android.widget.TextView
 
 import pl.idappstudio.howwelldoyouknoweachother.R
 import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity
+import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity.Companion.user
 import pl.idappstudio.howwelldoyouknoweachother.interfaces.nextFragment
 import pl.idappstudio.howwelldoyouknoweachother.model.InviteNotificationMessage
 import pl.idappstudio.howwelldoyouknoweachother.model.Message
@@ -28,8 +29,6 @@ class StageThreeFragment(private val listener: nextFragment) : android.support.v
         if(v != null){
 
             lockButton()
-
-            nextQuestion.isEnabled = true
 
             checkAnswer(v)
 
@@ -119,8 +118,6 @@ class StageThreeFragment(private val listener: nextFragment) : android.support.v
 
         stageTitle.text = "Odpowiedz na pytania"
 
-        nextQuestion.isEnabled = false
-
         aAnswerButton.background = resources.getDrawable(R.drawable.card_background_dark)
         bAnswerButton.background = resources.getDrawable(R.drawable.card_background_dark)
         cAnswerButton.background = resources.getDrawable(R.drawable.card_background_dark)
@@ -139,6 +136,8 @@ class StageThreeFragment(private val listener: nextFragment) : android.support.v
     }
 
     private fun nextQuestion() {
+
+        nextQuestion.isEnabled = true
 
         if (questionNumber == 3) {
 
@@ -163,11 +162,12 @@ class StageThreeFragment(private val listener: nextFragment) : android.support.v
 
         nextQuestion.setOnClickListener {
 
+            lockButton()
+
             questionNumber++
 
             if (questionNumber != 4) {
 
-                lockButton()
                 setText()
 
             } else {
@@ -312,9 +312,7 @@ class StageThreeFragment(private val listener: nextFragment) : android.support.v
 
         }
 
-        array.shuffle()
-
-        if(canswer.equals("tak") || canswer.equals("nie")){
+        if(canswer.equals("tak", true) || canswer.equals("nie", true)){
 
             aAnswerText.text = "Tak"
 
@@ -326,83 +324,86 @@ class StageThreeFragment(private val listener: nextFragment) : android.support.v
             bAnswerButton.isEnabled = true
             bAnswerButton.visibility = View.VISIBLE
 
-        } else {
+            array.removeAt(0)
+            array.removeAt(0)
 
-            if (aAnswerText.text == "") {
+        }
 
-                for (a in array) {
+        array.shuffle()
 
-                    if (a != "") {
+        if (aAnswerText.text == "") {
 
-                        aAnswerText.text = a
-                        array.remove(a)
+            for (a in array) {
 
-                        aAnswerButton.isEnabled = true
-                        aAnswerButton.visibility = View.VISIBLE
+                if (a != "") {
 
-                        break
+                    aAnswerText.text = a
+                    array.remove(a)
 
-                    }
+                    aAnswerButton.isEnabled = true
+                    aAnswerButton.visibility = View.VISIBLE
 
-                }
-
-            }
-
-            if (bAnswerText.text == "") {
-
-                for (a in array) {
-
-                    if (a != "") {
-
-                        bAnswerText.text = a
-                        array.remove(a)
-
-                        bAnswerButton.isEnabled = true
-                        bAnswerButton.visibility = View.VISIBLE
-
-                        break
-
-                    }
+                    break
 
                 }
 
             }
 
-            if (cAnswerText.text == "") {
+        }
 
-                for (a in array) {
+        if (bAnswerText.text == "") {
 
-                    if (a != "") {
+            for (a in array) {
 
-                        cAnswerText.text = a
-                        array.remove(a)
+                if (a != "") {
 
-                        cAnswerButton.isEnabled = true
-                        cAnswerButton.visibility = View.VISIBLE
+                    bAnswerText.text = a
+                    array.remove(a)
 
-                        break
+                    bAnswerButton.isEnabled = true
+                    bAnswerButton.visibility = View.VISIBLE
 
-                    }
+                    break
 
                 }
 
             }
 
-            if (dAnswerText.text == "") {
+        }
 
-                for (a in array) {
+        if (cAnswerText.text == "") {
 
-                    if (a != "") {
+            for (a in array) {
 
-                        dAnswerText.text = a
-                        array.remove(a)
+                if (a != "") {
 
-                        dAnswerButton.isEnabled = true
-                        dAnswerButton.visibility = View.VISIBLE
+                    cAnswerText.text = a
+                    array.remove(a)
 
-                        break
+                    cAnswerButton.isEnabled = true
+                    cAnswerButton.visibility = View.VISIBLE
 
-                    }
+                    break
+
+                }
+
+            }
+
+        }
+
+        if (dAnswerText.text == "") {
+
+            for (a in array) {
+
+                if (a != "") {
+
+                    dAnswerText.text = a
+                    array.remove(a)
+
+                    dAnswerButton.isEnabled = true
+                    dAnswerButton.visibility = View.VISIBLE
+
+                    break
 
                 }
 
@@ -413,51 +414,11 @@ class StageThreeFragment(private val listener: nextFragment) : android.support.v
 
     private fun loadImage(){
 
-        loop@for(i in 0..3){
-
-            if(i == 0){
-
-                setUserImage(aAnswerUserImage)
-
-                continue@loop
-
-            }
-
-            if(i == 1){
-
-                setUserImage(bAnswerUserImage)
-
-                continue@loop
-
-            }
-
-            if(i == 2){
-
-                setUserImage(cAnswerUserImage)
-
-                continue@loop
-
-            }
-
-            if(i == 3){
-
-                setUserImage(dAnswerUserImage)
-
-                continue@loop
-
-            }
-
-        }
+        glide.setImage(user.fb, user.image, this.requireContext(), aAnswerUserImage) {}
+        glide.setImage(user.fb, user.image, this.requireContext(), bAnswerUserImage) {}
+        glide.setImage(user.fb, user.image, this.requireContext(), cAnswerUserImage) {}
+        glide.setImage(user.fb, user.image, this.requireContext(), dAnswerUserImage) {}
 
     }
-
-    private fun setUserImage(v: ImageView){
-
-        glide.setImage(GameActivity.user.fb, GameActivity.user.image,this.context!!, v) {
-
-        }
-
-    }
-
 
 }

@@ -2,6 +2,8 @@
 
 package pl.idappstudio.howwelldoyouknoweachother.adapter
 
+import android.app.ActivityOptions
+import android.content.Intent
 import android.support.annotation.NonNull
 import android.support.v7.widget.RecyclerView
 import android.view.LayoutInflater
@@ -11,16 +13,16 @@ import com.firebase.ui.firestore.FirestoreRecyclerAdapter
 import com.firebase.ui.firestore.FirestoreRecyclerOptions
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.friends_item.view.*
-import org.jetbrains.anko.startActivity
 import pl.idappstudio.howwelldoyouknoweachother.R
 import pl.idappstudio.howwelldoyouknoweachother.activity.FriendsProfileActivity
 import pl.idappstudio.howwelldoyouknoweachother.interfaces.CountInterface
 import pl.idappstudio.howwelldoyouknoweachother.model.FriendsItem
 import pl.idappstudio.howwelldoyouknoweachother.util.FirestoreUtil
 import pl.idappstudio.howwelldoyouknoweachother.util.GlideUtil
+import android.support.v4.app.FragmentActivity
+import android.util.Pair
 
-
-class FriendsAdapterFirestore(@NonNull options: FirestoreRecyclerOptions<FriendsItem>, private val listener: CountInterface) : FirestoreRecyclerAdapter<FriendsItem, FriendsAdapterFirestore.InviteHolder>(options) {
+class FriendsAdapterFirestore(@NonNull options: FirestoreRecyclerOptions<FriendsItem>, private val listener: CountInterface, private val context: FragmentActivity?) : FirestoreRecyclerAdapter<FriendsItem, FriendsAdapterFirestore.InviteHolder>(options) {
 
     private var rv: RecyclerView? = null
     private val db = FirebaseFirestore.getInstance().collection("users")
@@ -68,7 +70,17 @@ class FriendsAdapterFirestore(@NonNull options: FirestoreRecyclerOptions<Friends
 
                         holder.itemView.btn_game.setOnClickListener {
 
-                            it.context.startActivity<FriendsProfileActivity>("id" to uid)
+                            val intent = Intent(context, FriendsProfileActivity::class.java)
+                            intent.putExtra("uid", uid)
+
+                            val pairs = arrayOfNulls<Pair<View, String>>(4)
+                            pairs[0] = Pair(holder.itemView.friends_profile, "anim_image_profile")
+                            pairs[1] = Pair(holder.itemView.profile_name, "anim_name_profile")
+                            pairs[2] = Pair(holder.itemView.btn_chat, "anim_message_button_profile")
+                            pairs[3] = Pair(holder.itemView.btn_favorite, "anim_favorite_button_profile")
+
+                            val options = ActivityOptions.makeSceneTransitionAnimation(context, pairs[0], pairs[1], pairs[2] , pairs[3])
+                            context?.startActivity(intent, options.toBundle())
 
                         }
 

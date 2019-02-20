@@ -19,7 +19,7 @@
             android:name="pl.idappstudio.howwelldoyouknoweachother.fragments.FriendsFragment"
             android:id="@+id/container" app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" android:layout_marginBottom="24dp"
+            app:layout_constraintTop_toTopOf="parent" android:layout_marginBottom="58dp"
             app:layout_constraintBottom_toBottomOf="parent"/>
 
     <android.support.design.widget.CoordinatorLayout

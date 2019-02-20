@@ -31,6 +31,7 @@
                 android:layout_gravity="center" android:layout_weight="1"/>
         <TextView
                 android:text="..."
+                android:transitionName="anim_name_profile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:id="@+id/friends_profile_name"
                 android:textColor="@color/colorWhite" android:textAlignment="center" android:layout_marginEnd="8dp"
@@ -61,6 +62,7 @@
                 android:textColor="@color/colorLigth"
                 app:layout_constraintStart_toStartOf="@+id/linearLayout5" android:layout_marginTop="12dp"
                 app:layout_constraintTop_toBottomOf="@+id/user_profile_stats_games"/>
+
         <TextView
                 android:text="0"
                 android:layout_width="wrap_content"
@@ -71,6 +73,7 @@
                 android:layout_marginTop="12dp"
                 app:layout_constraintTop_toBottomOf="@+id/user_profile_stats_banswer"
                 app:layout_constraintStart_toStartOf="@+id/linearLayout5"/>
+
         <TextView
                 android:text="0"
                 android:layout_width="wrap_content"
@@ -80,6 +83,7 @@
                 android:textColor="@color/colorLigth"
                 android:layout_marginTop="12dp" app:layout_constraintTop_toBottomOf="@+id/user_profile_stats_canswer"
                 app:layout_constraintStart_toStartOf="@+id/linearLayout5"/>
+
         <TextView
                 android:text="0"
                 android:layout_width="wrap_content"
@@ -89,6 +93,7 @@
                 android:textColor="@color/colorLigth"
                 android:layout_marginTop="16dp" app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
                 app:layout_constraintStart_toStartOf="@+id/linearLayout5"/>
+
         <TextView
                 android:text="Błędne odpowiedzi"
                 android:layout_width="wrap_content"
@@ -98,6 +103,7 @@
                 android:layout_marginTop="12dp" app:layout_constraintTop_toBottomOf="@+id/text_nick"
                 android:layout_marginEnd="8dp" app:layout_constraintEnd_toStartOf="@+id/friends_profile_image_stats"
                 app:layout_constraintStart_toEndOf="@+id/user_profile_image_stats" android:layout_marginStart="8dp"/>
+
         <TextView
                 android:text="0%"
                 android:layout_width="wrap_content"
@@ -108,10 +114,12 @@
                 android:layout_marginTop="12dp"
                 app:layout_constraintTop_toBottomOf="@+id/friends_profile_stats_games"
                 app:layout_constraintEnd_toEndOf="@+id/linearLayout5"/>
+
         <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/friends_profile_image"
                 android:layout_width="105dp"
                 android:layout_height="105dp"
+                android:transitionName="anim_image_profile"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:scaleType="centerCrop"
@@ -120,6 +128,7 @@
                 app:layout_constraintHorizontal_bias="0.502" android:background="@drawable/input_overlay_white"
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.0" android:layout_marginTop="32dp"/>
+
         <com.github.ybq.android.spinkit.SpinKitView android:layout_width="0dp"
                                                     android:layout_height="0dp"
                                                     style="@style/SpinKitView.MultiplePulse"
@@ -141,6 +150,7 @@
                 android:layout_marginTop="12dp"
                 app:layout_constraintTop_toBottomOf="@+id/friends_profile_stats_banswer"
                 app:layout_constraintEnd_toEndOf="@+id/linearLayout5"/>
+
         <TextView
                 android:text="0"
                 android:layout_width="wrap_content"
@@ -151,6 +161,7 @@
                 android:layout_marginTop="12dp"
                 app:layout_constraintTop_toBottomOf="@+id/friends_profile_stats_canswer"
                 app:layout_constraintEnd_toEndOf="@+id/linearLayout5"/>
+
         <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
@@ -160,6 +171,7 @@
                 android:text="Średnia znajomość"
                 app:layout_constraintStart_toEndOf="@+id/user_profile_image_stats" android:layout_marginStart="8dp"
                 android:layout_marginEnd="8dp" app:layout_constraintEnd_toStartOf="@+id/friends_profile_image_stats"/>
+
         <android.support.design.button.MaterialButton
                 android:id="@+id/friends_profile_startgame_btn"
                 android:layout_width="264.09dp"
@@ -314,6 +326,7 @@
                 android:textColor="@color/colorLigth"
                 android:layout_marginTop="16dp" app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
                 app:layout_constraintEnd_toEndOf="@+id/linearLayout5"/>
+
         <android.support.design.button.MaterialButton
                 android:layout_width="35dp"
                 android:layout_height="wrap_content" android:id="@+id/friends_profile_favorite"
@@ -323,18 +336,22 @@
                 android:stateListAnimator="@null"
                 app:layout_constraintStart_toEndOf="@+id/friends_profile_image" android:layout_marginStart="8dp"
                 app:layout_constraintTop_toTopOf="@+id/friends_profile_image"
+                android:transitionName="anim_favorite_button_profile"
                 app:layout_constraintBottom_toBottomOf="@+id/friends_profile_image"/>
+
         <android.support.design.button.MaterialButton
                 android:layout_width="35dp"
                 android:layout_height="wrap_content" android:id="@+id/friends_profile_chat"
                 app:icon="@drawable/ic_chat" app:iconSize="35dp"
                 app:iconPadding="0dp" android:backgroundTint="@color/colorTranspery" android:padding="0dp"
                 app:layout_constraintBottom_toBottomOf="@+id/friends_profile_image" android:stateListAnimator="@null"
+                android:transitionName="anim_message_button_profile"
                 android:layout_marginBottom="32dp"
                 android:layout_marginStart="8dp" app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginEnd="8dp" app:layout_constraintEnd_toStartOf="@+id/friends_profile_image"
                 android:layout_marginTop="32dp" app:layout_constraintTop_toTopOf="@+id/friends_profile_image"
                 app:layout_constraintHorizontal_bias="0.524"/>
+
         <LinearLayout
                 android:orientation="horizontal"
                 android:layout_height="wrap_content"

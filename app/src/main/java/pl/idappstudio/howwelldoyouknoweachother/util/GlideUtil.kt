@@ -12,15 +12,12 @@ import pl.idappstudio.howwelldoyouknoweachother.glide.GlideApp
 
 class GlideUtil {
 
-    fun setImage(b: Boolean, image: String, ctx: Context, target: ImageView, onComplete: () -> Unit) {
+    fun setActivityImage(b: Boolean, image: String, ctx: Context, target: ImageView, onComplete: () -> Unit) {
 
         val options = RequestOptions()
-            .centerCrop()
             .error(R.mipmap.logo_colored)
-            .diskCacheStrategy(DiskCacheStrategy.ALL)
+            .diskCacheStrategy(DiskCacheStrategy.DATA)
             .priority(Priority.HIGH)
-
-        Handler().postDelayed({
 
             if(b){
 
@@ -71,14 +68,57 @@ class GlideUtil {
 
             }
 
-        }, 10)
-
-        lol()
-
     }
 
-    fun lol() : String {
-        return "siema"
+    fun setImage(b: Boolean, image: String, ctx: Context, target: ImageView, onComplete: () -> Unit) {
+
+        val options = RequestOptions()
+            .error(R.mipmap.logo_colored)
+            .diskCacheStrategy(DiskCacheStrategy.DATA)
+            .priority(Priority.HIGH)
+
+        if(b){
+
+            GlideApp.with(ctx).load("http://graph.facebook.com/${image}/picture?type=large")
+                .apply(options)
+                .into(target)
+
+            onComplete()
+
+            } else {
+
+            if (image == "logo") {
+
+                target.setImageResource(R.mipmap.logo_colored)
+
+                onComplete()
+
+            } else {
+
+                val storageReference =
+                    FirebaseStorage.getInstance().reference.child("profile_image").child(image + "-image")
+                        .downloadUrl
+
+                storageReference.addOnSuccessListener { Uri ->
+
+                    GlideApp.with(ctx).load(Uri.toString())
+                        .apply(options)
+                        .into(target)
+
+                    onComplete()
+
+                }.addOnFailureListener {
+
+                    target.setImageResource(R.mipmap.logo_colored)
+
+                    onComplete()
+
+                }
+
+            }
+
+        }
+
     }
 
 }

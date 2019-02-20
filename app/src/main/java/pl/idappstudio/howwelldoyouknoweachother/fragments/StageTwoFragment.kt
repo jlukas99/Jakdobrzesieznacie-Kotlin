@@ -148,6 +148,8 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
         cAnswerButton.isEnabled = false
         dAnswerButton.isEnabled = false
 
+        nextQuestion.isEnabled = false
+
     }
 
     private fun setText(){
@@ -209,6 +211,23 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
         } else if(banswer3 != ""){
 
             array.add(banswer3)
+
+        }
+
+        if(canswer.equals("tak", true) || canswer.equals("nie", true)){
+
+            aAnswerText.text = "Tak"
+
+            aAnswerButton.isEnabled = true
+            aAnswerButton.visibility = View.VISIBLE
+
+            bAnswerText.text = "Nie"
+
+            bAnswerButton.isEnabled = true
+            bAnswerButton.visibility = View.VISIBLE
+
+            array.removeAt(0)
+            array.removeAt(0)
 
         }
 
@@ -296,6 +315,8 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
 
     private fun nextQuestion() {
 
+        nextQuestion.isEnabled = true
+
         if (questionNumber == 3) {
 
             nextQuestion.text = "nastepny etap"
@@ -310,6 +331,8 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
         }
 
         nextQuestion.setOnClickListener {
+
+            lockButton()
 
             questionNumber++
 
@@ -330,45 +353,15 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
 
     private fun loadImage(){
 
-        loop@for(i in 0..3){
+        glide.setImage(user.fb, user.image, this.requireContext(), aAnswerUserImage) {}
+        glide.setImage(user.fb, user.image, this.requireContext(), bAnswerUserImage) {}
+        glide.setImage(user.fb, user.image, this.requireContext(), cAnswerUserImage) {}
+        glide.setImage(user.fb, user.image, this.requireContext(), dAnswerUserImage) {}
 
-            if(i == 0){
-
-                setFriendImage(aAnswerFriendImage)
-                setUserImage(aAnswerUserImage)
-
-                continue@loop
-
-            }
-
-            if(i == 1){
-
-                setFriendImage(bAnswerFriendImage)
-                setUserImage(bAnswerUserImage)
-
-                continue@loop
-
-            }
-
-            if(i == 2){
-
-                setFriendImage(cAnswerFriendImage)
-                setUserImage(cAnswerUserImage)
-
-                continue@loop
-
-            }
-
-            if(i == 3){
-
-                setFriendImage(dAnswerFriendImage)
-                setUserImage(dAnswerUserImage)
-
-                continue@loop
-
-            }
-
-        }
+        glide.setImage(friends.fb, friends.image, this.requireContext(), aAnswerFriendImage) {}
+        glide.setImage(friends.fb, friends.image, this.requireContext(), bAnswerFriendImage) {}
+        glide.setImage(friends.fb, friends.image, this.requireContext(), cAnswerFriendImage) {}
+        glide.setImage(friends.fb, friends.image, this.requireContext(), dAnswerFriendImage) {}
 
     }
 
@@ -382,7 +375,7 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
 
                 listener.updateNumber(questionNumber, true)
 
-                aAnswerUserImage.visibility = View.VISIBLE
+                aAnswerFriendImage.visibility = View.VISIBLE
 
             }
 
@@ -392,7 +385,7 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
 
                 listener.updateNumber(questionNumber, true)
 
-                bAnswerUserImage.visibility = View.VISIBLE
+                bAnswerFriendImage.visibility = View.VISIBLE
 
             }
 
@@ -402,7 +395,7 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
 
                 listener.updateNumber(questionNumber, true)
 
-                cAnswerUserImage.visibility = View.VISIBLE
+                cAnswerFriendImage.visibility = View.VISIBLE
 
             }
 
@@ -412,7 +405,7 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
 
                 listener.updateNumber(questionNumber, true)
 
-                dAnswerUserImage.visibility = View.VISIBLE
+                dAnswerFriendImage.visibility = View.VISIBLE
 
             }
 
@@ -424,7 +417,7 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
 
                 listener.updateNumber(questionNumber, false)
 
-                aAnswerUserImage.visibility = View.VISIBLE
+                aAnswerFriendImage.visibility = View.VISIBLE
 
             }
 
@@ -434,7 +427,7 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
 
                 listener.updateNumber(questionNumber, false)
 
-                bAnswerUserImage.visibility = View.VISIBLE
+                bAnswerFriendImage.visibility = View.VISIBLE
 
             }
 
@@ -444,7 +437,7 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
 
                 listener.updateNumber(questionNumber, false)
 
-                cAnswerUserImage.visibility = View.VISIBLE
+                cAnswerFriendImage.visibility = View.VISIBLE
 
             }
 
@@ -454,7 +447,7 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
 
                 listener.updateNumber(questionNumber, false)
 
-                dAnswerUserImage.visibility = View.VISIBLE
+                dAnswerFriendImage.visibility = View.VISIBLE
 
             }
 
@@ -470,7 +463,7 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
         if(aAnswerText.text == canswer){
 
             aAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
-            aAnswerFriendImage.visibility = View.VISIBLE
+            aAnswerUserImage.visibility = View.VISIBLE
 
             return
 
@@ -479,7 +472,7 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
         if(bAnswerText.text == canswer){
 
             bAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
-            bAnswerFriendImage.visibility = View.VISIBLE
+            bAnswerUserImage.visibility = View.VISIBLE
 
             return
 
@@ -488,7 +481,7 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
         if(cAnswerText.text == canswer){
 
             cAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
-            cAnswerFriendImage.visibility = View.VISIBLE
+            cAnswerUserImage.visibility = View.VISIBLE
 
             return
 
@@ -497,25 +490,9 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
         if(dAnswerText.text == canswer){
 
             dAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
-            dAnswerFriendImage.visibility = View.VISIBLE
+            dAnswerUserImage.visibility = View.VISIBLE
 
             return
-
-        }
-
-    }
-
-    private fun setUserImage(v: ImageView){
-
-        glide.setImage(user.fb, user.image,this.context!!, v) {
-
-        }
-
-    }
-
-    private fun setFriendImage(v: ImageView){
-
-        glide.setImage(friends.fb, friends.image,this.context!!, v) {
 
         }
 

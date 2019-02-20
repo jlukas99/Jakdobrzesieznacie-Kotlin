@@ -5,7 +5,6 @@ import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,7 +20,6 @@ import pl.idappstudio.howwelldoyouknoweachother.adapter.FriendsAdapterFirestore
 import pl.idappstudio.howwelldoyouknoweachother.adapter.GamesAdapterFirestore
 import pl.idappstudio.howwelldoyouknoweachother.interfaces.CountInterface
 import pl.idappstudio.howwelldoyouknoweachother.model.FriendsItem
-import pl.idappstudio.howwelldoyouknoweachother.model.GamesItem
 import pl.idappstudio.howwelldoyouknoweachother.util.FirestoreUtil
 
 
@@ -89,7 +87,7 @@ class FriendsFragment : Fragment(), CountInterface {
 
         val options: FirestoreRecyclerOptions<FriendsItem> = FirestoreRecyclerOptions.Builder<FriendsItem>().setQuery(query, FriendsItem::class.java).setLifecycleOwner(this).build()
 
-        adapterFriends = FriendsAdapterFirestore(options, this)
+        adapterFriends = FriendsAdapterFirestore(options, this, activity)
         adapterFriends?.setRV(rvFriends)
 
         rvFriends.setHasFixedSize(true)

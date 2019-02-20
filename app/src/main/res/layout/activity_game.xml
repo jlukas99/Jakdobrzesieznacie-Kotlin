@@ -159,7 +159,7 @@
             app:layout_constraintBottom_toBottomOf="parent"/>
 
     <TextView
-            android:text="Poczekaj chwilkę\nmuszimy wszystko załadować"
+            android:text="Poczekaj chwilkę\nmusimy wszystko załadować"
             android:layout_width="300dp"
             android:layout_height="wrap_content" android:id="@+id/gameText" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"

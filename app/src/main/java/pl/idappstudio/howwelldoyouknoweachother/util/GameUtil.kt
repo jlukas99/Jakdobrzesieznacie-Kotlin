@@ -3,6 +3,7 @@ package pl.idappstudio.howwelldoyouknoweachother.util
 import android.content.Context
 import android.util.Log
 import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.FirebaseFirestoreSettings
 import org.jetbrains.anko.startActivity
 import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity
 import pl.idappstudio.howwelldoyouknoweachother.model.*
@@ -10,6 +11,10 @@ import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
 
 object GameUtil {
+
+    private val settings = FirebaseFirestoreSettings.Builder()
+        .setPersistenceEnabled(true)
+        .build()
 
     private val db: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
 
@@ -50,6 +55,8 @@ object GameUtil {
 
     fun getUserData(userId: String, friendId: String, onComplete: (UsersData) -> Unit){
 
+        db.firestoreSettings = settings
+
         db.collection("users").document(userId).get().addOnSuccessListener {
 
             val userData: UserData = it.toObject(UserData::class.java)!!
@@ -61,23 +68,23 @@ object GameUtil {
                 db.collection("users").document(userId).collection("friends").document(friendId).get()
                     .addOnSuccessListener {
 
+                        val fdays: Int = it.getLong("days")!!.toInt()
+                        val ffavorite: Boolean = it.getBoolean("favorite")!!
                         val ucanswer: Int = it.getLong("canswer")!!.toInt()
                         val ubanswer: Int = it.getLong("banswer")!!.toInt()
                         val ugames: Int = it.getLong("games")!!.toInt()
                         val ugameID: String = it.getString("gameId")!!
 
+                        val finfo = FriendInfoData(fdays, ffavorite)
                         val uStats = StatsData(ucanswer, ubanswer, ugames)
 
                         db.collection("users").document(friendId).collection("friends").document(userId).get()
                             .addOnSuccessListener {
 
-                                val fdays: Int = it.getLong("days")!!.toInt()
-                                val ffavorite: Boolean = it.getBoolean("favorite")!!
                                 val fcanswer: Int = it.getLong("canswer")!!.toInt()
                                 val fbanswer: Int = it.getLong("banswer")!!.toInt()
                                 val fgames: Int = it.getLong("games")!!.toInt()
 
-                                val finfo = FriendInfoData(fdays, ffavorite)
                                 val fStats = StatsData(fcanswer, fbanswer, fgames)
 
                                 db.collection("games").document(ugameID).get().addOnSuccessListener {
@@ -142,6 +149,8 @@ object GameUtil {
 
     fun sendAnswer(game: GameData, userData: UserData, friendData: UserData, a1: String, a2: String, a3: String, onComplete: () -> Unit){
 
+        db.firestoreSettings = settings
+
         val user = HashMap<String, String>()
         user.put("answer1", a1)
         user.put("answer2", a2)
@@ -168,6 +177,8 @@ object GameUtil {
 
     fun sendAnswerStageThree(game: GameData, userData: UserData, friendData: UserData, a1: String, a2: String, a3: String, id1: String, id2: String, id3: String, onComplete: () -> Unit){
 
+        db.firestoreSettings = settings
+
         val user = HashMap<String, String>()
         user.put("answer1", a1)
         user.put("answer2", a2)
@@ -187,6 +198,8 @@ object GameUtil {
     }
 
     fun getQuestionDataStageThree(s: String, onComplete: (QuestionData) -> Unit) {
+
+        db.firestoreSettings = settings
 
         db.collection(s).get().addOnSuccessListener {
 
@@ -250,6 +263,8 @@ object GameUtil {
 
     fun getQuestionData2(s: String, onComplete: (AnswerData, AnswerData, QuestionData) -> Unit) {
 
+        db.firestoreSettings = settings
+
         db.document(s).get().addOnSuccessListener {
 
                 val questionList = ArrayList<UserQuestionData>()
@@ -310,6 +325,8 @@ object GameUtil {
 
     fun getQuestionData(s: String, onComplete: (QuestionData) -> Unit) {
 
+        db.firestoreSettings = settings
+
         db.document(s).get().addOnSuccessListener {
 
             if(it.getString("id1") != null){
@@ -334,25 +351,25 @@ object GameUtil {
 
                         if(i.questionId == id1){
 
-                            if(a.answer1 == i.canswer){
+                            if(a.answer1.trim() == i.canswer.trim()){
 
                                 question1 = UserQuestionData(i.question, i.canswer, i.banswer, i.banswer2, i.banswer3, id1)
 
                             }
 
-                            if(a.answer1 == i.banswer){
+                            if(a.answer1.trim() == i.banswer.trim()){
 
                                 question1 = UserQuestionData(i.question, i.banswer, i.canswer, i.banswer2, i.banswer3, id1)
 
                             }
 
-                            if(a.answer1 == i.banswer2){
+                            if(a.answer1.trim() == i.banswer2.trim()){
 
                                 question1 = UserQuestionData(i.question, i.banswer2, i.banswer, i.canswer, i.banswer3, id1)
 
                             }
 
-                            if(a.answer1 == i.banswer3){
+                            if(a.answer1.trim() == i.banswer3.trim()){
 
                                 question1 = UserQuestionData(i.question, i.banswer3, i.banswer, i.banswer2, i.canswer, id1)
 
@@ -362,25 +379,25 @@ object GameUtil {
 
                         if(i.questionId == id2){
 
-                            if(a.answer2 == i.canswer){
+                            if(a.answer2.trim() == i.canswer.trim()){
 
                                 question2 = UserQuestionData(i.question, i.canswer, i.banswer, i.banswer2, i.banswer3, id2)
 
                             }
 
-                            if(a.answer2 == i.banswer){
+                            if(a.answer2.trim() == i.banswer.trim()){
 
                                 question2 = UserQuestionData(i.question, i.banswer, i.canswer, i.banswer2, i.banswer3, id2)
 
                             }
 
-                            if(a.answer2 == i.banswer2){
+                            if(a.answer2.trim() == i.banswer2.trim()){
 
                                 question2 = UserQuestionData(i.question, i.banswer2, i.banswer, i.canswer, i.banswer3, id2)
 
                             }
 
-                            if(a.answer2 == i.banswer3){
+                            if(a.answer2.trim() == i.banswer3.trim()){
 
                                 question2 = UserQuestionData(i.question, i.banswer3, i.banswer, i.banswer2, i.canswer, id2)
 
@@ -390,25 +407,25 @@ object GameUtil {
 
                         if(i.questionId == id3){
 
-                            if(a.answer3 == i.canswer){
+                            if(a.answer3.trim() == i.canswer.trim()){
 
                                 question3 = UserQuestionData(i.question, i.canswer, i.banswer, i.banswer2, i.banswer3, id3)
 
                             }
 
-                            if(a.answer3 == i.banswer){
+                            if(a.answer3.trim() == i.banswer.trim()){
 
                                 question3 = UserQuestionData(i.question, i.banswer, i.canswer, i.banswer2, i.banswer3, id3)
 
                             }
 
-                            if(a.answer3 == i.banswer2){
+                            if(a.answer3.trim() == i.banswer2.trim()){
 
                                 question3 = UserQuestionData(i.question, i.banswer2, i.banswer, i.canswer, i.banswer3, id3)
 
                             }
 
-                            if(a.answer3 == i.banswer3){
+                            if(a.answer3.trim() == i.banswer3.trim()){
 
                                 question3 = UserQuestionData(i.question, i.banswer3, i.banswer, i.banswer2, i.canswer, id3)
 
@@ -435,11 +452,17 @@ object GameUtil {
 
             }
 
+        }.addOnFailureListener {
+
+            onComplete(QuestionData())
+
         }
 
     }
 
     fun getQuestionDataStageTwo(s: String, s2: String, onComplete: (AnswerData, QuestionData) -> Unit){
+
+        db.firestoreSettings = settings
 
             db.document(s).get().addOnSuccessListener {
 
@@ -592,6 +615,8 @@ object GameUtil {
 
     fun getQuestionDataStageTwo2(s: String, onComplete: (AnswerData, AnswerData, QuestionData) -> Unit) {
 
+        db.firestoreSettings = settings
+
         db.document(s).get().addOnSuccessListener {
 
             val questionList = ArrayList<UserQuestionData>()
@@ -658,6 +683,8 @@ object GameUtil {
 
     fun updateStats(id: String, friendId: String, canswer: Int, banswer: Int, game: Int, onComplete: () -> Unit){
 
+        db.firestoreSettings = settings
+
         db.collection("users").document(id).collection("friends").document(friendId).update("canswer", canswer, "banswer", banswer, "games", game).addOnSuccessListener {
 
             onComplete()
@@ -667,6 +694,8 @@ object GameUtil {
     }
 
     fun sendOwnQuestion(questionData: ArrayList<UserQuestionData>, game: GameData, userData: UserData, friendData: UserData, onComplete: () -> Unit) {
+
+        db.firestoreSettings = settings
 
         val user = HashMap<String, UserQuestionData>()
         user.put("question", questionData[0])
@@ -684,11 +713,15 @@ object GameUtil {
 
     fun notNewGame(game: GameData) {
 
+        db.firestoreSettings = settings
+
         db.collection("games").document(game.gameID).update("newGame", false)
 
     }
 
     fun updateGame(game: Int, user: String, friend: String){
+
+        db.firestoreSettings = settings
 
         db.collection("users").document(user).collection("friends").document(friend).update("games", game + 1)
 

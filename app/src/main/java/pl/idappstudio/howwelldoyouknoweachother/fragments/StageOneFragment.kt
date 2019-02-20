@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.support.constraint.ConstraintLayout
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -207,6 +208,7 @@ class StageOneFragment(private val listener: nextFragment) : Fragment(), View.On
         dAnswerButton.isEnabled = false
 
         rejectBadAnswer.isEnabled = false
+        nextQuestion.isEnabled = false
 
     }
 
@@ -280,15 +282,14 @@ class StageOneFragment(private val listener: nextFragment) : Fragment(), View.On
 
         }
 
-        array.shuffle()
-
         if(array.size > 2){
 
             rejectBadAnswer.visibility = View.VISIBLE
 
         }
 
-        if(canswer.equals("tak") || canswer.equals("nie")){
+
+        if(canswer.equals("tak", true) || canswer.equals("nie", true)){
 
             aAnswerText.text = "Tak"
 
@@ -300,87 +301,91 @@ class StageOneFragment(private val listener: nextFragment) : Fragment(), View.On
             bAnswerButton.isEnabled = true
             bAnswerButton.visibility = View.VISIBLE
 
-        } else {
+            array.removeAt(0)
+            array.removeAt(0)
 
-            if (aAnswerText.text == "") {
+        }
 
-                for (a in array) {
+        array.shuffle()
 
-                    if (a != "") {
+        if (aAnswerText.text == "") {
 
-                        aAnswerText.text = a
-                        array.remove(a)
+            for (a in array) {
 
-                        aAnswerButton.isEnabled = true
-                        aAnswerButton.visibility = View.VISIBLE
+                if (a != "") {
 
-                        break
+                    aAnswerText.text = a
+                    array.remove(a)
 
-                    }
+                    aAnswerButton.isEnabled = true
+                    aAnswerButton.visibility = View.VISIBLE
 
-                }
-
-            }
-
-            if (bAnswerText.text == "") {
-
-                for (a in array) {
-
-                    if (a != "") {
-
-                        bAnswerText.text = a
-                        array.remove(a)
-
-                        bAnswerButton.isEnabled = true
-                        bAnswerButton.visibility = View.VISIBLE
-
-                        break
-
-                    }
+                    break
 
                 }
 
             }
 
-            if (cAnswerText.text == "") {
+        }
 
-                for (a in array) {
+        if (bAnswerText.text == "") {
 
-                    if (a != "") {
+            for (a in array) {
 
-                        cAnswerText.text = a
-                        array.remove(a)
+                if (a != "") {
 
-                        cAnswerButton.isEnabled = true
-                        cAnswerButton.visibility = View.VISIBLE
+                    bAnswerText.text = a
+                    array.remove(a)
 
-                        break
+                    bAnswerButton.isEnabled = true
+                    bAnswerButton.visibility = View.VISIBLE
 
-                    }
+                    break
+
+                }
+
+            }
+
+        }
+
+        if (cAnswerText.text == "") {
+
+            for (a in array) {
+
+                if (a != "") {
+
+                    cAnswerText.text = a
+                    array.remove(a)
+
+                    cAnswerButton.isEnabled = true
+                    cAnswerButton.visibility = View.VISIBLE
+
+                    break
 
                 }
 
             }
 
-            if (dAnswerText.text == "") {
+        }
 
-                for (a in array) {
+        if (dAnswerText.text == "") {
 
-                    if (a != "") {
+            for (a in array) {
 
-                        dAnswerText.text = a
-                        array.remove(a)
+                if (a != "") {
 
-                        dAnswerButton.isEnabled = true
-                        dAnswerButton.visibility = View.VISIBLE
+                    dAnswerText.text = a
+                    array.remove(a)
 
-                        break
+                    dAnswerButton.isEnabled = true
+                    dAnswerButton.visibility = View.VISIBLE
 
-                    }
+                    break
 
                 }
 
             }
+
         }
 
         loadImage()
@@ -433,6 +438,8 @@ class StageOneFragment(private val listener: nextFragment) : Fragment(), View.On
 
     private fun nextQuestion() {
 
+        nextQuestion.isEnabled = true
+
         if (questionNumber == 3) {
 
             nextQuestion.text = "nastepny etap"
@@ -456,11 +463,12 @@ class StageOneFragment(private val listener: nextFragment) : Fragment(), View.On
 
         nextQuestion.setOnClickListener {
 
+            lockButton()
+
             questionNumber++
 
             if (questionNumber != 4) {
 
-                lockButton()
                 setText()
 
             } else {

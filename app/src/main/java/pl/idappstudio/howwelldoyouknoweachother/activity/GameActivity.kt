@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatActivity
 import android.os.Bundle
 import android.support.v4.app.Fragment
 import android.support.v4.content.ContextCompat
+import android.util.Log
 import android.view.View
 import android.widget.TextView
 import com.google.firebase.auth.FirebaseAuth
@@ -135,6 +136,8 @@ class GameActivity : AppCompatActivity(), nextFragment {
 
     private fun setFragment(){
 
+        Log.d("GAME", "DEBUG 0")
+
         questionOne.setBackgroundResource(R.drawable.game_number_overlay)
         questionTwo.setBackgroundResource(R.drawable.game_number_overlay)
         questionThree.setBackgroundResource(R.drawable.game_number_overlay)
@@ -190,15 +193,22 @@ class GameActivity : AppCompatActivity(), nextFragment {
 
             GameUtil.getQuestionData("games/${game.gameID}/${friends.uid}/3") {
 
-
-
                 questionList = it
-                if(!isFinishing) {
-                    supportFragmentManager.beginTransaction()
-                        .disallowAddToBackStack()
-                        .replace(R.id.fragment, StageOneFragment(this)).commit()
-                    mContent = supportFragmentManager.fragments.get(0)
-                    hideLoading()
+
+                if(it.question.questionId != "" && it.question1.questionId != "" && it.question2.questionId != "") {
+
+                    if (!isFinishing) {
+                        supportFragmentManager.beginTransaction()
+                            .disallowAddToBackStack()
+                            .replace(R.id.fragment, StageOneFragment(this)).commit()
+                        mContent = supportFragmentManager.fragments.get(0)
+                        hideLoading()
+                    }
+
+                } else {
+
+                    gameText.text = "Nie udało się załadować pytań\nczy chcesz zrestartować grę?"
+
                 }
 
             }
@@ -236,13 +246,13 @@ class GameActivity : AppCompatActivity(), nextFragment {
 
     private fun setImage(onComplete: () -> Unit){
 
-        glide.setImage(user.fb, user.image, this, userProfileImage){
+        glide.setActivityImage(user.fb, user.image, this, userProfileImage){
 
             userLoadingImage.visibility = View.GONE
 
         }
 
-        glide.setImage(friends.fb, friends.image, this, friendProfileImage){
+        glide.setActivityImage(friends.fb, friends.image, this, friendProfileImage){
 
             friendLoadingImage.visibility = View.GONE
 

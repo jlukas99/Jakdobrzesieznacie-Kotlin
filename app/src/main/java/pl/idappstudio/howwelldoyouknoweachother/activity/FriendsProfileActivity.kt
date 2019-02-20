@@ -154,19 +154,19 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
 
     fun setImage(){
 
-        glide.setImage(user.fb, user.image, this, user_profile_image_stats){
+        glide.setActivityImage(user.fb, user.image, this, user_profile_image_stats){
 
             user_profile_image_stats_loading.visibility = View.GONE
 
         }
 
-        glide.setImage(friends.fb, friends.image, this, friends_profile_image_stats){
+        glide.setActivityImage(friends.fb, friends.image, this, friends_profile_image_stats){
 
             friends_profile_image_stats_loading.visibility = View.GONE
 
         }
 
-        glide.setImage(friends.fb, friends.image, this, friends_profile_image){
+        glide.setActivityImage(friends.fb, friends.image, this, friends_profile_image){
 
             friends_profile_loading_image.visibility = View.GONE
 
@@ -235,6 +235,7 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
     fun updateInofrmation() {
 
         FirebaseFirestore.getInstance().collection("games").document(game.gameID).addSnapshotListener(EventListener<DocumentSnapshot> { snapshot, e ->
+
             if (e != null) {
                 return@EventListener
             }
@@ -335,7 +336,7 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
     }
 
     private fun getFriendInformation(){
-        GameUtil.getUserData(FirebaseAuth.getInstance().currentUser?.uid.toString(), intent?.extras?.get("id").toString()) { e ->
+        GameUtil.getUserData(FirebaseAuth.getInstance().currentUser?.uid.toString(), intent?.extras?.get("uid").toString()) { e ->
 
             friends = e.friendsData
             user = e.userData

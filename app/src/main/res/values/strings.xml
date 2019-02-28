@@ -22,6 +22,7 @@
     <string name="adMob_menu_ad_id">ca-app-pub-3940256099942544/1033173712</string>
     <string name="default_notification_channel_id">13</string>
     <string name="no_search_results">Nie znaleziono gracza o takim nicku\nnie zapomnij o dużych literach</string>
+    <string name="title_activity_create_set">CreateSetActivity</string>
 
 
 </resources>

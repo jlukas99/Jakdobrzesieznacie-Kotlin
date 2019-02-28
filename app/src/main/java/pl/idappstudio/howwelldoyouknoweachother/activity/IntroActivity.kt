@@ -13,6 +13,7 @@ import org.jetbrains.anko.startActivity
 import pl.idappstudio.howwelldoyouknoweachother.R
 import pl.idappstudio.howwelldoyouknoweachother.util.AdMobUtil
 import pl.idappstudio.howwelldoyouknoweachother.util.FirestoreUtil
+import pl.idappstudio.howwelldoyouknoweachother.util.UserUtil
 import java.util.*
 import kotlin.concurrent.schedule
 
@@ -41,12 +42,16 @@ class IntroActivity : Activity() {
 
         } else {
 
-            FirestoreUtil.getCurrentUser {
+            UserUtil.initialize {
 
-                if(it.uid != "") {
+                if(it != "") {
 
-                    startActivity<MenuActivity>()
-                    finish()
+                    UserUtil.initializeUser {
+
+                        startActivity<MenuActivity>()
+                        finish()
+
+                    }
 
                 } else {
 
@@ -77,12 +82,7 @@ class IntroActivity : Activity() {
 
         window.decorView.systemUiVisibility = flags
 
-        val decorView = window.decorView
-        decorView.setOnSystemUiVisibilityChangeListener { visibility ->
-            if (visibility and View.SYSTEM_UI_FLAG_FULLSCREEN == 0) {
-                decorView.systemUiVisibility = flags
-            }
-        }
+
     }
 
 }

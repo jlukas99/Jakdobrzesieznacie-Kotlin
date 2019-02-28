@@ -11,7 +11,7 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.media.RingtoneManager
 import android.os.Build
-import android.support.v4.app.NotificationCompat
+import androidx.core.app.NotificationCompat
 import com.google.firebase.auth.FirebaseAuth
 
 import com.google.firebase.messaging.FirebaseMessagingService
@@ -20,7 +20,6 @@ import pl.idappstudio.howwelldoyouknoweachother.R
 
 import pl.idappstudio.howwelldoyouknoweachother.activity.IntroActivity
 import pl.idappstudio.howwelldoyouknoweachother.util.FirestoreUtil
-
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 

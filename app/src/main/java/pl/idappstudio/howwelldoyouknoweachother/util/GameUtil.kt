@@ -1,11 +1,6 @@
 package pl.idappstudio.howwelldoyouknoweachother.util
 
-import android.content.Context
-import android.util.Log
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.FirebaseFirestoreSettings
-import org.jetbrains.anko.startActivity
-import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity
+import com.google.firebase.firestore.*
 import pl.idappstudio.howwelldoyouknoweachother.model.*
 import kotlin.collections.ArrayList
 import kotlin.collections.HashMap
@@ -17,6 +12,9 @@ object GameUtil {
         .build()
 
     private val db: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
+
+    private var getUserStatsListener: ListenerRegistration? = null
+    private var getFriendStatsListener: ListenerRegistration? = null
 
     fun getSetName(s: String) : String{
 
@@ -53,98 +51,59 @@ object GameUtil {
 
     }
 
-    fun getUserData(userId: String, friendId: String, onComplete: (UsersData) -> Unit){
+    fun getGameData(id: String, uid: String, onComplete: (GamesItem, Boolean) -> Unit){
 
-        db.firestoreSettings = settings
+        db.collection("games").document(id).get().addOnSuccessListener {
 
-        db.collection("users").document(userId).get().addOnSuccessListener {
+            if (it != null) {
 
-            val userData: UserData = it.toObject(UserData::class.java)!!
+                if (it.exists()) {
 
-            db.collection("users").document(friendId).get().addOnSuccessListener {
+                    val gamemode: String = it.getString("gamemode")!!
+                    val friendStage: Int = it.getLong("${uid}-stage")!!.toInt()
+                    val yourStage: Int = it.getLong("${UserUtil.user.uid}-stage")!!.toInt()
+                    val friendTurn: Boolean = it.getBoolean("${uid}-turn")!!
+                    val yourTurn: Boolean = it.getBoolean("${UserUtil.user.uid}-turn")!!
+                    val friendSet: String = it.getString("${uid}-set")!!
+                    val yourSet: String = it.getString("${UserUtil.user.uid}-set")!!
+                    val newGame: Boolean = it.getBoolean("newGame")!!
+                    val userID: String = it.getString("${UserUtil.user.uid}-id")!!
+                    val friendID: String = it.getString("${uid}-id")!!
 
-                val friendData: UserData = it.toObject(UserData::class.java)!!
+                    val games = GamesItem(
+                        it.id,
+                        yourSet,
+                        yourStage,
+                        yourTurn,
+                        userID,
+                        friendSet,
+                        friendStage,
+                        friendTurn,
+                        friendID,
+                        gamemode,
+                        newGame
+                    )
 
-                db.collection("users").document(userId).collection("friends").document(friendId).get()
-                    .addOnSuccessListener {
+                    onComplete(games, true)
 
-                        val fdays: Int = it.getLong("days")!!.toInt()
-                        val ffavorite: Boolean = it.getBoolean("favorite")!!
-                        val ucanswer: Int = it.getLong("canswer")!!.toInt()
-                        val ubanswer: Int = it.getLong("banswer")!!.toInt()
-                        val ugames: Int = it.getLong("games")!!.toInt()
-                        val ugameID: String = it.getString("gameId")!!
+                } else {
 
-                        val finfo = FriendInfoData(fdays, ffavorite)
-                        val uStats = StatsData(ucanswer, ubanswer, ugames)
+                    onComplete(GamesItem(), false)
 
-                        db.collection("users").document(friendId).collection("friends").document(userId).get()
-                            .addOnSuccessListener {
+                }
 
-                                val fcanswer: Int = it.getLong("canswer")!!.toInt()
-                                val fbanswer: Int = it.getLong("banswer")!!.toInt()
-                                val fgames: Int = it.getLong("games")!!.toInt()
+            } else {
 
-                                val fStats = StatsData(fcanswer, fbanswer, fgames)
+                onComplete(GamesItem(), false)
 
-                                db.collection("games").document(ugameID).get().addOnSuccessListener {
-
-                                    val gamemode: String = it.getString("gamemode")!!
-                                    val friendStage: Int = it.getLong("$friendId-stage")!!.toInt()
-                                    val yourStage: Int = it.getLong("$userId-stage")!!.toInt()
-                                    val friendTurn: Boolean = it.getBoolean("$friendId-turn")!!
-                                    val yourTurn: Boolean = it.getBoolean("$userId-turn")!!
-                                    val friendSet: String = it.getString("$friendId-set")!!
-                                    val yourSet: String = it.getString("$userId-set")!!
-                                    val newGame: Boolean = it.getBoolean("newGame")!!
-                                    val userID: String = it.getString("$userId-id")!!
-                                    val friendID: String = it.getString("$friendId-id")!!
-
-                                    db.collection("set").document(yourSet).get().addOnSuccessListener {
-
-                                        val uSet = it.toObject(UserSetData::class.java)!!
-
-                                        db.collection("set").document(friendSet).get().addOnSuccessListener {
-
-                                            val fSet = it.toObject(UserSetData::class.java)!!
-
-                                            val game = GameData(
-                                                yourTurn,
-                                                friendTurn,
-                                                yourStage,
-                                                friendStage,
-                                                uSet,
-                                                fSet,
-                                                gamemode,
-                                                ugameID,
-                                                newGame,
-                                                userID,
-                                                friendID
-                                            )
-
-                                            val gameData = UsersData(
-                                                userData,
-                                                friendData,
-                                                finfo,
-                                                uStats,
-                                                fStats,
-                                                game
-                                            )
-
-                                            onComplete(gameData)
-
-                                        }
-
-                                    }
-
-                                }
-
-                            }
-
-                    }
             }
 
+        }.addOnFailureListener {
+
+            onComplete(GamesItem(), false)
+
         }
+
     }
 
     fun sendAnswer(game: GameData, userData: UserData, friendData: UserData, a1: String, a2: String, a3: String, onComplete: () -> Unit){
@@ -492,25 +451,25 @@ object GameUtil {
 
                                 if(i.questionId == id1){
 
-                                    if(a.answer1 == i.canswer){
+                                    if(a.answer1.trim() == i.canswer.trim()){
 
                                         question1 = UserQuestionData(i.question, i.canswer, i.banswer, i.banswer2, i.banswer3, id1)
 
                                     }
 
-                                    if(a.answer1 == i.banswer){
+                                    if(a.answer1.trim() == i.banswer.trim()){
 
                                         question1 = UserQuestionData(i.question, i.banswer, i.canswer, i.banswer2, i.banswer3, id1)
 
                                     }
 
-                                    if(a.answer1 == i.banswer2){
+                                    if(a.answer1.trim() == i.banswer2.trim()){
 
                                         question1 = UserQuestionData(i.question, i.banswer2, i.banswer, i.canswer, i.banswer3, id1)
 
                                     }
 
-                                    if(a.answer1 == i.banswer3){
+                                    if(a.answer1.trim() == i.banswer3.trim()){
 
                                         question1 = UserQuestionData(i.question, i.banswer3, i.banswer, i.banswer2, i.canswer, id1)
 
@@ -520,25 +479,25 @@ object GameUtil {
 
                                 if(i.questionId == id2){
 
-                                    if(a.answer2 == i.canswer){
+                                    if(a.answer2.trim() == i.canswer.trim()){
 
                                         question2 = UserQuestionData(i.question, i.canswer, i.banswer, i.banswer2, i.banswer3, id2)
 
                                     }
 
-                                    if(a.answer2 == i.banswer){
+                                    if(a.answer2.trim() == i.banswer.trim()){
 
                                         question2 = UserQuestionData(i.question, i.banswer, i.canswer, i.banswer2, i.banswer3, id2)
 
                                     }
 
-                                    if(a.answer2 == i.banswer2){
+                                    if(a.answer2.trim() == i.banswer2.trim()){
 
                                         question2 = UserQuestionData(i.question, i.banswer2, i.banswer, i.canswer, i.banswer3, id2)
 
                                     }
 
-                                    if(a.answer2 == i.banswer3){
+                                    if(a.answer2.trim() == i.banswer3.trim()){
 
                                         question2 = UserQuestionData(i.question, i.banswer3, i.banswer, i.banswer2, i.canswer, id2)
 
@@ -548,25 +507,25 @@ object GameUtil {
 
                                 if(i.questionId == id3){
 
-                                    if(a.answer3 == i.canswer){
+                                    if(a.answer3.trim() == i.canswer.trim()){
 
                                         question3 = UserQuestionData(i.question, i.canswer, i.banswer, i.banswer2, i.banswer3, id3)
 
                                     }
 
-                                    if(a.answer3 == i.banswer){
+                                    if(a.answer3.trim() == i.banswer.trim()){
 
                                         question3 = UserQuestionData(i.question, i.banswer, i.canswer, i.banswer2, i.banswer3, id3)
 
                                     }
 
-                                    if(a.answer3 == i.banswer2){
+                                    if(a.answer3.trim() == i.banswer2.trim()){
 
                                         question3 = UserQuestionData(i.question, i.banswer2, i.banswer, i.canswer, i.banswer3, id3)
 
                                     }
 
-                                    if(a.answer3 == i.banswer3){
+                                    if(a.answer3.trim() == i.banswer3.trim()){
 
                                         question3 = UserQuestionData(i.question, i.banswer3, i.banswer, i.banswer2, i.canswer, id3)
 
@@ -675,19 +634,17 @@ object GameUtil {
 
     }
 
-    fun startGame(friendsData: UserData, ctx: Context){
-
-        ctx.startActivity<GameActivity>("id" to friendsData.uid)
-
-    }
-
-    fun updateStats(id: String, friendId: String, canswer: Int, banswer: Int, game: Int, onComplete: () -> Unit){
+    fun updateStats(friendId: String, canswer: Int, banswer: Int, game: Int, onComplete: (Boolean) -> Unit){
 
         db.firestoreSettings = settings
 
-        db.collection("users").document(id).collection("friends").document(friendId).update("canswer", canswer, "banswer", banswer, "games", game).addOnSuccessListener {
+        db.collection("users").document(UserUtil.user.uid).collection("friends").document(friendId).update("canswer", canswer, "banswer", banswer, "games", game).addOnSuccessListener {
 
-            onComplete()
+            onComplete(true)
+
+        }.addOnFailureListener {
+
+            onComplete(false)
 
         }
 
@@ -724,6 +681,100 @@ object GameUtil {
         db.firestoreSettings = settings
 
         db.collection("users").document(user).collection("friends").document(friend).update("games", game + 1)
+
+    }
+
+    fun getSetData(id: String, onComplete: (UserSetData, Boolean) -> Unit){
+
+        db.collection("set").document(id).get().addOnSuccessListener {
+
+            val uSet = it.toObject(UserSetData::class.java)!!
+            onComplete(uSet, true)
+
+        }.addOnFailureListener {
+
+            onComplete(UserSetData(), true)
+
+        }
+    }
+
+    fun getUserStats(uid: String, onComplete: (Int, Int, Int) -> Unit){
+
+        if(getUserStatsListener != null){
+            getUserStatsListener!!.remove()
+        }
+
+        getUserStatsListener = db.collection("users").document(UserUtil.user.uid).collection("friends").document(uid).addSnapshotListener(MetadataChanges.INCLUDE, EventListener<DocumentSnapshot> { it, e ->
+
+                if (e != null) {
+                    return@EventListener
+                }
+
+                if (it == null) {
+                    return@EventListener
+                }
+
+                if(it.exists()) {
+
+                    val canswer = it.getLong("canswer")!!.toInt()
+                    val banswer = it.getLong("banswer")!!.toInt()
+                    val games = it.getLong("games")!!.toInt()
+
+                    onComplete(canswer, banswer, games)
+
+                } else {
+
+                    onComplete(-1, -1, -1)
+
+                }
+
+            })
+
+    }
+
+    fun getFriendStats(uid: String, onComplete: (Int, Int, Int) -> Unit){
+
+        if(getFriendStatsListener != null){
+            getFriendStatsListener!!.remove()
+        }
+
+        getFriendStatsListener = db.collection("users").document(uid).collection("friends").document(UserUtil.user.uid).addSnapshotListener(MetadataChanges.INCLUDE, EventListener<DocumentSnapshot> { it, e ->
+
+            if (e != null) {
+                return@EventListener
+            }
+
+            if (it == null) {
+                return@EventListener
+            }
+
+            if(it.exists()) {
+
+                val canswer = it.getLong("canswer")!!.toInt()
+                val banswer = it.getLong("banswer")!!.toInt()
+                val games = it.getLong("games")!!.toInt()
+
+                onComplete(canswer, banswer, games)
+
+            } else {
+
+                onComplete(-1, -1, -1)
+
+            }
+
+        })
+
+    }
+
+    fun removeListenerStats(){
+
+        if(getUserStatsListener != null){
+            getUserStatsListener!!.remove()
+        }
+
+        if(getFriendStatsListener != null){
+            getFriendStatsListener!!.remove()
+        }
 
     }
 

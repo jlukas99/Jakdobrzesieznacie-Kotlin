@@ -18,7 +18,7 @@ import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.activity_register.*
 import java.util.regex.Pattern
 import com.google.firebase.auth.FirebaseAuth
-import android.support.design.widget.Snackbar
+import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.iid.FirebaseInstanceId
 import org.jetbrains.anko.clearTask
 import org.jetbrains.anko.intentFor
@@ -27,6 +27,7 @@ import pl.idappstudio.howwelldoyouknoweachother.R
 import pl.idappstudio.howwelldoyouknoweachother.service.MyFirebaseMessagingService
 import pl.idappstudio.howwelldoyouknoweachother.util.FirestoreUtil
 import pl.idappstudio.howwelldoyouknoweachother.util.StorgeUtil
+import pl.idappstudio.howwelldoyouknoweachother.util.UserUtil
 import java.io.ByteArrayOutputStream
 
 class RegisterActivity : Activity() {
@@ -199,7 +200,7 @@ class RegisterActivity : Activity() {
 
                         val image = if(fileUri != null) uid else "logo"
 
-                        FirestoreUtil.registerCurrentUser(uid, email, image, false, gender, "free") {
+                        FirestoreUtil.registerCurrentUser(uid, email, image, false, gender, "free", "") {
 
                             if(fileUri != null) {
                                 val selectedImageBmp = MediaStore.Images.Media.getBitmap(contentResolver, fileUri)
@@ -218,16 +219,20 @@ class RegisterActivity : Activity() {
                                 }
                             }
 
-                            alertDialog.dismiss()
+                            UserUtil.initializeUser {
 
-                            val snackbar: Snackbar? = Snackbar.make(view, "Utworzono konto", 2500)
-                            snackbar?.view?.setBackgroundColor(resources.getColor(R.color.colorAccent))
-                            snackbar?.show()
+                                alertDialog.dismiss()
 
-                            startActivity(intentFor<MenuActivity>().newTask().clearTask())
+                                val snackbar: Snackbar? = Snackbar.make(view, "Utworzono konto", 2500)
+                                snackbar?.view?.setBackgroundColor(resources.getColor(R.color.colorAccent))
+                                snackbar?.show()
 
-                            val registrationToken = FirebaseInstanceId.getInstance().token
-                            MyFirebaseMessagingService.addTokenToFirestore(registrationToken)
+                                val registrationToken = FirebaseInstanceId.getInstance().token
+                                MyFirebaseMessagingService.addTokenToFirestore(registrationToken)
+
+                                startActivity(intentFor<MenuActivity>().newTask().clearTask())
+
+                            }
 
                         }
 
@@ -306,12 +311,6 @@ class RegisterActivity : Activity() {
 
         window.decorView.systemUiVisibility = flags
 
-        val decorView = window.decorView
-        decorView.setOnSystemUiVisibilityChangeListener { visibility ->
-            if (visibility and View.SYSTEM_UI_FLAG_FULLSCREEN == 0) {
-                decorView.systemUiVisibility = flags
-            }
-        }
     }
 
 }

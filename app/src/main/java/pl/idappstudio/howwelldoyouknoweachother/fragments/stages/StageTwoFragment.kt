@@ -1,11 +1,8 @@
-package pl.idappstudio.howwelldoyouknoweachother.fragments
-
+package pl.idappstudio.howwelldoyouknoweachother.fragments.stages
 
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
-import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
-import android.util.Log
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,14 +11,16 @@ import android.widget.ImageView
 import android.widget.TextView
 
 import pl.idappstudio.howwelldoyouknoweachother.R
-import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity
+import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity.Companion.answerList
 import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity.Companion.friends
-import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity.Companion.user
+import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity.Companion.game
+import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity.Companion.questionList
 import pl.idappstudio.howwelldoyouknoweachother.interfaces.nextFragment
 import pl.idappstudio.howwelldoyouknoweachother.util.FirestoreUtil
 import pl.idappstudio.howwelldoyouknoweachother.util.GlideUtil
+import pl.idappstudio.howwelldoyouknoweachother.util.UserUtil
 
-class StageTwoFragment(private val listener: nextFragment) : Fragment() {
+class StageTwoFragment(private val listener: nextFragment) : androidx.fragment.app.Fragment() {
 
     private lateinit var stageTitle: TextView
 
@@ -50,7 +49,7 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
     private lateinit var nextQuestion: Button
     private lateinit var skipStage: Button
 
-    private val glide = GlideUtil()
+    private val glide = GlideUtil
 
     private var questionNumber = 1
 
@@ -94,7 +93,7 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
 
         skipStage.setOnClickListener {
 
-            FirestoreUtil.updateGameSettings(true, false, 3, 1, GameActivity.game.uSet.id, GameActivity.game.fSet.id, GameActivity.game.gamemode, GameActivity.game.gameID, GameActivity.user.uid, GameActivity.friends.uid)
+            FirestoreUtil.updateGameSettings(true, false, 3, 1, game.uSet.id, game.fSet.id, game.gamemode, game.gameID, UserUtil.user.uid, friends.uid)
 
             listener.next()
 
@@ -163,33 +162,33 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
 
         if(questionNumber == 1){
 
-            question = GameActivity.questionList.question.question
-            canswer = GameActivity.questionList.question.canswer
-            banswer = GameActivity.questionList.question.banswer
-            banswer2 = GameActivity.questionList.question.banswer2
-            banswer3 = GameActivity.questionList.question.banswer3
+            question = questionList.question.question
+            canswer = questionList.question.canswer
+            banswer = questionList.question.banswer
+            banswer2 = questionList.question.banswer2
+            banswer3 = questionList.question.banswer3
 
-            answer = GameActivity.answerList.answer1
+            answer = answerList.answer1
 
         } else if(questionNumber == 2){
 
-            question = GameActivity.questionList.question1.question
-            canswer = GameActivity.questionList.question1.canswer
-            banswer = GameActivity.questionList.question1.banswer
-            banswer2 = GameActivity.questionList.question1.banswer2
-            banswer3 = GameActivity.questionList.question1.banswer3
+            question = questionList.question1.question
+            canswer = questionList.question1.canswer
+            banswer = questionList.question1.banswer
+            banswer2 = questionList.question1.banswer2
+            banswer3 = questionList.question1.banswer3
 
-            answer = GameActivity.answerList.answer2
+            answer = answerList.answer2
 
         } else if(questionNumber == 3){
 
-            question = GameActivity.questionList.question2.question
-            canswer = GameActivity.questionList.question2.canswer
-            banswer = GameActivity.questionList.question2.banswer
-            banswer2 = GameActivity.questionList.question2.banswer2
-            banswer3 = GameActivity.questionList.question2.banswer3
+            question = questionList.question2.question
+            canswer = questionList.question2.canswer
+            banswer = questionList.question2.banswer
+            banswer2 = questionList.question2.banswer2
+            banswer3 = questionList.question2.banswer3
 
-            answer = GameActivity.answerList.answer3
+            answer = answerList.answer3
 
         }
 
@@ -342,7 +341,7 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
 
             } else {
 
-                FirestoreUtil.updateGameSettings(true, false, 3, 1, GameActivity.game.uSet.id, GameActivity.game.fSet.id, GameActivity.game.gamemode, GameActivity.game.gameID, GameActivity.user.uid, GameActivity.friends.uid)
+                FirestoreUtil.updateGameSettings(true, false, 3, 1, game.uSet.id, game.fSet.id, game.gamemode, game.gameID, UserUtil.user.uid, friends.uid)
 
                 listener.next()
 
@@ -353,10 +352,10 @@ class StageTwoFragment(private val listener: nextFragment) : Fragment() {
 
     private fun loadImage(){
 
-        glide.setImage(user.fb, user.image, this.requireContext(), aAnswerUserImage) {}
-        glide.setImage(user.fb, user.image, this.requireContext(), bAnswerUserImage) {}
-        glide.setImage(user.fb, user.image, this.requireContext(), cAnswerUserImage) {}
-        glide.setImage(user.fb, user.image, this.requireContext(), dAnswerUserImage) {}
+        glide.setImage(UserUtil.user.fb, UserUtil.user.image, this.requireContext(), aAnswerUserImage) {}
+        glide.setImage(UserUtil.user.fb, UserUtil.user.image, this.requireContext(), bAnswerUserImage) {}
+        glide.setImage(UserUtil.user.fb, UserUtil.user.image, this.requireContext(), cAnswerUserImage) {}
+        glide.setImage(UserUtil.user.fb, UserUtil.user.image, this.requireContext(), dAnswerUserImage) {}
 
         glide.setImage(friends.fb, friends.image, this.requireContext(), aAnswerFriendImage) {}
         glide.setImage(friends.fb, friends.image, this.requireContext(), bAnswerFriendImage) {}

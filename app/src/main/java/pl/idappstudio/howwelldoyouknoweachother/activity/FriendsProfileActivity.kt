@@ -1,140 +1,231 @@
 package pl.idappstudio.howwelldoyouknoweachother.activity
 
+import android.app.ActivityOptions
 import android.app.Dialog
-import android.support.v7.app.AppCompatActivity
+import android.content.Intent
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v4.content.ContextCompat
-import android.support.v7.widget.LinearLayoutManager
-import android.support.v7.widget.RecyclerView
+import android.util.Pair
 import android.view.View
 import android.view.Window
-import android.widget.ImageView
-import com.firebase.ui.firestore.FirestoreRecyclerOptions
-import com.google.firebase.auth.FirebaseAuth
-import com.google.firebase.firestore.DocumentSnapshot
-import com.google.firebase.firestore.EventListener
-import com.google.firebase.firestore.FirebaseFirestore
-import com.google.firebase.firestore.Query
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
+import androidx.core.view.ViewCompat
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.snackbar.Snackbar
+import com.google.firebase.firestore.*
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.Section
+import com.xwray.groupie.kotlinandroidextensions.ViewHolder
+import jp.wasabeef.recyclerview.animators.LandingAnimator
+import jp.wasabeef.recyclerview.animators.SlideInDownAnimator
 import kotlinx.android.synthetic.main.activity_friends_profile.*
+import kotlinx.android.synthetic.main.game_item.*
+import kotlinx.android.synthetic.main.header_title_item.*
 import pl.idappstudio.howwelldoyouknoweachother.R
-import pl.idappstudio.howwelldoyouknoweachother.util.GlideUtil
-import pl.idappstudio.howwelldoyouknoweachother.adapter.SetAdapterFirestore
-import pl.idappstudio.howwelldoyouknoweachother.interfaces.CountInterface
+import pl.idappstudio.howwelldoyouknoweachother.activity.MenuActivity.Companion.EXTRA_USER_BTN_CHAT_TRANSITION_NAME
+import pl.idappstudio.howwelldoyouknoweachother.activity.MenuActivity.Companion.EXTRA_USER_BTN_FAVORITE_TRANSITION_NAME
+import pl.idappstudio.howwelldoyouknoweachother.activity.MenuActivity.Companion.EXTRA_USER_IMAGE_GAME_TRANSITION_NAME
+import pl.idappstudio.howwelldoyouknoweachother.activity.MenuActivity.Companion.EXTRA_USER_IMAGE_TRANSITION_NAME
+import pl.idappstudio.howwelldoyouknoweachother.activity.MenuActivity.Companion.EXTRA_USER_ITEM
+import pl.idappstudio.howwelldoyouknoweachother.activity.MenuActivity.Companion.EXTRA_USER_NAME_TRANSITION_NAME
+import pl.idappstudio.howwelldoyouknoweachother.activity.MenuActivity.Companion.EXTRA_USER_STATUS_GAME_TRANSITION_NAME
+import pl.idappstudio.howwelldoyouknoweachother.adapter.SetAdapater
+import pl.idappstudio.howwelldoyouknoweachother.enums.StatusMessage
+import pl.idappstudio.howwelldoyouknoweachother.interfaces.ClickSetListener
+import pl.idappstudio.howwelldoyouknoweachother.items.HeaderItem
 import pl.idappstudio.howwelldoyouknoweachother.model.*
-import pl.idappstudio.howwelldoyouknoweachother.util.FirestoreUtil
 import pl.idappstudio.howwelldoyouknoweachother.util.GameUtil
+import pl.idappstudio.howwelldoyouknoweachother.util.GlideUtil
+import pl.idappstudio.howwelldoyouknoweachother.util.UserUtil
 
-class FriendsProfileActivity : AppCompatActivity(), CountInterface {
+class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
-    override fun reload() {
+    override fun click(setItem: SetItem) {
 
-        rvSetDefault.requestLayout()
+        if (UserUtil.user.type == "premium" && setItem.premium) {
 
-    }
+            dbGames.document(games.gameId).update("${UserUtil.user.uid}-set", setItem.id)
+            closeDialog()
 
-    override fun count() {}
+        } else if (!setItem.premium){
 
-    override fun click(s: String, b: Boolean, name: String, image: Int) {
+            dbGames.document(games.gameId).update("${UserUtil.user.uid}-set", setItem.id)
+            closeDialog()
 
-        if(setDialog.isShowing){
+        } else {
 
-            if(b && friends.type == "premium"){
-
-                FirestoreUtil.updateGameSettings(game.uTurn, game.fTurn, game.uStage, game.fStage, s, game.fSet.id, game.gamemode, game.gameID, FirebaseAuth.getInstance().currentUser?.uid.toString(), friends.uid)
-
-                friends_profile_set_btn.text = GameUtil.getSetName(name)
-
-                if(image == 700034){
-
-                    friends_profile_set_btn.setIconResource(R.drawable.ic_stat_name)
-
-                } else {
-
-                    friends_profile_set_btn.setIconResource(R.drawable.ic_pack_icon)
-
-                }
-
-                getFriendInformation()
-
-                closeDialog()
-
-            } else if (!b) {
-
-                FirestoreUtil.updateGameSettings(game.uTurn, game.fTurn, game.uStage, game.fStage, s, game.fSet.id, game.gamemode, game.gameID, FirebaseAuth.getInstance().currentUser?.uid.toString(), friends.uid)
-
-                friends_profile_set_btn.text = GameUtil.getSetName(name)
-
-                getFriendInformation()
-
-                closeDialog()
-
-            } else {
-
-                snackbar = Snackbar.make(crownImage.rootView, "Aby wybrać ten zestaw musisz posiadać konto premium", 2500)
-                snackbar.view.setBackgroundColor(this.resources.getColor(R.color.colorYellow))
-                snackbar.show()
-
-            }
+            snackbar = Snackbar.make(setDialog.findViewById(R.id.head_title_text), "Aby wybrać ten zestaw musisz posiadać konto premium", 2500)
+            snackbar.view.setBackgroundColor(this.resources.getColor(R.color.colorYellow))
+            snackbar.show()
 
         }
 
     }
 
-    private lateinit var friends: UserData
-    private lateinit var stats: StatsData
+    companion object {
 
-    private lateinit var information: FriendInfoData
-    private lateinit var game: GameData
+        val EXTRA_USER_IMAGE_TRANSITION = "image-user"
+        val EXTRA_FRIEND_IMAGE_TRANSITION = "image-friend"
 
-    private lateinit var user: UserData
-    private lateinit var userStats: StatsData
+    }
 
     private lateinit var snackbar: Snackbar
 
     private lateinit var setDialog: Dialog
 
-    private val db = FirebaseFirestore.getInstance().collection("set")
+    private lateinit var friend: UserData
+    private lateinit var games: GamesItem
 
-    private lateinit var adapterSetDefault: SetAdapterFirestore
+    private lateinit var userSet: UserSetData
+    private lateinit var friendSet: UserSetData
+
+    private val db = FirebaseFirestore.getInstance().collection("users")
+    private val dbSet = FirebaseFirestore.getInstance().collection("set")
+    private val dbGames = FirebaseFirestore.getInstance().collection("games")
+
+    private var setListener: ListenerRegistration? = null
+    private var userStatsListener: ListenerRegistration? = null
+    private var userSetListener: ListenerRegistration? = null
+    private var friendSetListener: ListenerRegistration? = null
+    private var friendStatsListener: ListenerRegistration? = null
+    private var friendDataListener: ListenerRegistration? = null
+    private var gamesListener: ListenerRegistration? = null
 
     private lateinit var rvSetDefault: RecyclerView
 
-    private lateinit var crownImage: ImageView
-    private lateinit var packImage: ImageView
+    private val defaultPack = Section()
+    private val yourPack = Section()
+    private val socialPack = Section()
 
-    private val glide = GlideUtil()
+    private val defaultItems = HashMap<String, SetAdapater>()
+    private val yourItems = HashMap<String, SetAdapater>()
+    private val socialItems = HashMap<String, SetAdapater>()
+
+    private fun addDefaultItem(id: String, set: SetItem): HashMap<String, SetAdapater> {
+        defaultItems[id] = SetAdapater(set, this, this)
+        return defaultItems
+    }
+
+    private fun addYourItem(id: String, set: SetItem): HashMap<String, SetAdapater> {
+        yourItems[id] = SetAdapater(set, this, this)
+        return yourItems
+    }
+
+    private fun addSocialItem(id: String, set: SetItem): HashMap<String, SetAdapater> {
+        socialItems[id] = SetAdapater(set, this, this)
+        return socialItems
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_friends_profile)
+        supportPostponeEnterTransition()
 
-        friends_profile_loading_image.visibility = View.VISIBLE
+        val extras = intent.extras
 
-        setDialog()
+        friend = extras?.getParcelable(EXTRA_USER_ITEM)!!
+        if(extras.getString(EXTRA_USER_IMAGE_GAME_TRANSITION_NAME) != null) {
+            val imageGame = extras.getString(EXTRA_USER_IMAGE_GAME_TRANSITION_NAME)
+            friends_profile_startgame_btn.transitionName = imageGame
+        }
+
+        if(extras.getString(EXTRA_USER_STATUS_GAME_TRANSITION_NAME) != null) {
+            val imageStatus = extras.getString(EXTRA_USER_STATUS_GAME_TRANSITION_NAME)
+        }
+
+        val imageTransitionName = extras.getString(EXTRA_USER_IMAGE_TRANSITION_NAME)
+        val nameTransitionName = extras.getString(EXTRA_USER_NAME_TRANSITION_NAME)
+        val btnChatTransitionName = extras.getString(EXTRA_USER_BTN_CHAT_TRANSITION_NAME)
+        val btnFavoriteTransitionName = extras.getString(EXTRA_USER_BTN_FAVORITE_TRANSITION_NAME)
+
+        statsFriend()
+        statsUser()
+
+        setInformation()
+
+        friends_profile_image.transitionName = imageTransitionName
+        friends_profile_name.transitionName = nameTransitionName
+        friends_profile_chat.transitionName = btnChatTransitionName
+        friends_profile_favorite.transitionName = btnFavoriteTransitionName
+
+        friends_profile_name.text = friend.name
+
+        GlideUtil.setImage(UserUtil.user.fb, UserUtil.user.image, this, user_profile_image_stats) {}
+
+        GlideUtil.setImage(friend.fb, friend.image, this, friends_profile_image_stats) {}
+
+        GlideUtil.setImage(friend.fb, friend.image, this, friends_profile_image) {
+
+            supportStartPostponedEnterTransition()
+
+        }
+
         blockFunction()
 
-    }
+        ViewCompat.setTransitionName(friends_profile_image_stats, EXTRA_FRIEND_IMAGE_TRANSITION)
+        ViewCompat.setTransitionName(user_profile_image_stats, EXTRA_USER_IMAGE_TRANSITION)
 
-    fun setOnClick(b: Boolean){
+        setDialog()
 
-        if(b) {
+        val groupAdapter = GroupAdapter<ViewHolder>()
 
-            friends_profile_startgame_btn.setOnClickListener {
+        val llm = LinearLayoutManager(this)
 
-                GameUtil.startGame(friends, it.context)
+        rvSetDefault.layoutManager = llm
+        rvSetDefault.itemAnimator = SlideInDownAnimator()
+
+        rvSetDefault.adapter = groupAdapter
+
+        defaultPack.setHeader(HeaderItem("PODSTAWOWE"))
+        yourPack.setHeader(HeaderItem("TWOJE"))
+        socialPack.setHeader(HeaderItem("PREMIUM"))
+
+        defaultPack.setHideWhenEmpty(true)
+        yourPack.setHideWhenEmpty(true)
+        socialPack.setHideWhenEmpty(true)
+
+        groupAdapter.add(0, defaultPack)
+        groupAdapter.add(1, yourPack)
+        groupAdapter.add(2, socialPack)
+
+        friends_profile_set_btn.setOnClickListener {
+
+            showDialog()
+
+        }
+
+        friends_profile_startgame_btn.setOnClickListener {
+
+            blockFunction()
+
+            UserUtil.getIdGame(friend.uid) {
+
+                dbGames.document(it).update("${friend.uid}-turn", false)
+
+                intent = Intent(this, GameActivity::class.java)
+                intent.putExtra("uid", friend.uid)
+                intent.putExtra("uSet", userSet.id)
+                intent.putExtra("fSet", friendSet.id)
+                intent.putExtra("gameId", it)
+                intent.putExtra(EXTRA_USER_IMAGE_TRANSITION, ViewCompat.getTransitionName(user_profile_image_stats))
+                intent.putExtra(EXTRA_FRIEND_IMAGE_TRANSITION, ViewCompat.getTransitionName(friends_profile_image_stats))
+
+                val pairs = arrayOfNulls<Pair<View, String>>(2)
+                pairs[0] = Pair(friends_profile_image_stats, EXTRA_FRIEND_IMAGE_TRANSITION)
+                pairs[1] = Pair(user_profile_image_stats, EXTRA_USER_IMAGE_TRANSITION)
+
+                val options = ActivityOptions.makeSceneTransitionAnimation(this, pairs[0], pairs[1])
+
+                startActivity(intent, options.toBundle())
 
             }
-
-        } else {
-
-            friends_profile_startgame_btn.setOnClickListener { }
 
         }
 
     }
 
-    fun blockFunction(){
+    fun blockFunction() {
 
         friends_profile_favorite.isEnabled = false
         friends_profile_set_btn.isEnabled = false
@@ -143,7 +234,7 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
 
     }
 
-    fun unlockFunction(){
+    fun unlockFunction() {
 
         friends_profile_favorite.isEnabled = true
         friends_profile_set_btn.isEnabled = true
@@ -152,72 +243,117 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
 
     }
 
-    fun setImage(){
+    fun closeDialog() {
 
-        glide.setActivityImage(user.fb, user.image, this, user_profile_image_stats){
+        if (setDialog.isShowing) {
 
-            user_profile_image_stats_loading.visibility = View.GONE
+            setDialog.dismiss()
 
-        }
-
-        glide.setActivityImage(friends.fb, friends.image, this, friends_profile_image_stats){
-
-            friends_profile_image_stats_loading.visibility = View.GONE
-
-        }
-
-        glide.setActivityImage(friends.fb, friends.image, this, friends_profile_image){
-
-            friends_profile_loading_image.visibility = View.GONE
+            setListener?.remove()
 
         }
 
     }
 
-    fun closeDialog(){
+    fun showDialog() {
 
-        adapterSetDefault.stopListening()
+        if (!setDialog.isShowing) {
 
-        setDialog.dismiss()
-
-    }
-
-    fun showDialog(){
-
-        setDialog.show()
-
-        if(setDialog.isShowing) {
-
-            val query: Query = db.whereEqualTo("type", "default").orderBy("premium", Query.Direction.ASCENDING)
-
-            val options: FirestoreRecyclerOptions<SetItem> = FirestoreRecyclerOptions.Builder<SetItem>().setQuery(query, SetItem::class.java).setLifecycleOwner(this).build()
-
-            adapterSetDefault = SetAdapterFirestore(options, this)
-            adapterSetDefault.setRV(rvSetDefault)
-
-            rvSetDefault.setHasFixedSize(true)
-            rvSetDefault.layoutManager = LinearLayoutManager(this)
-            rvSetDefault.adapter = adapterSetDefault
-
-            crownImage.setColorFilter(
-                ContextCompat.getColor(
-                    this, R.color.colorLigth
-                ), android.graphics.PorterDuff.Mode.SRC_IN
-            )
-
-            packImage.setColorFilter(
-                ContextCompat.getColor(
-                    this, R.color.colorLigth
-                ), android.graphics.PorterDuff.Mode.SRC_IN
-            )
-
-            adapterSetDefault.startListening()
+            setDialog.show()
 
         }
 
     }
 
-    fun setDialog(){
+    fun loadSetRecycler() {
+
+        setListener = dbSet.addSnapshotListener(EventListener<QuerySnapshot> { doc, e ->
+
+            if (e != null) {
+                return@EventListener
+            }
+
+            if (doc != null) {
+
+                for (it in doc.documentChanges) {
+
+                    if (it.type == DocumentChange.Type.REMOVED) {
+
+                        rvSetDefault.itemAnimator = LandingAnimator()
+
+                        if (it.document.getBoolean("premium") == true) {
+
+                            socialItems.remove(it.document.id)
+                            socialPack.update(socialItems.values)
+
+                        } else if(it.document.getString("type") == UserUtil.user.uid) {
+
+                            yourItems.remove(it.document.id)
+                            yourPack.update(yourItems.values)
+
+                        } else {
+
+                            defaultItems.remove(it.document.id)
+                            defaultPack.update(defaultItems.values)
+
+                        }
+
+                    }
+
+                    if (it.type == DocumentChange.Type.MODIFIED) {
+
+                        rvSetDefault.itemAnimator = LandingAnimator()
+
+                        if (it.document.getBoolean("premium") == true) {
+
+                            addSocialItem(it.document.id, it.document.toObject(SetItem::class.java))
+                            defaultPack.update(defaultItems.values)
+
+                        } else if(it.document.getString("type") == UserUtil.user.uid){
+
+                            addYourItem(it.document.id, it.document.toObject(SetItem::class.java))
+                            yourPack.update(yourItems.values)
+
+                        } else {
+
+                            addDefaultItem(it.document.id, it.document.toObject(SetItem::class.java))
+                            defaultPack.update(defaultItems.values)
+
+                        }
+
+                    }
+
+                    if (it.type == DocumentChange.Type.ADDED) {
+
+                        if (it.document.getBoolean("premium") == true) {
+
+                            addSocialItem(it.document.id, it.document.toObject(SetItem::class.java))
+                            socialPack.update(socialItems.values)
+
+                        } else if(it.document.getString("type") == UserUtil.user.uid){
+
+                            addYourItem(it.document.id, it.document.toObject(SetItem::class.java))
+                            yourPack.update(yourItems.values)
+
+                        } else {
+
+                            addDefaultItem(it.document.id, it.document.toObject(SetItem::class.java))
+                            defaultPack.update(defaultItems.values)
+
+                        }
+
+                    }
+
+                }
+
+
+            }
+
+        })
+
+    }
+
+    fun setDialog() {
 
         setDialog = Dialog(this, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen)
         setDialog.setCancelable(true)
@@ -227,138 +363,260 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
 
         rvSetDefault = setDialog.findViewById(R.id.rvSetDefault)
 
-        crownImage = setDialog.findViewById(R.id.crown_image)
-        packImage = setDialog.findViewById(R.id.pack_icon)
+        loadSetRecycler()
 
     }
 
-    fun updateInofrmation() {
+    fun statsUser() {
 
-        FirebaseFirestore.getInstance().collection("games").document(game.gameID).addSnapshotListener(EventListener<DocumentSnapshot> { snapshot, e ->
+        userStatsListener =
+            db.document(UserUtil.user.uid).collection("friends").document(friend.uid).addSnapshotListener(
+                EventListener<DocumentSnapshot> { doc, e ->
+
+                    if (e != null) {
+                        return@EventListener
+                    }
+
+                    if (doc != null) {
+
+                        if (doc.exists()) {
+
+                            if (doc.getBoolean("favorite")!!) {
+
+                                friends_profile_favorite.apply {
+                                    setImageResource(R.drawable.ic_heart_solid)
+                                }
+
+                                friends_profile_favorite.setOnClickListener {
+
+                                    db.document(UserUtil.user.uid).collection("friends").document(friend.uid)
+                                        .update("favorite", false)
+
+                                }
+
+                            } else {
+
+                                friends_profile_favorite.apply {
+                                    setImageResource(R.drawable.ic_heart_over)
+                                }
+
+                                friends_profile_favorite.setOnClickListener {
+
+                                    db.document(UserUtil.user.uid).collection("friends").document(friend.uid)
+                                        .update("favorite", true)
+
+                                }
+
+                            }
+
+                            user_profile_stats_canswer.text = doc.getLong("canswer")!!.toInt().toString()
+                            user_profile_stats_banswer.text = doc.getLong("banswer")!!.toInt().toString()
+                            user_profile_stats_games.text = doc.getLong("games")!!.toInt().toString()
+                            val precent = GameUtil.getPrecent(
+                                StatsData(
+                                    doc.getLong("canswer")!!.toInt(),
+                                    doc.getLong("banswer")!!.toInt(),
+                                    doc.getLong("games")!!.toInt()
+                                )
+                            )
+                            user_profile_stats_precent.text = "$precent%"
+
+                        }
+
+                    }
+
+                })
+
+    }
+
+    fun statsFriend() {
+
+        friendStatsListener =
+            db.document(friend.uid).collection("friends").document(UserUtil.user.uid).addSnapshotListener(
+                EventListener<DocumentSnapshot> { doc, e ->
+
+                    if (e != null) {
+                        return@EventListener
+                    }
+
+                    if (doc != null) {
+
+                        if (doc.exists()) {
+
+                            friends_profile_stats_canswer.text = doc.getLong("canswer")!!.toInt().toString()
+                            friends_profile_stats_banswer.text = doc.getLong("banswer")!!.toInt().toString()
+                            friends_profile_stats_games.text = doc.getLong("games")!!.toInt().toString()
+                            val precent = GameUtil.getPrecent(
+                                StatsData(
+                                    doc.getLong("canswer")!!.toInt(),
+                                    doc.getLong("banswer")!!.toInt(),
+                                    doc.getLong("games")!!.toInt()
+                                )
+                            )
+                            friends_profile_stats_precent.text = "$precent%"
+
+                        }
+
+                    }
+
+                })
+
+    }
+
+    fun setInformation() {
+
+        UserUtil.getIdGame(friend.uid) {
+
+            gamesListener = dbGames.document(it).addSnapshotListener(EventListener<DocumentSnapshot> { doc, e ->
+
+                if (e != null) {
+                    return@EventListener
+                }
+
+                if (doc != null) {
+
+                    if (doc.exists()) {
+
+                        val gamemode: String = doc.getString("gamemode")!!
+                        val friendStage: Int = doc.getLong("${friend.uid}-stage")!!.toInt()
+                        val yourStage: Int = doc.getLong("${UserUtil.user.uid}-stage")!!.toInt()
+                        val friendTurn: Boolean = doc.getBoolean("${friend.uid}-turn")!!
+                        val yourTurn: Boolean = doc.getBoolean("${UserUtil.user.uid}-turn")!!
+                        val friendSet: String = doc.getString("${friend.uid}-set")!!
+                        val yourSet: String = doc.getString("${UserUtil.user.uid}-set")!!
+                        val newGame: Boolean = doc.getBoolean("newGame")!!
+                        val userID: String = doc.getString("${UserUtil.user.uid}-id")!!
+                        val friendID: String = doc.getString("${friend.uid}-id")!!
+
+                        games = GamesItem(
+                            doc.id,
+                            yourSet,
+                            yourStage,
+                            yourTurn,
+                            userID,
+                            friendSet,
+                            friendStage,
+                            friendTurn,
+                            friendID,
+                            gamemode,
+                            newGame
+                        )
+
+                        updateInofrmation()
+
+                    }
+
+                }
+
+            })
+
+        }
+
+    }
+
+    fun userSets() {
+
+        userSetListener = dbSet.document(games.yset).addSnapshotListener(EventListener<DocumentSnapshot> { doc, e ->
 
             if (e != null) {
                 return@EventListener
             }
 
-            if (snapshot != null && snapshot.exists()) {
+            if (doc != null) {
 
-                if(snapshot.getBoolean(FirestoreUtil.currentUser.uid + "-turn")!!){
+                if (doc.exists()) {
 
-                    friends_profile_startgame_btn.text = "GRAJ"
-                    friends_profile_startgame_btn.background.setColorFilter(
-                        ContextCompat.getColor(
-                            this, R.color.colorPrimary
-                        ), android.graphics.PorterDuff.Mode.SRC_IN)
+                    userSet = doc.toObject(UserSetData::class.java)!!
 
-                    setOnClick(true)
-
-                } else {
-
-                    friends_profile_startgame_btn.text = "kolej znajomego"
-                    friends_profile_startgame_btn.background.setColorFilter(
-                        ContextCompat.getColor(
-                            this, R.color.colorRed
-                        ), android.graphics.PorterDuff.Mode.SRC_IN)
-
-                    setOnClick(false)
+                    friends_profile_set_btn.text = userSet.name
 
                 }
 
-                friends_profile_gamemode_btn.text = GameUtil.getGamemodeName(snapshot.getString("gamemode")!!)
-
             }
+
         })
 
     }
 
-    fun setInformation(){
+    fun friendSets() {
 
-        friends_profile_name.text = friends.name
-        friends_profile_set_btn.text = GameUtil.getSetName(game.uSet.name)
+        friendSetListener = dbSet.document(games.fset).addSnapshotListener(EventListener<DocumentSnapshot> { doc, e ->
 
-        friends_profile_set_btn.setOnClickListener {
+            if (e != null) {
+                return@EventListener
+            }
 
-            showDialog()
+            if (doc != null) {
 
-        }
+                if (doc.exists()) {
 
-        updateInofrmation()
+                    friendSet = doc.toObject(UserSetData::class.java)!!
 
-        if(information.favorite){
-
-            friends_profile_favorite.setIconResource(R.drawable.ic_heart_solid)
-
-            friends_profile_favorite.setOnClickListener {
-
-                friends_profile_favorite.setIconResource(R.drawable.ic_heart_over)
-
-                FirestoreUtil.setFavorite(friends.uid, false)
-                getFriendInformation()
+                }
 
             }
 
-        } else {
-
-            friends_profile_favorite.setIconResource(R.drawable.ic_heart_over)
-
-            friends_profile_favorite.setOnClickListener {
-
-                friends_profile_favorite.setIconResource(R.drawable.ic_heart_solid)
-
-                FirestoreUtil.setFavorite(friends.uid, true)
-                getFriendInformation()
-
-            }
-        }
-
-        val a: Float = userStats.canswer.toFloat()
-        val b: Float = userStats.banswer.toFloat()
-        val c: Int = userStats.games
-
-        val a1: Float = stats.canswer.toFloat()
-        val b2: Float = stats.banswer.toFloat()
-        val c3: Int = stats.games
-
-        user_profile_stats_canswer.text = a.toInt().toString()
-        user_profile_stats_banswer.text = b.toInt().toString()
-        user_profile_stats_games.text = c.toString()
-        user_profile_stats_precent.text = "${GameUtil.getPrecent(userStats)}%"
-
-        friends_profile_stats_canswer.text = a1.toInt().toString()
-        friends_profile_stats_banswer.text = b2.toInt().toString()
-        friends_profile_stats_games.text = c3.toString()
-        friends_profile_stats_precent.text = "${GameUtil.getPrecent(stats)}%"
-
-        setImage()
-
-        unlockFunction()
+        })
 
     }
 
-    private fun getFriendInformation(){
-        GameUtil.getUserData(FirebaseAuth.getInstance().currentUser?.uid.toString(), intent?.extras?.get("uid").toString()) { e ->
+    fun updateInofrmation() {
 
-            friends = e.friendsData
-            user = e.userData
+        userSets()
+        friendSets()
 
-            game = e.game
-            information = e.finfo
+        unlockFunction()
 
-            stats = e.fstats
-            userStats = e.ustats
+        if (games.yturn && games.fturn) {
 
-            setInformation()
+            friends_profile_startgame_btn.text = "GRAJ"
+            friends_profile_startgame_btn.background.setColorFilter(
+                ContextCompat.getColor(
+                    this, R.color.colorPrimary
+                ), android.graphics.PorterDuff.Mode.SRC_IN
+            )
+
+        } else if(games.yturn && !games.fturn) {
+
+            friends_profile_startgame_btn.text = "GRAJ"
+            friends_profile_startgame_btn.background.setColorFilter(
+                ContextCompat.getColor(
+                    this, R.color.colorAccent
+                ), android.graphics.PorterDuff.Mode.SRC_IN
+            )
+
+        } else {
+
+            friends_profile_startgame_btn.isEnabled = false
+
+            friends_profile_startgame_btn.text = "kolej znajomego"
+            friends_profile_startgame_btn.background.setColorFilter(
+                ContextCompat.getColor(
+                    this, R.color.colorRed
+                ), android.graphics.PorterDuff.Mode.SRC_IN
+            )
 
         }
+
+        friends_profile_gamemode_btn.text = GameUtil.getGamemodeName(games.gamemode)
+
     }
 
     override fun onResume() {
         super.onResume()
-
+        unlockFunction()
         hideNavigationBar()
+    }
 
-        getFriendInformation()
-
+    override fun onDestroy() {
+        super.onDestroy()
+        setListener?.remove()
+        gamesListener?.remove()
+        friendStatsListener?.remove()
+        friendDataListener?.remove()
+        friendSetListener?.remove()
+        userStatsListener?.remove()
+        userSetListener?.remove()
     }
 
     private fun hideNavigationBar() {
@@ -372,12 +630,6 @@ class FriendsProfileActivity : AppCompatActivity(), CountInterface {
 
         window.decorView.systemUiVisibility = flags
 
-        val decorView = window.decorView
-        decorView.setOnSystemUiVisibilityChangeListener { visibility ->
-            if (visibility and View.SYSTEM_UI_FLAG_FULLSCREEN == 0) {
-                decorView.systemUiVisibility = flags
-            }
-        }
     }
 
 }

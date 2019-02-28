@@ -1,29 +1,27 @@
 package pl.idappstudio.howwelldoyouknoweachother.util
 
 import android.content.Context
-import android.os.Handler
 import android.widget.ImageView
+import com.bumptech.glide.Glide
+import com.bumptech.glide.Priority
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.google.firebase.storage.FirebaseStorage
 import pl.idappstudio.howwelldoyouknoweachother.R
 import com.bumptech.glide.request.RequestOptions
-import com.bumptech.glide.Priority
-import pl.idappstudio.howwelldoyouknoweachother.glide.GlideApp
+object GlideUtil {
 
-class GlideUtil {
+    private val options = RequestOptions()
+        .error(R.mipmap.logo_colored)
+        .diskCacheStrategy(DiskCacheStrategy.DATA)
+        .priority(Priority.HIGH)
 
     fun setActivityImage(b: Boolean, image: String, ctx: Context, target: ImageView, onComplete: () -> Unit) {
-
-        val options = RequestOptions()
-            .error(R.mipmap.logo_colored)
-            .diskCacheStrategy(DiskCacheStrategy.DATA)
-            .priority(Priority.HIGH)
 
             if(b){
 
                 if(target.isAttachedToWindow) {
 
-                    GlideApp.with(ctx).load("http://graph.facebook.com/${image}/picture?type=large")
+                    Glide.with(ctx).load("http://graph.facebook.com/${image}/picture?type=large")
                         .apply(options)
                         .into(target)
 
@@ -48,7 +46,7 @@ class GlideUtil {
 
                         storageReference.addOnSuccessListener { Uri ->
 
-                            GlideApp.with(ctx).load(Uri.toString())
+                            Glide.with(ctx).load(Uri.toString())
                                 .apply(options)
                                 .into(target)
 
@@ -72,14 +70,9 @@ class GlideUtil {
 
     fun setImage(b: Boolean, image: String, ctx: Context, target: ImageView, onComplete: () -> Unit) {
 
-        val options = RequestOptions()
-            .error(R.mipmap.logo_colored)
-            .diskCacheStrategy(DiskCacheStrategy.DATA)
-            .priority(Priority.HIGH)
-
         if(b){
 
-            GlideApp.with(ctx).load("http://graph.facebook.com/${image}/picture?type=large")
+            Glide.with(ctx).load("http://graph.facebook.com/${image}/picture?type=large")
                 .apply(options)
                 .into(target)
 
@@ -95,13 +88,11 @@ class GlideUtil {
 
             } else {
 
-                val storageReference =
-                    FirebaseStorage.getInstance().reference.child("profile_image").child(image + "-image")
-                        .downloadUrl
+                val storageReference = FirebaseStorage.getInstance().reference.child("profile_image").child(image + "-image").downloadUrl
 
                 storageReference.addOnSuccessListener { Uri ->
 
-                    GlideApp.with(ctx).load(Uri.toString())
+                    Glide.with(ctx).load(Uri.toString())
                         .apply(options)
                         .into(target)
 

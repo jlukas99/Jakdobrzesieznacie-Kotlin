@@ -7,7 +7,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.support.design.widget.Snackbar
+import com.google.android.material.snackbar.Snackbar
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -145,12 +145,6 @@ class ResetPasswordActivity : Activity() {
 
         window.decorView.systemUiVisibility = flags
 
-        val decorView = window.decorView
-        decorView.setOnSystemUiVisibilityChangeListener { visibility ->
-            if (visibility and View.SYSTEM_UI_FLAG_FULLSCREEN == 0) {
-                decorView.systemUiVisibility = flags
-            }
-        }
     }
 
 }

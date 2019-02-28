@@ -1,11 +1,8 @@
-package pl.idappstudio.howwelldoyouknoweachother.fragments
-
+package pl.idappstudio.howwelldoyouknoweachother.fragments.stages
 
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
-import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
-import android.util.Log
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -21,12 +18,15 @@ import com.google.android.gms.ads.reward.RewardedVideoAdListener
 import pl.idappstudio.howwelldoyouknoweachother.R
 import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity
 import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity.Companion.friends
-import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity.Companion.user
+import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity.Companion.game
+import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity.Companion.questionList
+import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity.Companion.userStats
 import pl.idappstudio.howwelldoyouknoweachother.interfaces.nextFragment
 import pl.idappstudio.howwelldoyouknoweachother.util.GameUtil
 import pl.idappstudio.howwelldoyouknoweachother.util.GlideUtil
+import pl.idappstudio.howwelldoyouknoweachother.util.UserUtil
 
-class StageOneFragment(private val listener: nextFragment) : Fragment(), View.OnClickListener {
+class StageOneFragment(private val listener: nextFragment) : androidx.fragment.app.Fragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
 
@@ -69,7 +69,7 @@ class StageOneFragment(private val listener: nextFragment) : Fragment(), View.On
 
     private lateinit var rewardedVideoAd: RewardedVideoAd
 
-    private val glide = GlideUtil()
+    private val glide = GlideUtil
 
     private var badAnswer: ArrayList<String> = ArrayList()
     private var userAnswer: ArrayList<String> = ArrayList()
@@ -223,27 +223,27 @@ class StageOneFragment(private val listener: nextFragment) : Fragment(), View.On
 
         if(questionNumber == 1){
 
-            question = GameActivity.questionList.question.question
-            canswer = GameActivity.questionList.question.canswer
-            banswer = GameActivity.questionList.question.banswer
-            banswer2 = GameActivity.questionList.question.banswer2
-            banswer3 = GameActivity.questionList.question.banswer3
+            question = questionList.question.question
+            canswer = questionList.question.canswer
+            banswer = questionList.question.banswer
+            banswer2 = questionList.question.banswer2
+            banswer3 = questionList.question.banswer3
 
         } else if(questionNumber == 2){
 
-            question = GameActivity.questionList.question1.question
-            canswer = GameActivity.questionList.question1.canswer
-            banswer = GameActivity.questionList.question1.banswer
-            banswer2 = GameActivity.questionList.question1.banswer2
-            banswer3 = GameActivity.questionList.question1.banswer3
+            question = questionList.question1.question
+            canswer = questionList.question1.canswer
+            banswer = questionList.question1.banswer
+            banswer2 = questionList.question1.banswer2
+            banswer3 = questionList.question1.banswer3
 
         } else if(questionNumber == 3){
 
-            question = GameActivity.questionList.question2.question
-            canswer = GameActivity.questionList.question2.canswer
-            banswer = GameActivity.questionList.question2.banswer
-            banswer2 = GameActivity.questionList.question2.banswer2
-            banswer3 = GameActivity.questionList.question2.banswer3
+            question = questionList.question2.question
+            canswer = questionList.question2.canswer
+            banswer = questionList.question2.banswer
+            banswer2 = questionList.question2.banswer2
+            banswer3 = questionList.question2.banswer3
 
         }
 
@@ -473,11 +473,15 @@ class StageOneFragment(private val listener: nextFragment) : Fragment(), View.On
 
             } else {
 
-                GameActivity.updateStats { }
+                GameUtil.updateStats(friends.uid, GameActivity.canswer, GameActivity.banswer, userStats.games){
 
-                GameUtil.sendAnswer(GameActivity.game, GameActivity.user, GameActivity.friends, userAnswer[0], userAnswer[1], userAnswer[2]){ }
+                    GameUtil.sendAnswer(game, UserUtil.user, friends, userAnswer[0], userAnswer[1], userAnswer[2]){
 
-                listener.next()
+                        listener.next()
+
+                    }
+
+                }
 
             }
         }
@@ -486,10 +490,10 @@ class StageOneFragment(private val listener: nextFragment) : Fragment(), View.On
 
     private fun loadImage(){
 
-        glide.setImage(user.fb, user.image, this.requireContext(), aAnswerUserImage) {}
-        glide.setImage(user.fb, user.image, this.requireContext(), bAnswerUserImage) {}
-        glide.setImage(user.fb, user.image, this.requireContext(), cAnswerUserImage) {}
-        glide.setImage(user.fb, user.image, this.requireContext(), dAnswerUserImage) {}
+        glide.setImage(UserUtil.user.fb, UserUtil.user.image, this.requireContext(), aAnswerUserImage) {}
+        glide.setImage(UserUtil.user.fb, UserUtil.user.image, this.requireContext(), bAnswerUserImage) {}
+        glide.setImage(UserUtil.user.fb, UserUtil.user.image, this.requireContext(), cAnswerUserImage) {}
+        glide.setImage(UserUtil.user.fb, UserUtil.user.image, this.requireContext(), dAnswerUserImage) {}
 
         glide.setImage(friends.fb, friends.image, this.requireContext(), aAnswerFriendImage) {}
         glide.setImage(friends.fb, friends.image, this.requireContext(), bAnswerFriendImage) {}

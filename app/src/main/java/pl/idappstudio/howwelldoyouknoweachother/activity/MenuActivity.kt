@@ -3,20 +3,32 @@
 package pl.idappstudio.howwelldoyouknoweachother.activity
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v7.app.AppCompatActivity
+import androidx.fragment.app.Fragment
+import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.InterstitialAd
 import kotlinx.android.synthetic.main.activity_menu.*
 import pl.idappstudio.howwelldoyouknoweachother.R
+import pl.idappstudio.howwelldoyouknoweachother.enums.StatusMessage
 import pl.idappstudio.howwelldoyouknoweachother.fragments.*
 import pl.idappstudio.howwelldoyouknoweachother.util.AdMobUtil
 import pl.idappstudio.howwelldoyouknoweachother.util.FirestoreUtil
+import pl.idappstudio.howwelldoyouknoweachother.util.UserUtil
 
 class MenuActivity : AppCompatActivity() {
 
-    var b: Boolean = false
+    companion object {
+
+        val EXTRA_USER_ITEM = "user"
+        val EXTRA_USER_IMAGE_TRANSITION_NAME = "image"
+        val EXTRA_USER_NAME_TRANSITION_NAME = "name"
+        val EXTRA_USER_BTN_CHAT_TRANSITION_NAME = "chat"
+        val EXTRA_USER_BTN_FAVORITE_TRANSITION_NAME = "favorite"
+        val EXTRA_USER_STATUS_GAME_TRANSITION_NAME = "game-status"
+        val EXTRA_USER_IMAGE_GAME_TRANSITION_NAME = "game-image"
+
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,53 +59,40 @@ class MenuActivity : AppCompatActivity() {
             }
         }
 
-        navigation.selectedItemId = R.id.navigation_play
-
         fab.setOnClickListener {
 
-            if(!navigation.menu.getItem(2).isChecked) {
-                openFragment(FriendsFragment())
-                navigation.selectedItemId = R.id.navigation_play
+            if(!navigation.menu.getItem(2).isChecked || !navigation2.menu.getItem(2).isChecked) {
+                openFragment(FriendsFragment(), "friends")
+                navigation.menu.getItem(2).isChecked = true
+                navigation2.menu.getItem(2).isChecked = true
             }
 
         }
 
-        openFragment(FriendsFragment())
+        navigation.menu.getItem(2).isVisible = false
+        navigation2.menu.getItem(2).isVisible = false
 
-        navigation.setOnNavigationItemSelectedListener {
+        openFragment(FriendsFragment(), "friends")
+
+        navigation2.setOnNavigationItemSelectedListener {
 
             when (it.itemId) {
-                R.id.navigation_pack -> {
-                    if(!it.isChecked) {
 
-                        openFragment(PackFragment())
-
-                    }
-                    true
-                }
-                R.id.navigation_states -> {
-                    if(!it.isChecked) {
-
-                        openFragment(AchivmentsFragment())
-
-                    }
-                    true
-                }
-                R.id.navigation_play -> {
-                    true
-                }
                 R.id.navigation_add_friends -> {
                     if(!it.isChecked) {
 
-                        openFragment(InvitesFragment())
+                        openFragment(InvitesFragment(), "invites")
+                        navigation.menu.getItem(2).isChecked = true
 
                     }
                     true
                 }
+
                 R.id.navigation_profile -> {
                     if(!it.isChecked) {
 
-                        openFragment(ProfileFragment())
+                        openFragment(ProfileFragment(), "profile")
+                        navigation.menu.getItem(2).isChecked = true
 
                     }
                     true
@@ -102,23 +101,72 @@ class MenuActivity : AppCompatActivity() {
             }
         }
 
+        navigation.setOnNavigationItemSelectedListener {
+
+            when (it.itemId) {
+
+                R.id.navigation_pack -> {
+                    if(!it.isChecked) {
+
+                        openFragment(PackFragment(), "pack")
+                        navigation2.menu.getItem(2).isChecked = true
+
+                    }
+                    true
+                }
+
+                R.id.navigation_states -> {
+                    if(!it.isChecked) {
+
+                        openFragment(AchivmentsFragment(), "achivment")
+                        navigation2.menu.getItem(2).isChecked = true
+
+                    }
+                    true
+                }
+
+                else -> false
+            }
+        }
+
+        navigation.menu.getItem(2).isChecked = true
+        navigation2.menu.getItem(2).isChecked = true
+
         navigation.menu.getItem(2).isEnabled = false
+        navigation2.menu.getItem(2).isEnabled = false
 
     }
 
-    private fun openFragment(fragment: Fragment) {
+    private fun openFragment(fragment: androidx.fragment.app.Fragment, tag: String) {
 
-            supportFragmentManager.beginTransaction()
-                .disallowAddToBackStack()
-                .replace(R.id.container, fragment)
-                .commit()
+        val fManager = supportFragmentManager
+        val fTransaction = fManager.beginTransaction()
+
+        val tag2 = fManager.findFragmentByTag(tag)
+
+        if (tag2 == null) {
+
+            fTransaction.add(R.id.container, fragment, tag).commit()
+
+        } else {
+
+            fTransaction.disallowAddToBackStack().replace(R.id.container, tag2, tag).commit()
+
+        }
 
     }
 
     override fun onResume() {
         super.onResume()
-        FirestoreUtil.initialize()
         hideNavigationBar()
+        UserUtil.getUser {}
+        UserUtil.updateStatus(StatusMessage.inmenu)
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        UserUtil.stopListener()
+        UserUtil.updateStatus(StatusMessage.offline)
     }
 
     private fun hideNavigationBar() {
@@ -132,11 +180,5 @@ class MenuActivity : AppCompatActivity() {
 
         window.decorView.systemUiVisibility = flags
 
-        val decorView = window.decorView
-        decorView.setOnSystemUiVisibilityChangeListener { visibility ->
-            if (visibility and View.SYSTEM_UI_FLAG_FULLSCREEN == 0) {
-                decorView.systemUiVisibility = flags
-            }
-        }
     }
 }

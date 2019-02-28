@@ -1,8 +1,7 @@
-package pl.idappstudio.howwelldoyouknoweachother.fragments
+package pl.idappstudio.howwelldoyouknoweachother.fragments.stages
 
 import android.os.Bundle
-import android.support.design.widget.Snackbar
-import android.support.v4.app.Fragment
+import com.google.android.material.snackbar.Snackbar
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,16 +10,19 @@ import pl.idappstudio.howwelldoyouknoweachother.model.UserQuestionData
 import android.text.Editable
 import android.text.TextWatcher
 import android.widget.*
-import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity
+import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity.Companion.friends
+import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity.Companion.friendsStats
+import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity.Companion.game
+import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity.Companion.userStats
 import pl.idappstudio.howwelldoyouknoweachother.interfaces.nextFragment
 import pl.idappstudio.howwelldoyouknoweachother.model.InviteNotificationMessage
 import pl.idappstudio.howwelldoyouknoweachother.model.Message
 import pl.idappstudio.howwelldoyouknoweachother.model.NotificationType
 import pl.idappstudio.howwelldoyouknoweachother.util.FirestoreUtil
 import pl.idappstudio.howwelldoyouknoweachother.util.GameUtil
+import pl.idappstudio.howwelldoyouknoweachother.util.UserUtil
 
-
-class StageThreeOwnQuestionFragment(private val listener: nextFragment) : Fragment(), TextWatcher {
+class StageThreeOwnQuestionFragment(private val listener: nextFragment) : androidx.fragment.app.Fragment(), TextWatcher {
 
     override fun afterTextChanged(s: Editable?) {
 
@@ -244,7 +246,7 @@ class StageThreeOwnQuestionFragment(private val listener: nextFragment) : Fragme
             lockEditText()
             questionText.isEnabled = false
 
-            val questionData = UserQuestionData(q, ca, ba1, ba2, ba3, GameActivity.user.uid)
+            val questionData = UserQuestionData(q, ca, ba1, ba2, ba3, UserUtil.user.uid)
             questionList.add(questionData)
 
             nextQuestion()
@@ -371,20 +373,20 @@ class StageThreeOwnQuestionFragment(private val listener: nextFragment) : Fragme
 
             listener.updateNumber(3, true)
 
-            GameUtil.sendOwnQuestion(questionList, GameActivity.game, GameActivity.user, GameActivity.friends){
+            GameUtil.sendOwnQuestion(questionList, game, UserUtil.user, friends){
 
-                if(GameActivity.userStats.games == 0 && GameActivity.stats.games == 1){
+                if(userStats.games == 0 && friendsStats.games == 1){
 
-                    GameUtil.notNewGame(GameActivity.game)
+                    GameUtil.notNewGame(game)
 
                 }
 
-                GameUtil.updateGame(GameActivity.userStats.games, GameActivity.user.uid, GameActivity.friends.uid)
+                GameUtil.updateGame(userStats.games, UserUtil.user.uid, friends.uid)
 
-                val msg: Message = InviteNotificationMessage("Twoja kolej!", "${GameActivity.user.name} skończył swoją turę, czas na ciebie!", GameActivity.user.uid, GameActivity.friends.uid,GameActivity.user.name, NotificationType.GAME)
-                FirestoreUtil.sendMessage(msg, GameActivity.friends.uid)
+                val msg: Message = InviteNotificationMessage("Twoja kolej!", "${UserUtil.user.name} skończył swoją turę, czas na ciebie!", UserUtil.user.uid, friends.uid,UserUtil.user.name, NotificationType.GAME)
+                FirestoreUtil.sendMessage(msg, friends.uid)
 
-                this.activity?.finish()
+                activity?.onBackPressed()
 
             }
 
@@ -468,10 +470,6 @@ class StageThreeOwnQuestionFragment(private val listener: nextFragment) : Fragme
         cAnswerText.isEnabled = false
         dAnswerText.isEnabled = false
 
-    }
-
-    companion object {
-        fun newInstance(): AchivmentsFragment = AchivmentsFragment()
     }
 
 }

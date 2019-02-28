@@ -15,6 +15,4 @@ object StorgeUtil {
         ref.putBytes(imageBytes).addOnSuccessListener { onSuccess(ref.path) }
     }
 
-    fun pathToReference(path: String) = storageInstance.getReference(path)
-
 }

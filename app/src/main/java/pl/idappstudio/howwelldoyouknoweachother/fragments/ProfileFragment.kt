@@ -1,8 +1,6 @@
 package pl.idappstudio.howwelldoyouknoweachother.fragments
 
-
 import android.os.Bundle
-import android.support.v4.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,7 +9,6 @@ import android.widget.TextView
 import com.github.ybq.android.spinkit.SpinKitView
 import com.google.firebase.auth.FirebaseAuth
 import de.hdodenhof.circleimageview.CircleImageView
-import kotlinx.android.synthetic.main.fragment_profile.*
 import org.jetbrains.anko.clearTask
 import org.jetbrains.anko.newTask
 import org.jetbrains.anko.support.v4.intentFor
@@ -19,11 +16,13 @@ import org.jetbrains.anko.support.v4.startActivity
 import pl.idappstudio.howwelldoyouknoweachother.R
 import pl.idappstudio.howwelldoyouknoweachother.activity.LoginMenuActivity
 import pl.idappstudio.howwelldoyouknoweachother.activity.SettingsActivity
-import pl.idappstudio.howwelldoyouknoweachother.util.GlideUtil
-import pl.idappstudio.howwelldoyouknoweachother.util.FirestoreUtil
+import pl.idappstudio.howwelldoyouknoweachother.model.StatsData
+import pl.idappstudio.howwelldoyouknoweachother.model.UserData
 import pl.idappstudio.howwelldoyouknoweachother.util.GameUtil
+import pl.idappstudio.howwelldoyouknoweachother.util.GlideUtil
+import pl.idappstudio.howwelldoyouknoweachother.util.UserUtil
 
-class ProfileFragment : Fragment() {
+class ProfileFragment : androidx.fragment.app.Fragment() {
 
     private lateinit var name: TextView
     private lateinit var image: CircleImageView
@@ -39,9 +38,7 @@ class ProfileFragment : Fragment() {
     private lateinit var friends_profile_stats_games: TextView
     private lateinit var profile_stats_friend_precent: TextView
 
-    private val currentUser = FirestoreUtil.currentUser
-
-    private val glide = GlideUtil()
+    private val glide = GlideUtil
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -71,7 +68,6 @@ class ProfileFragment : Fragment() {
         settings.setOnClickListener {
 
             startActivity<SettingsActivity>()
-            onStop()
 
         }
 
@@ -93,42 +89,37 @@ class ProfileFragment : Fragment() {
 
     fun setInformation(){
 
-        loading.visibility = View.VISIBLE
+        glide.setActivityImage(UserUtil.user.fb, UserUtil.user.image, this.context!!, image) {}
 
-        name.text = currentUser.name
+        name.text = UserUtil.user.name
 
-        FirestoreUtil.getStats {
+        UserUtil.getProfileUserStats { i1, i2, i3 ->
 
-            val a: Float = it.canswer.toFloat()
-            val b: Float = it.banswer.toFloat()
-            val c: Int = it.games
+            val a: Float = i1.toFloat()
+            val b: Float = i2.toFloat()
+            val c: Int = i3
 
             friends_profile_stats_canswer.text = a.toInt().toString()
             friends_profile_stats_banswer.text = b.toInt().toString()
             friends_profile_stats_games.text = c.toString()
-            profile_stats_friend_precent.text = "${GameUtil.getPrecent(it)}%"
+            profile_stats_friend_precent.text = "${GameUtil.getPrecent(StatsData(i1, i2, i3))}%"
 
         }
 
-        glide.setImage(currentUser.fb, currentUser.image, this.context!!, image){
+    }
 
-            loading.visibility = View.GONE
+    override fun onStart() {
+        super.onStart()
+        setInformation()
+    }
 
-        }
-
+    override fun onDestroy() {
+        super.onDestroy()
+        UserUtil.stopListener()
     }
 
     companion object {
         fun newInstance(): ProfileFragment = ProfileFragment()
     }
-
-    override fun onResume() {
-        super.onResume()
-
-        FirestoreUtil.initialize()
-        setInformation()
-
-    }
-
 
 }

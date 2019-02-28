@@ -4,7 +4,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
 import android.os.Bundle
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import kotlinx.android.synthetic.main.activity_settings.*
 import pl.idappstudio.howwelldoyouknoweachother.R
@@ -13,18 +13,22 @@ import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
 import android.provider.MediaStore
-import android.support.design.widget.Snackbar
+import android.util.Log
+import com.google.android.material.snackbar.Snackbar
 import android.widget.ArrayAdapter
 import android.widget.CompoundButton
+import com.firebase.ui.auth.data.model.User
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
+import pl.idappstudio.howwelldoyouknoweachother.enums.StatusMessage
 import pl.idappstudio.howwelldoyouknoweachother.util.StorgeUtil
+import pl.idappstudio.howwelldoyouknoweachother.util.UserUtil
 import java.io.ByteArrayOutputStream
 
 
 class SettingsActivity : AppCompatActivity() {
 
-    private lateinit var db: DocumentReference
+    private val db: DocumentReference = FirebaseFirestore.getInstance().collection("users").document(UserUtil.user.uid)
 
     private var fileUri: Uri? = null
     private val items = arrayOf("Mężczyzna", "Kobieta")
@@ -34,24 +38,44 @@ class SettingsActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_settings)
 
-        db = FirebaseFirestore.getInstance().collection("users").document(FirestoreUtil.currentUser.uid)
+        exit_settings.setOnClickListener {
 
-        exit_settings.setOnClickListener { finish() }
+            if(save_button.visibility == View.VISIBLE || save_image.visibility == View.VISIBLE || save_gender.visibility == View.VISIBLE){
+
+                val snackbar = Snackbar.make(view, "Posiadasz nie zapisane zmiany", 2500)
+                snackbar.view.setBackgroundColor(this.resources.getColor(R.color.colorRed))
+                snackbar.show()
+
+            } else {
+
+                finish()
+
+            }
+
+        }
 
         version_text.text = getVersion()
 
-        public_profile_switch.isActivated = FirestoreUtil.currentUser.public
-        notification_switch.isActivated = FirestoreUtil.currentUser.notification
+        public_profile_switch.isChecked = UserUtil.user.public
+        notification_switch.isChecked = UserUtil.user.notification
 
         public_profile_switch.setOnCheckedChangeListener { compoundButton: CompoundButton, b: Boolean ->
 
             if(b){
 
-                FirestoreUtil.setPublic(FirestoreUtil.currentUser.uid, true)
+                UserUtil.setPublic(true){
+
+                    UserUtil.initializeUser {}
+
+                }
 
             } else {
 
-                FirestoreUtil.setPublic(FirestoreUtil.currentUser.uid, false)
+                UserUtil.setPublic(false){
+
+                    UserUtil.initializeUser {}
+
+                }
 
             }
 
@@ -61,11 +85,19 @@ class SettingsActivity : AppCompatActivity() {
 
             if(b){
 
-                FirestoreUtil.setNotification(FirestoreUtil.currentUser.uid, true)
+                UserUtil.setNotification(true){
+
+                    UserUtil.initializeUser {}
+
+                }
 
             } else {
 
-                FirestoreUtil.setNotification(FirestoreUtil.currentUser.uid, false)
+                UserUtil.setNotification(false){
+
+                    UserUtil.initializeUser {}
+
+                }
 
             }
 
@@ -163,7 +195,7 @@ class SettingsActivity : AppCompatActivity() {
 
         cardView_change_avatar.setOnClickListener {
 
-            if(!FirestoreUtil.currentUser.fb){
+            if(!UserUtil.user.fb){
 
                 val intent = Intent().apply {
 
@@ -204,7 +236,7 @@ class SettingsActivity : AppCompatActivity() {
 
                 StorgeUtil.uploadProfilePhoto(selectedImageBytes) {
 
-                    db.update("image", FirestoreUtil.currentUser.uid).addOnCompleteListener {
+                    db.update("image", UserUtil.user.uid).addOnCompleteListener {
 
                         if (it.isSuccessful){
 
@@ -274,7 +306,7 @@ class SettingsActivity : AppCompatActivity() {
 
         cardView_change_gender.setOnClickListener {
 
-            if(!FirestoreUtil.currentUser.fb) {
+            if(!UserUtil.user.fb) {
 
                 val builder = AlertDialog.Builder(this)
                 with(builder) {
@@ -362,7 +394,7 @@ class SettingsActivity : AppCompatActivity() {
 
         }
 
-        if(FirestoreUtil.currentUser.type == "free"){
+        if(UserUtil.user.type == "free"){
 
             premium_color_switch.isChecked = false
             premium_color_switch.setOnClickListener {
@@ -406,8 +438,8 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        FirestoreUtil.initialize()
         hideNavigationBar()
+        UserUtil.updateStatus(StatusMessage.insettings)
     }
 
     private fun hideNavigationBar() {
@@ -421,11 +453,5 @@ class SettingsActivity : AppCompatActivity() {
 
         window.decorView.systemUiVisibility = flags
 
-        val decorView = window.decorView
-        decorView.setOnSystemUiVisibilityChangeListener { visibility ->
-            if (visibility and View.SYSTEM_UI_FLAG_FULLSCREEN == 0) {
-                decorView.systemUiVisibility = flags
-            }
-        }
     }
 }

@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.constraint.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                                             xmlns:tools="http://schemas.android.com/tools"
-                                             xmlns:app="http://schemas.android.com/apk/res-auto"
-                                             android:layout_width="match_parent"
-                                             android:layout_height="match_parent"
-                                             tools:context=".fragments.StageThreeOwnQuestionFragment"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+                                                   xmlns:tools="http://schemas.android.com/tools"
+                                                   xmlns:app="http://schemas.android.com/apk/res-auto"
+                                                   android:layout_width="match_parent"
+                                                   android:layout_height="match_parent"
+                                                   tools:context=".fragments.StageThreeOwnQuestionFragment"
 >
 
-    <android.support.design.button.MaterialButton
+    <com.google.android.material.button.MaterialButton
             android:id="@+id/nextQuestionBtn"
             android:layout_width="0dp"
             android:layout_height="38.66dp"
@@ -55,7 +55,7 @@
                 android:layout_gravity="center" android:layout_weight="1" android:layout_width="wrap_content"/>
 
     </LinearLayout>
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/questionText" android:layout_marginTop="16dp"
@@ -101,8 +101,8 @@
                 app:layout_constraintEnd_toEndOf="parent" android:visibility="invisible"/>
 
 
-    </android.support.constraint.ConstraintLayout>
-    <android.support.constraint.ConstraintLayout
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="32dp" app:layout_constraintStart_toStartOf="parent"
@@ -143,8 +143,8 @@
                 android:textAllCaps="true" android:textAlignment="center"
                 app:srcCompat="@drawable/ic_check_icon" android:tint="@color/colorAccent" android:padding="12dp"
                 app:layout_constraintEnd_toEndOf="parent" android:visibility="invisible"/>
-    </android.support.constraint.ConstraintLayout>
-    <android.support.constraint.ConstraintLayout
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="32dp" app:layout_constraintStart_toStartOf="parent"
@@ -184,8 +184,8 @@
                 android:textAllCaps="true" android:textAlignment="center"
                 app:srcCompat="@drawable/ic_check_icon" android:tint="@color/colorAccent" android:padding="12dp"
                 app:layout_constraintEnd_toEndOf="parent" android:visibility="invisible"/>
-    </android.support.constraint.ConstraintLayout>
-    <android.support.constraint.ConstraintLayout
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="32dp" app:layout_constraintStart_toStartOf="parent"
@@ -225,8 +225,8 @@
                 app:layout_constraintEnd_toStartOf="@+id/dTextAnswer3"
                 android:enabled="false" android:imeOptions="actionNext" android:inputType="text"
                 android:layout_marginEnd="8dp" android:maxLength="40"/>
-    </android.support.constraint.ConstraintLayout>
-    <android.support.constraint.ConstraintLayout
+    </androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="0dp"
             android:layout_height="wrap_content" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="32dp" app:layout_constraintStart_toStartOf="parent"
@@ -266,6 +266,6 @@
                 app:layout_constraintEnd_toStartOf="@+id/dTextAnswer2"
                 android:enabled="false" android:imeOptions="actionDone" android:inputType="text"
                 android:ellipsize="start" android:layout_marginEnd="8dp" android:maxLength="40"/>
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-</android.support.constraint.ConstraintLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

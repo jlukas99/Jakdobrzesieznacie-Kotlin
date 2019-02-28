@@ -1,30 +1,50 @@
 package pl.idappstudio.howwelldoyouknoweachother.activity
 
-import android.support.v7.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.support.v4.app.Fragment
-import android.support.v4.content.ContextCompat
-import android.util.Log
+import androidx.core.content.ContextCompat
 import android.view.View
 import android.widget.TextView
-import com.google.firebase.auth.FirebaseAuth
+import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_game.*
-import org.jetbrains.anko.activityManager
 import pl.idappstudio.howwelldoyouknoweachother.R
+import pl.idappstudio.howwelldoyouknoweachother.activity.FriendsProfileActivity.Companion.EXTRA_FRIEND_IMAGE_TRANSITION
+import pl.idappstudio.howwelldoyouknoweachother.activity.FriendsProfileActivity.Companion.EXTRA_USER_IMAGE_TRANSITION
+import pl.idappstudio.howwelldoyouknoweachother.enums.StatusMessage
 import pl.idappstudio.howwelldoyouknoweachother.fragments.*
+import pl.idappstudio.howwelldoyouknoweachother.fragments.stages.StageOneFragment
+import pl.idappstudio.howwelldoyouknoweachother.fragments.stages.StageThreeFragment
+import pl.idappstudio.howwelldoyouknoweachother.fragments.stages.StageThreeOwnQuestionFragment
+import pl.idappstudio.howwelldoyouknoweachother.fragments.stages.StageTwoFragment
 import pl.idappstudio.howwelldoyouknoweachother.interfaces.nextFragment
 import pl.idappstudio.howwelldoyouknoweachother.model.*
 import pl.idappstudio.howwelldoyouknoweachother.util.GameUtil
 import pl.idappstudio.howwelldoyouknoweachother.util.GlideUtil
+import pl.idappstudio.howwelldoyouknoweachother.util.UserUtil
 
 class GameActivity : AppCompatActivity(), nextFragment {
 
     override fun next() {
 
-        supportFragmentManager.beginTransaction().replace(R.id.fragment, ClearFragment()).commit()
         showLoading()
 
-        getFriendInformation()
+        getInformation {
+
+            if(it){
+
+                setInterface {
+
+                    setFragment()
+
+                }
+
+            } else {
+
+                error()
+
+            }
+
+        }
 
     }
 
@@ -65,13 +85,14 @@ class GameActivity : AppCompatActivity(), nextFragment {
     companion object {
 
         lateinit var friends: UserData
-        lateinit var stats: StatsData
 
-        lateinit var information: FriendInfoData
-        lateinit var game: GameData
-
-        lateinit var user: UserData
+        lateinit var friendsStats: StatsData
         lateinit var userStats: StatsData
+
+        lateinit var uSet: UserSetData
+        lateinit var fSet: UserSetData
+
+        lateinit var game: GameData
 
         lateinit var questionList: QuestionData
         lateinit var answerList: AnswerData
@@ -79,29 +100,27 @@ class GameActivity : AppCompatActivity(), nextFragment {
         var canswer: Int = 0
         var banswer: Int = 0
 
-        fun updateStats(onComplete: () -> Unit){
-
-            GameUtil.updateStats(user.uid, friends.uid, GameActivity.userStats.canswer + canswer, GameActivity.userStats.banswer + banswer, GameActivity.userStats.games){
-
-                onComplete()
-
-            }
-
-        }
-
     }
 
     lateinit var questionOne: TextView
     lateinit var questionTwo: TextView
     lateinit var questionThree: TextView
 
-    lateinit var mContent: Fragment
+    lateinit var mContent: androidx.fragment.app.Fragment
 
-    private val glide = GlideUtil()
+    private val glide = GlideUtil
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
+        supportPostponeEnterTransition()
+
+        val extras = intent.extras
+        val imageUserTransitionName = extras.getString(EXTRA_USER_IMAGE_TRANSITION)
+        val imageFriendTransitionName = extras.getString(EXTRA_FRIEND_IMAGE_TRANSITION)
+
+        userProfileImage.transitionName = imageUserTransitionName
+        friendProfileImage.transitionName = imageFriendTransitionName
 
         questionOne = findViewById(R.id.questionOneText)
         questionTwo = findViewById(R.id.questionTwoText)
@@ -112,9 +131,31 @@ class GameActivity : AppCompatActivity(), nextFragment {
 
         showLoading()
 
+        getInformation {
+
+            if(it){
+
+                getStats()
+
+                setInterface {
+
+                    setFragment()
+
+                }
+
+            } else {
+
+                error()
+
+            }
+
+        }
+
     }
 
     private fun showLoading(){
+
+        supportFragmentManager.beginTransaction().replace(R.id.fragment, ClearFragment()).commit()
 
         gameIcon.setColorFilter(ContextCompat.getColor(this, R.color.colorLigth), android.graphics.PorterDuff.Mode.SRC_IN)
 
@@ -130,41 +171,32 @@ class GameActivity : AppCompatActivity(), nextFragment {
         gameText.visibility = View.GONE
         gameLoading.visibility = View.GONE
 
-        questionOne.background
-
     }
 
     private fun setFragment(){
-
-        Log.d("GAME", "DEBUG 0")
 
         questionOne.setBackgroundResource(R.drawable.game_number_overlay)
         questionTwo.setBackgroundResource(R.drawable.game_number_overlay)
         questionThree.setBackgroundResource(R.drawable.game_number_overlay)
 
-        if(game.uStage == 3 || game.uStage == 0){
+        if(game.uStage == 3 || game.fStage == 0){
 
-            if(game.uSet.category == "own_question") {
+            if(uSet.category == "own_question") {
 
                 if(!isFinishing) {
-                    supportFragmentManager.beginTransaction()
-                        .disallowAddToBackStack()
-                        .replace(R.id.fragment, StageThreeOwnQuestionFragment(this)).commit()
-                    mContent = supportFragmentManager.fragments.get(0)
+                    supportFragmentManager.beginTransaction().disallowAddToBackStack().replace(R.id.fragment, StageThreeOwnQuestionFragment(this)).commit()
+                    mContent = supportFragmentManager.fragments[0]
                     hideLoading()
                 }
 
             } else {
 
-                GameUtil.getQuestionDataStageThree("set/${game.uSet.id}/${user.gender}") {
+                GameUtil.getQuestionDataStageThree("set/${game.uSet.id}/${UserUtil.user.gender}") {
 
                     questionList = it
 
-                    if(!isFinishing) {
-                        supportFragmentManager.beginTransaction()
-                            .disallowAddToBackStack()
-                            .replace(R.id.fragment, StageThreeFragment(this)).commit()
-                        mContent = supportFragmentManager.fragments.get(0)
+                    if(!isFinishing) { supportFragmentManager.beginTransaction().disallowAddToBackStack().replace(R.id.fragment, StageThreeFragment(this)).commit()
+                        mContent = supportFragmentManager.fragments[0]
                         hideLoading()
                     }
 
@@ -174,16 +206,14 @@ class GameActivity : AppCompatActivity(), nextFragment {
 
         } else if(game.uStage == 2){
 
-            GameUtil.getQuestionDataStageTwo("games/${game.gameID}/${friends.uid}/1", "games/${game.gameID}/${user.uid}/3") { a, q ->
+            GameUtil.getQuestionDataStageTwo("games/${game.gameID}/${friends.uid}/1", "games/${game.gameID}/${UserUtil.user.uid}/3") { a, q ->
 
                 questionList = q
                 answerList = a
 
                 if(!isFinishing) {
-                    supportFragmentManager.beginTransaction()
-                        .disallowAddToBackStack()
-                        .replace(R.id.fragment, StageTwoFragment(this)).commit()
-                    mContent = supportFragmentManager.fragments.get(0)
+                    supportFragmentManager.beginTransaction().disallowAddToBackStack().replace(R.id.fragment, StageTwoFragment(this)).commit()
+                    mContent = supportFragmentManager.fragments[0]
                     hideLoading()
                 }
 
@@ -198,10 +228,8 @@ class GameActivity : AppCompatActivity(), nextFragment {
                 if(it.question.questionId != "" && it.question1.questionId != "" && it.question2.questionId != "") {
 
                     if (!isFinishing) {
-                        supportFragmentManager.beginTransaction()
-                            .disallowAddToBackStack()
-                            .replace(R.id.fragment, StageOneFragment(this)).commit()
-                        mContent = supportFragmentManager.fragments.get(0)
+                        supportFragmentManager.beginTransaction().disallowAddToBackStack().replace(R.id.fragment, StageOneFragment(this)).commit()
+                        mContent = supportFragmentManager.fragments[0]
                         hideLoading()
                     }
 
@@ -223,13 +251,9 @@ class GameActivity : AppCompatActivity(), nextFragment {
 
     private fun setInterface(onComplete: () -> Unit){
 
-        setImage {
+        setImage { onComplete() }
 
-            onComplete()
-
-        }
-
-        userNameText.text = user.name
+        userNameText.text = UserUtil.user.name
         friendNameText.text = friends.name
 
         if(game.uStage == 0){
@@ -246,7 +270,7 @@ class GameActivity : AppCompatActivity(), nextFragment {
 
     private fun setImage(onComplete: () -> Unit){
 
-        glide.setActivityImage(user.fb, user.image, this, userProfileImage){
+        glide.setActivityImage(UserUtil.user.fb, UserUtil.user.image, this, userProfileImage){
 
             userLoadingImage.visibility = View.GONE
 
@@ -255,6 +279,7 @@ class GameActivity : AppCompatActivity(), nextFragment {
         glide.setActivityImage(friends.fb, friends.image, this, friendProfileImage){
 
             friendLoadingImage.visibility = View.GONE
+            supportStartPostponedEnterTransition()
 
         }
 
@@ -262,34 +287,94 @@ class GameActivity : AppCompatActivity(), nextFragment {
 
     }
 
-    private fun getFriendInformation(){
-        GameUtil.getUserData(FirebaseAuth.getInstance().currentUser?.uid.toString(), intent?.extras?.get("id").toString()) { e ->
+    private fun error(){
 
-            friends = e.friendsData
-            user = e.userData
+        gameText.text = "Nie udało się załadować pytań\nczy chcesz zrestartować grę?"
 
-            game = e.game
-            information = e.finfo
+    }
 
-            stats = e.fstats
-            userStats = e.ustats
+    private fun getStats(){
 
-            setInterface {
+        GameUtil.getFriendStats(intent?.extras?.getString("uid")!!){ca, ba, ga ->
 
-                setFragment()
+            friendsStats = StatsData(ca, ba, ga)
+
+        }
+
+        GameUtil.getUserStats(intent?.extras?.getString("uid")!!){ca, ba, ga ->
+
+            userStats = StatsData(ca, ba, ga)
+
+        }
+
+    }
+
+    private fun getInformation(onComplete: (Boolean) -> Unit){
+
+        UserUtil.getFriendData(intent?.extras?.getString("uid")!!){data, b ->
+
+            if(b){
+
+                friends = data
+
+                GameUtil.getSetData(intent?.extras?.getString("uSet")!!) { data1, b1 ->
+
+                    if(b1){
+
+                        uSet = data1
+
+                        GameUtil.getSetData(intent?.extras?.getString("fSet")!!) { data2, b2 ->
+
+                            if(b2){
+
+                                fSet = data2
+
+                                GameUtil.getGameData(intent?.extras?.getString("gameId")!!, friends.uid){ data3, b3 ->
+
+                                    if(b3){
+
+                                        game = GameData(data3.yturn, data3.fturn, data3.ystage, data3.fstage, uSet, fSet, data3.gamemode, data3.gameId, data3.newGame, data3.yid, data3.fid)
+
+                                        onComplete(true)
+
+                                    } else {
+
+                                        onComplete(false)
+
+                                    }
+
+                                }
+
+                            } else {
+
+                                onComplete(false)
+
+                            }
+
+                        }
+
+                    } else {
+
+                        onComplete(false)
+
+                    }
+
+                }
+
+            } else {
+
+                onComplete(false)
 
             }
 
         }
+
     }
 
     override fun onResume() {
         super.onResume()
-
+        UserUtil.updateStatus(StatusMessage.ingame)
         hideNavigationBar()
-
-        getFriendInformation()
-
     }
 
     private fun hideNavigationBar() {
@@ -309,6 +394,11 @@ class GameActivity : AppCompatActivity(), nextFragment {
                     decorView.systemUiVisibility = flags
                 }
             }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        GameUtil.removeListenerStats()
     }
 
 }

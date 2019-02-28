@@ -1,19 +1,20 @@
-package pl.idappstudio.howwelldoyouknoweachother.fragments
-
+package pl.idappstudio.howwelldoyouknoweachother.fragments.stages
 
 import android.os.Bundle
-import android.support.constraint.ConstraintLayout
-import android.support.v4.content.ContextCompat
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.ImageView
 import android.widget.TextView
-
 import pl.idappstudio.howwelldoyouknoweachother.R
-import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity
-import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity.Companion.user
+import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity.Companion.friends
+import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity.Companion.friendsStats
+import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity.Companion.game
+import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity.Companion.questionList
+import pl.idappstudio.howwelldoyouknoweachother.activity.GameActivity.Companion.userStats
 import pl.idappstudio.howwelldoyouknoweachother.interfaces.nextFragment
 import pl.idappstudio.howwelldoyouknoweachother.model.InviteNotificationMessage
 import pl.idappstudio.howwelldoyouknoweachother.model.Message
@@ -21,8 +22,9 @@ import pl.idappstudio.howwelldoyouknoweachother.model.NotificationType
 import pl.idappstudio.howwelldoyouknoweachother.util.FirestoreUtil
 import pl.idappstudio.howwelldoyouknoweachother.util.GameUtil
 import pl.idappstudio.howwelldoyouknoweachother.util.GlideUtil
+import pl.idappstudio.howwelldoyouknoweachother.util.UserUtil
 
-class StageThreeFragment(private val listener: nextFragment) : android.support.v4.app.Fragment(), View.OnClickListener {
+class StageThreeFragment(private val listener: nextFragment) : androidx.fragment.app.Fragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
 
@@ -36,7 +38,7 @@ class StageThreeFragment(private val listener: nextFragment) : android.support.v
 
     }
 
-    private val glide = GlideUtil()
+    private val glide = GlideUtil
 
     private lateinit var stageTitle: TextView
 
@@ -172,23 +174,23 @@ class StageThreeFragment(private val listener: nextFragment) : android.support.v
 
             } else {
 
-                GameUtil.sendAnswerStageThree(GameActivity.game, GameActivity.user, GameActivity.friends, userAnswer[0], userAnswer[1], userAnswer[2],
-                    "set/${GameActivity.game.uSet.id}/${GameActivity.user.gender}/${GameActivity.questionList.question.questionId}",
-                    "set/${GameActivity.game.uSet.id}/${GameActivity.user.gender}/${GameActivity.questionList.question1.questionId}",
-                    "set/${GameActivity.game.uSet.id}/${GameActivity.user.gender}/${GameActivity.questionList.question2.questionId}"){
+                GameUtil.sendAnswerStageThree(game, UserUtil.user, friends, userAnswer[0], userAnswer[1], userAnswer[2],
+                    "set/${game.uSet.id}/${UserUtil.user.gender}/${questionList.question.questionId}",
+                    "set/${game.uSet.id}/${UserUtil.user.gender}/${questionList.question1.questionId}",
+                    "set/${game.uSet.id}/${UserUtil.user.gender}/${questionList.question2.questionId}"){
 
-                    if(GameActivity.userStats.games == 0 && GameActivity.stats.games == 1){
+                    if(userStats.games == 0 && friendsStats.games == 1){
 
-                        GameUtil.notNewGame(GameActivity.game)
+                        GameUtil.notNewGame(game)
 
                     }
 
-                    GameUtil.updateGame(GameActivity.userStats.games, GameActivity.user.uid, GameActivity.friends.uid)
+                    GameUtil.updateGame(userStats.games, UserUtil.user.uid, friends.uid)
 
-                    val msg: Message = InviteNotificationMessage("Twoja kolej!", "${GameActivity.user.name} skończył swoją turę, czas na ciebie!", GameActivity.user.uid, GameActivity.friends.uid,GameActivity.user.name, NotificationType.GAME)
-                    FirestoreUtil.sendMessage(msg, GameActivity.friends.uid)
+                    val msg: Message = InviteNotificationMessage("Twoja kolej!", "${UserUtil.user.name} skończył swoją turę, czas na ciebie!", UserUtil.user.uid, friends.uid, UserUtil.user.name, NotificationType.GAME)
+                    FirestoreUtil.sendMessage(msg, friends.uid)
 
-                    this.activity?.finish()
+                    activity?.onBackPressed()
 
                 }
 
@@ -267,27 +269,27 @@ class StageThreeFragment(private val listener: nextFragment) : android.support.v
 
         if(questionNumber == 1){
 
-            question = GameActivity.questionList.question.question
-            canswer = GameActivity.questionList.question.canswer
-            banswer = GameActivity.questionList.question.banswer
-            banswer2 = GameActivity.questionList.question.banswer2
-            banswer3 = GameActivity.questionList.question.banswer3
+            question = questionList.question.question
+            canswer = questionList.question.canswer
+            banswer = questionList.question.banswer
+            banswer2 = questionList.question.banswer2
+            banswer3 = questionList.question.banswer3
 
         } else if(questionNumber == 2){
 
-            question = GameActivity.questionList.question1.question
-            canswer = GameActivity.questionList.question1.canswer
-            banswer = GameActivity.questionList.question1.banswer
-            banswer2 = GameActivity.questionList.question1.banswer2
-            banswer3 = GameActivity.questionList.question1.banswer3
+            question = questionList.question1.question
+            canswer = questionList.question1.canswer
+            banswer = questionList.question1.banswer
+            banswer2 = questionList.question1.banswer2
+            banswer3 = questionList.question1.banswer3
 
         } else if(questionNumber == 3){
 
-            question = GameActivity.questionList.question2.question
-            canswer = GameActivity.questionList.question2.canswer
-            banswer = GameActivity.questionList.question2.banswer
-            banswer2 = GameActivity.questionList.question2.banswer2
-            banswer3 = GameActivity.questionList.question2.banswer3
+            question = questionList.question2.question
+            canswer = questionList.question2.canswer
+            banswer = questionList.question2.banswer
+            banswer2 = questionList.question2.banswer2
+            banswer3 = questionList.question2.banswer3
 
         }
 
@@ -414,10 +416,10 @@ class StageThreeFragment(private val listener: nextFragment) : android.support.v
 
     private fun loadImage(){
 
-        glide.setImage(user.fb, user.image, this.requireContext(), aAnswerUserImage) {}
-        glide.setImage(user.fb, user.image, this.requireContext(), bAnswerUserImage) {}
-        glide.setImage(user.fb, user.image, this.requireContext(), cAnswerUserImage) {}
-        glide.setImage(user.fb, user.image, this.requireContext(), dAnswerUserImage) {}
+        glide.setImage(UserUtil.user.fb, UserUtil.user.image, this.requireContext(), aAnswerUserImage) {}
+        glide.setImage(UserUtil.user.fb, UserUtil.user.image, this.requireContext(), bAnswerUserImage) {}
+        glide.setImage(UserUtil.user.fb, UserUtil.user.image, this.requireContext(), cAnswerUserImage) {}
+        glide.setImage(UserUtil.user.fb, UserUtil.user.image, this.requireContext(), dAnswerUserImage) {}
 
     }
 

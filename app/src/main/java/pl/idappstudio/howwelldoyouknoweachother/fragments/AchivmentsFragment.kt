@@ -2,14 +2,14 @@ package pl.idappstudio.howwelldoyouknoweachother.fragments
 
 
 import android.os.Bundle
-import android.support.v4.app.Fragment
+import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import pl.idappstudio.howwelldoyouknoweachother.R
 import pl.idappstudio.howwelldoyouknoweachother.util.FirestoreUtil
 
-class AchivmentsFragment : Fragment() {
+class AchivmentsFragment : androidx.fragment.app.Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -20,8 +20,4 @@ class AchivmentsFragment : Fragment() {
         fun newInstance(): AchivmentsFragment = AchivmentsFragment()
     }
 
-    override fun onResume() {
-        super.onResume()
-        FirestoreUtil.initialize()
-    }
 }

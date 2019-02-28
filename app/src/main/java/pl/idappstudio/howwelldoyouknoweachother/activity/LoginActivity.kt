@@ -7,7 +7,7 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.support.design.widget.Snackbar
+import com.google.android.material.snackbar.Snackbar
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -18,6 +18,7 @@ import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.newTask
 import org.jetbrains.anko.startActivity
 import pl.idappstudio.howwelldoyouknoweachother.R
+import pl.idappstudio.howwelldoyouknoweachother.util.UserUtil
 import java.util.regex.Pattern
 
 class LoginActivity : Activity() {
@@ -99,13 +100,27 @@ class LoginActivity : Activity() {
 
             auth.signInWithEmailAndPassword(emailInput.text.toString().trim(), passwordInput.text.toString().trim()).addOnSuccessListener {
 
-                alertDialog.dismiss()
+                UserUtil.initializeUser {
 
-                val snackbar: Snackbar? = Snackbar.make(view, "Zalogowano", 2500)
-                snackbar?.view?.setBackgroundColor(resources.getColor(R.color.colorAccent))
-                snackbar?.show()
+                    alertDialog.dismiss()
 
-                startActivity(intentFor<MenuActivity>().newTask().clearTask())
+                    if(it.uid != ""){
+
+                        val snackbar: Snackbar? = Snackbar.make(view, "Zalogowano", 2500)
+                        snackbar?.view?.setBackgroundColor(resources.getColor(R.color.colorAccent))
+                        snackbar?.show()
+
+                        startActivity(intentFor<MenuActivity>().newTask().clearTask())
+
+                    } else {
+
+                        val snackbar: Snackbar? = Snackbar.make(view, "Najwidoczniej jest problem z twoim kontem, skontaktuj się znami.", 2500)
+                        snackbar?.view?.setBackgroundColor(resources.getColor(R.color.colorRed))
+                        snackbar?.show()
+
+                    }
+
+                }
 
             }.addOnCanceledListener {
 
@@ -175,12 +190,6 @@ class LoginActivity : Activity() {
 
         window.decorView.systemUiVisibility = flags
 
-        val decorView = window.decorView
-        decorView.setOnSystemUiVisibilityChangeListener { visibility ->
-            if (visibility and View.SYSTEM_UI_FLAG_FULLSCREEN == 0) {
-                decorView.systemUiVisibility = flags
-            }
-        }
     }
 
 }

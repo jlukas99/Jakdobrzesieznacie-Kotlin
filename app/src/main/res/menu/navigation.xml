@@ -15,14 +15,4 @@
             android:id="@+id/navigation_play"
             android:title=""/>
 
-    <item
-            android:id="@+id/navigation_add_friends"
-            android:icon="@drawable/ic_add_friends"
-            android:title="Zaproszenia"/>
-
-    <item
-            android:id="@+id/navigation_profile"
-            android:icon="@drawable/ic_profile"
-            android:title="Profil"/>
-
 </menu>

@@ -8,7 +8,7 @@ import android.app.AlertDialog
 import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.support.design.widget.Snackbar
+import com.google.android.material.snackbar.Snackbar
 import android.util.Log
 import android.view.View
 import com.facebook.*
@@ -35,6 +35,7 @@ import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import pl.idappstudio.howwelldoyouknoweachother.util.FacebookUtil
+import pl.idappstudio.howwelldoyouknoweachother.util.UserUtil
 import java.util.*
 
 
@@ -206,7 +207,7 @@ class LoginMenuActivity : Activity() {
 
                     }
 
-                    FirestoreUtil.registerCurrentUser(uid, profile.name, profile.id, true, gender, "free") {
+                    FirestoreUtil.registerCurrentUser(uid, profile.name, profile.id, true, gender, "free", "") {
 
                         alertDialog.dismiss()
 
@@ -218,10 +219,26 @@ class LoginMenuActivity : Activity() {
                         MyFirebaseMessagingService.addTokenToFirestore(registrationToken)
 
                         if(it) {
-                            FacebookUtil.getFacebookFriends(token, profile.name)
-                        }
 
-                        startActivity(intentFor<MenuActivity>().newTask().clearTask())
+                            UserUtil.initializeUser {
+
+//                                FacebookUtil.getFacebookFriends(token, profile.name){
+
+                                    startActivity(intentFor<MenuActivity>().newTask().clearTask())
+
+//                                }
+
+                            }
+
+                        } else {
+
+                            UserUtil.initialize {
+
+                                startActivity(intentFor<MenuActivity>().newTask().clearTask())
+
+                            }
+
+                        }
 
                     }
 
@@ -254,11 +271,5 @@ class LoginMenuActivity : Activity() {
 
         window.decorView.systemUiVisibility = flags
 
-        val decorView = window.decorView
-        decorView.setOnSystemUiVisibilityChangeListener { visibility ->
-            if (visibility and View.SYSTEM_UI_FLAG_FULLSCREEN == 0) {
-                decorView.systemUiVisibility = flags
-            }
-        }
     }
 }

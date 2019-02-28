@@ -6,6 +6,6 @@
         android:radius="100dp" />
 
     <solid
-        android:color="#60000000" />
+        android:color="@color/colorDarkCard" />
 
 </shape>

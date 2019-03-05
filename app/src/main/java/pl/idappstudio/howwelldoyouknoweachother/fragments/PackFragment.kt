@@ -62,7 +62,6 @@ class PackFragment : androidx.fragment.app.Fragment(), ClickSetListener {
         super.onCreate(savedInstanceState)
 
         packSection.setHideWhenEmpty(true)
-
         packAdapter.add(0, packSection)
 
     }
@@ -161,6 +160,8 @@ class PackFragment : androidx.fragment.app.Fragment(), ClickSetListener {
 
             if(UserUtil.user.type == "free"){
 
+                pack_btn_add.isEnabled = false
+
                 pack_btn_add.text = "KUP SLOT NA ZESTAW"
                 pack_btn_add.background.setColorFilter(
                         ContextCompat.getColor(this.context!!, R.color.colorButtonSecondary
@@ -168,6 +169,8 @@ class PackFragment : androidx.fragment.app.Fragment(), ClickSetListener {
                 )
 
             } else {
+
+                pack_btn_add.isEnabled = true
 
                 pack_btn_add.text = "STWORZ ZESTAW"
                 pack_btn_add.background.setColorFilter(
@@ -180,9 +183,9 @@ class PackFragment : androidx.fragment.app.Fragment(), ClickSetListener {
                     val pack = SetItem("kliknij mnie, żeby zmienić nazwę", 0, false, "default", UserUtil.user.uid, "")
 
                     dbSet.add(pack).addOnSuccessListener {
-                        dbSet.document(it.id).update("id", it.id).addOnSuccessListener {
+                        dbSet.document(it.id).update("id", it.id).addOnSuccessListener {it2 ->
 
-                            startActivity<CreateSetActivity>()
+                            startActivity<CreateSetActivity>("id" to it.id)
 
                         }
 
@@ -199,6 +202,8 @@ class PackFragment : androidx.fragment.app.Fragment(), ClickSetListener {
 
         } else {
 
+            pack_btn_add.isEnabled = true
+
             pack_btn_add.text = "STWORZ ZESTAW"
             pack_btn_add.background.setColorFilter(
                 ContextCompat.getColor(this.context!!, R.color.colorPrimary
@@ -210,9 +215,9 @@ class PackFragment : androidx.fragment.app.Fragment(), ClickSetListener {
                 val pack = SetItem("kliknij mnie, żeby zmienić nazwę", 0, false, "default", UserUtil.user.uid, "")
 
                 dbSet.add(pack).addOnSuccessListener {
-                    dbSet.document(it.id).update("id", it.id).addOnSuccessListener {
+                    dbSet.document(it.id).update("id", it.id).addOnSuccessListener {it2 ->
 
-                        startActivity<CreateSetActivity>()
+                        startActivity<CreateSetActivity>("id" to it.id)
 
                     }
 

@@ -468,7 +468,7 @@ class InvitesFragment : androidx.fragment.app.Fragment(), ClickInviteListener {
 
             setInfoSearch {}
 
-            searchListener = db.whereEqualTo("name", searchInput.text.toString().trim()).whereEqualTo("public", true)
+            searchListener = db.orderBy("name").startAt(searchInput.text.toString().trim()).endAt(searchInput.text.toString().trim() + "\uf8ff").whereEqualTo("public", true)
                 .addSnapshotListener(EventListener<QuerySnapshot> { doc, e ->
 
                     if (e != null) {

@@ -310,27 +310,27 @@ object GameUtil {
 
                         if(i.questionId == id1){
 
-                            if(a.answer1.trim() == i.canswer.trim()){
+                            if(a.answer1.trim() == i.a.trim()){
 
-                                question1 = UserQuestionData(i.question, i.canswer, i.banswer, i.banswer2, i.banswer3, id1)
-
-                            }
-
-                            if(a.answer1.trim() == i.banswer.trim()){
-
-                                question1 = UserQuestionData(i.question, i.banswer, i.canswer, i.banswer2, i.banswer3, id1)
+                                question1 = UserQuestionData(i.question, i.a, i.b, i.c, i.d, id1)
 
                             }
 
-                            if(a.answer1.trim() == i.banswer2.trim()){
+                            if(a.answer1.trim() == i.b.trim()){
 
-                                question1 = UserQuestionData(i.question, i.banswer2, i.banswer, i.canswer, i.banswer3, id1)
+                                question1 = UserQuestionData(i.question, i.b, i.a, i.c, i.d, id1)
 
                             }
 
-                            if(a.answer1.trim() == i.banswer3.trim()){
+                            if(a.answer1.trim() == i.c.trim()){
 
-                                question1 = UserQuestionData(i.question, i.banswer3, i.banswer, i.banswer2, i.canswer, id1)
+                                question1 = UserQuestionData(i.question, i.c, i.b, i.a, i.d, id1)
+
+                            }
+
+                            if(a.answer1.trim() == i.d.trim()){
+
+                                question1 = UserQuestionData(i.question, i.d, i.b, i.c, i.a, id1)
 
                             }
 
@@ -338,27 +338,27 @@ object GameUtil {
 
                         if(i.questionId == id2){
 
-                            if(a.answer2.trim() == i.canswer.trim()){
+                            if(a.answer2.trim() == i.a.trim()){
 
-                                question2 = UserQuestionData(i.question, i.canswer, i.banswer, i.banswer2, i.banswer3, id2)
-
-                            }
-
-                            if(a.answer2.trim() == i.banswer.trim()){
-
-                                question2 = UserQuestionData(i.question, i.banswer, i.canswer, i.banswer2, i.banswer3, id2)
+                                question2 = UserQuestionData(i.question, i.a, i.b, i.c, i.d, id2)
 
                             }
 
-                            if(a.answer2.trim() == i.banswer2.trim()){
+                            if(a.answer2.trim() == i.b.trim()){
 
-                                question2 = UserQuestionData(i.question, i.banswer2, i.banswer, i.canswer, i.banswer3, id2)
+                                question2 = UserQuestionData(i.question, i.b, i.a, i.c, i.d, id2)
 
                             }
 
-                            if(a.answer2.trim() == i.banswer3.trim()){
+                            if(a.answer2.trim() == i.c.trim()){
 
-                                question2 = UserQuestionData(i.question, i.banswer3, i.banswer, i.banswer2, i.canswer, id2)
+                                question2 = UserQuestionData(i.question, i.c, i.b, i.a, i.d, id2)
+
+                            }
+
+                            if(a.answer2.trim() == i.d.trim()){
+
+                                question2 = UserQuestionData(i.question, i.d, i.b, i.c, i.a, id2)
 
                             }
 
@@ -366,27 +366,27 @@ object GameUtil {
 
                         if(i.questionId == id3){
 
-                            if(a.answer3.trim() == i.canswer.trim()){
+                            if(a.answer3.trim() == i.a.trim()){
 
-                                question3 = UserQuestionData(i.question, i.canswer, i.banswer, i.banswer2, i.banswer3, id3)
-
-                            }
-
-                            if(a.answer3.trim() == i.banswer.trim()){
-
-                                question3 = UserQuestionData(i.question, i.banswer, i.canswer, i.banswer2, i.banswer3, id3)
+                                question3 = UserQuestionData(i.question, i.a, i.b, i.c, i.d, id3)
 
                             }
 
-                            if(a.answer3.trim() == i.banswer2.trim()){
+                            if(a.answer3.trim() == i.b.trim()){
 
-                                question3 = UserQuestionData(i.question, i.banswer2, i.banswer, i.canswer, i.banswer3, id3)
+                                question3 = UserQuestionData(i.question, i.b, i.a, i.c, i.d, id3)
 
                             }
 
-                            if(a.answer3.trim() == i.banswer3.trim()){
+                            if(a.answer3.trim() == i.c.trim()){
 
-                                question3 = UserQuestionData(i.question, i.banswer3, i.banswer, i.banswer2, i.canswer, id3)
+                                question3 = UserQuestionData(i.question, i.c, i.b, i.a, i.d, id3)
+
+                            }
+
+                            if(a.answer3.trim() == i.d.trim()){
+
+                                question3 = UserQuestionData(i.question, i.d, i.b, i.c, i.a, id3)
 
                             }
 
@@ -451,27 +451,27 @@ object GameUtil {
 
                                 if(i.questionId == id1){
 
-                                    if(a.answer1.trim() == i.canswer.trim()){
+                                    if(a.answer1.trim() == i.a.trim()){
 
-                                        question1 = UserQuestionData(i.question, i.canswer, i.banswer, i.banswer2, i.banswer3, id1)
-
-                                    }
-
-                                    if(a.answer1.trim() == i.banswer.trim()){
-
-                                        question1 = UserQuestionData(i.question, i.banswer, i.canswer, i.banswer2, i.banswer3, id1)
+                                        question1 = UserQuestionData(i.question, i.a, i.b, i.c, i.d, id1)
 
                                     }
 
-                                    if(a.answer1.trim() == i.banswer2.trim()){
+                                    if(a.answer1.trim() == i.b.trim()){
 
-                                        question1 = UserQuestionData(i.question, i.banswer2, i.banswer, i.canswer, i.banswer3, id1)
+                                        question1 = UserQuestionData(i.question, i.b, i.a, i.c, i.d, id1)
 
                                     }
 
-                                    if(a.answer1.trim() == i.banswer3.trim()){
+                                    if(a.answer1.trim() == i.c.trim()){
 
-                                        question1 = UserQuestionData(i.question, i.banswer3, i.banswer, i.banswer2, i.canswer, id1)
+                                        question1 = UserQuestionData(i.question, i.c, i.b, i.a, i.d, id1)
+
+                                    }
+
+                                    if(a.answer1.trim() == i.d.trim()){
+
+                                        question1 = UserQuestionData(i.question, i.d, i.b, i.c, i.a, id1)
 
                                     }
 
@@ -479,27 +479,27 @@ object GameUtil {
 
                                 if(i.questionId == id2){
 
-                                    if(a.answer2.trim() == i.canswer.trim()){
+                                    if(a.answer2.trim() == i.a.trim()){
 
-                                        question2 = UserQuestionData(i.question, i.canswer, i.banswer, i.banswer2, i.banswer3, id2)
-
-                                    }
-
-                                    if(a.answer2.trim() == i.banswer.trim()){
-
-                                        question2 = UserQuestionData(i.question, i.banswer, i.canswer, i.banswer2, i.banswer3, id2)
+                                        question2 = UserQuestionData(i.question, i.a, i.b, i.c, i.d, id2)
 
                                     }
 
-                                    if(a.answer2.trim() == i.banswer2.trim()){
+                                    if(a.answer2.trim() == i.b.trim()){
 
-                                        question2 = UserQuestionData(i.question, i.banswer2, i.banswer, i.canswer, i.banswer3, id2)
+                                        question2 = UserQuestionData(i.question, i.b, i.a, i.c, i.d, id2)
 
                                     }
 
-                                    if(a.answer2.trim() == i.banswer3.trim()){
+                                    if(a.answer2.trim() == i.c.trim()){
 
-                                        question2 = UserQuestionData(i.question, i.banswer3, i.banswer, i.banswer2, i.canswer, id2)
+                                        question2 = UserQuestionData(i.question, i.c, i.b, i.a, i.d, id2)
+
+                                    }
+
+                                    if(a.answer2.trim() == i.d.trim()){
+
+                                        question2 = UserQuestionData(i.question, i.d, i.b, i.c, i.a, id2)
 
                                     }
 
@@ -507,27 +507,27 @@ object GameUtil {
 
                                 if(i.questionId == id3){
 
-                                    if(a.answer3.trim() == i.canswer.trim()){
+                                    if(a.answer3.trim() == i.a.trim()){
 
-                                        question3 = UserQuestionData(i.question, i.canswer, i.banswer, i.banswer2, i.banswer3, id3)
-
-                                    }
-
-                                    if(a.answer3.trim() == i.banswer.trim()){
-
-                                        question3 = UserQuestionData(i.question, i.banswer, i.canswer, i.banswer2, i.banswer3, id3)
+                                        question3 = UserQuestionData(i.question, i.a, i.b, i.c, i.d, id3)
 
                                     }
 
-                                    if(a.answer3.trim() == i.banswer2.trim()){
+                                    if(a.answer3.trim() == i.b.trim()){
 
-                                        question3 = UserQuestionData(i.question, i.banswer2, i.banswer, i.canswer, i.banswer3, id3)
+                                        question3 = UserQuestionData(i.question, i.b, i.a, i.c, i.d, id3)
 
                                     }
 
-                                    if(a.answer3.trim() == i.banswer3.trim()){
+                                    if(a.answer3.trim() == i.c.trim()){
 
-                                        question3 = UserQuestionData(i.question, i.banswer3, i.banswer, i.banswer2, i.canswer, id3)
+                                        question3 = UserQuestionData(i.question, i.c, i.b, i.a, i.d, id3)
+
+                                    }
+
+                                    if(a.answer3.trim() == i.d.trim()){
+
+                                        question3 = UserQuestionData(i.question, i.d, i.b, i.c, i.a, id3)
 
                                     }
 

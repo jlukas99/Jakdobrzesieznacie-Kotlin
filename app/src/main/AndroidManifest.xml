@@ -20,6 +20,8 @@
             android:theme="@style/MyTheme"
             tools:ignore="AllowBackup"
             tools:replace="android:theme">
+        <activity android:name=".activity.AddQuestionActivity">
+        </activity>
         <activity
                 android:name=".activity.CreateSetActivity"
                 android:label="@string/title_activity_create_set">

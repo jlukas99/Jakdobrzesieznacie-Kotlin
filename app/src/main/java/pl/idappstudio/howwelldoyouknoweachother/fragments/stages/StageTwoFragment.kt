@@ -163,30 +163,30 @@ class StageTwoFragment(private val listener: nextFragment) : androidx.fragment.a
         if(questionNumber == 1){
 
             question = questionList.question.question
-            canswer = questionList.question.canswer
-            banswer = questionList.question.banswer
-            banswer2 = questionList.question.banswer2
-            banswer3 = questionList.question.banswer3
+            canswer = questionList.question.a
+            banswer = questionList.question.b
+            banswer2 = questionList.question.c
+            banswer3 = questionList.question.d
 
             answer = answerList.answer1
 
         } else if(questionNumber == 2){
 
             question = questionList.question1.question
-            canswer = questionList.question1.canswer
-            banswer = questionList.question1.banswer
-            banswer2 = questionList.question1.banswer2
-            banswer3 = questionList.question1.banswer3
+            canswer = questionList.question1.a
+            banswer = questionList.question1.b
+            banswer2 = questionList.question1.c
+            banswer3 = questionList.question1.d
 
             answer = answerList.answer2
 
         } else if(questionNumber == 3){
 
             question = questionList.question2.question
-            canswer = questionList.question2.canswer
-            banswer = questionList.question2.banswer
-            banswer2 = questionList.question2.banswer2
-            banswer3 = questionList.question2.banswer3
+            canswer = questionList.question2.a
+            banswer = questionList.question2.b
+            banswer2 = questionList.question2.c
+            banswer3 = questionList.question2.d
 
             answer = answerList.answer3
 

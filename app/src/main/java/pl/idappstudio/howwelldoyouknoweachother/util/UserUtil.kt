@@ -13,15 +13,11 @@ object UserUtil {
         .build()
 
     private val dbUsers: CollectionReference get() = db.collection("users")
-    private val dbSet: CollectionReference get() = db.collection("set")
     private val dbGames: CollectionReference get() = db.collection("games")
     private val dbFriendsUser: CollectionReference get() = db.collection("users/${FirebaseAuth.getInstance().currentUser?.uid}/friends")
     private val dbCurrentUser: DocumentReference get() = db.document("users/${FirebaseAuth.getInstance().currentUser?.uid}")
 
     var user = UserData()
-
-//    var friends =  HashMap<String, UserData>()
-//    var games = HashMap<String, GameData>()
 
     private var getListFriendsListener: ListenerRegistration? = null
     private var getOneFriendListener: ListenerRegistration? = null
@@ -77,6 +73,34 @@ object UserUtil {
 
     }
 
+    fun friendsList(onComplete: (ArrayList<String>) -> Unit){
+
+        dbFriendsUser.get().addOnSuccessListener {
+
+            if(it.isEmpty){
+                onComplete(ArrayList())
+            }
+
+            val array = ArrayList<String>()
+
+            for(i in it){
+
+                array.add(i.id)
+
+                if(it.size() == array.size){
+                    onComplete(array)
+                }
+
+            }
+
+        }.addOnFailureListener {
+
+            onComplete(ArrayList())
+
+        }
+
+    }
+
     fun getUser(onComplete: (UserData) -> Unit) {
 
        getUserListener = dbCurrentUser.addSnapshotListener(MetadataChanges.INCLUDE, EventListener<DocumentSnapshot> { document, e ->
@@ -111,7 +135,7 @@ object UserUtil {
 
     fun getIdGame(id: String, onComplete: (String) -> Unit){ dbFriendsUser.document(id).get().addOnSuccessListener { onComplete(it.getString("gameId").toString()) } }
 
-    fun addFriend(uid: String, onComplete: (Boolean) -> Unit){
+    fun addFriend(uid: String, fb: Boolean, onComplete: (Boolean) -> Unit){
 
         val you = HashMap<String, Any>()
         you["uid"] = user.uid
@@ -135,8 +159,8 @@ object UserUtil {
         game["${user.uid}-stage"] = 0
         game["$uid-turn"] = true
         game["${user.uid}-turn"] = true
-        game["$uid-set"] = "tXROasrv5bQhFIwZAmM6"
-        game["${user.uid}-set"] = "tXROasrv5bQhFIwZAmM6"
+        game["$uid-set"] = "3IlI2MBd04S6AhdkIgsY"
+        game["${user.uid}-set"] = "3IlI2MBd04S6AhdkIgsY"
         game["newGame"] = true
         game["${user.uid}-id"] = user.uid
         game["$uid-id"] = uid
@@ -156,8 +180,17 @@ object UserUtil {
 
                 dbUsers.document(uid).collection("friends").document(user.uid).set(you).addOnSuccessListener {
 
-                    val msg: Message = InviteNotificationMessage("Masz nowego znajomego", "${user.name} i ty jesteście teraz znajomymi", user.uid, uid, user.name, NotificationType.INVITE)
-                    FirestoreUtil.sendMessage(msg, uid)
+                    if(!fb) {
+                        val msg: Message = InviteNotificationMessage(
+                            "Masz nowego znajomego",
+                            "${user.name} i ty jesteście teraz znajomymi",
+                            user.uid,
+                            uid,
+                            user.name,
+                            NotificationType.INVITE
+                        )
+                        FirestoreUtil.sendMessage(msg, uid)
+                    }
                     onComplete(true)
 
                 }.addOnFailureListener {
@@ -311,6 +344,34 @@ object UserUtil {
     }
 
     fun updateStatus(msg: String){ dbCurrentUser.update("status", msg) }
+
+    fun getFacebookFriend(uid: String, onComplete: (UserData, Boolean) -> Unit){
+
+        dbUsers.whereEqualTo("image", uid).get().addOnSuccessListener {
+
+            for(i in it){
+
+                val friend = i.toObject(UserData::class.java)
+
+                if(friend.uid != ""){
+
+                    onComplete(friend, true)
+
+                } else {
+
+                    onComplete(UserData(), false)
+
+                }
+
+            }
+
+        }.addOnFailureListener {
+
+            onComplete(UserData(), false)
+
+        }
+
+    }
 
     fun getFriendData(uid: String, onComplete: (UserData, Boolean) -> Unit){
 

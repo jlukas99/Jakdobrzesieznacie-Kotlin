@@ -14,37 +14,62 @@ object FacebookUtil {
     fun getFacebookFriends(token: AccessToken, name: String, onComplete: () -> Unit) {
         val request = GraphRequest.newMyFriendsRequest(token) { array, response ->
 
-//            UserUtil.initializeList {
-//
-//                for (i in 0 until array.length()) {
-//
-//                    FirestoreUtil.getUser(array.getJSONObject(i).getString("id")){it2 ->
-//
-//                        if(it2.uid != ""){
-//
-//                            FirestoreUtil.addFacebookFriend(it2.uid, it){
-//
-//                                val msg: Message = InviteNotificationMessage("Znajomy z Facebook'a", "twój znajomyy $name, właśnie zarejestrował się w aplikacji", UserUtil.user.uid, it2.uid, name, NotificationType.INVITE)
-//                                FirestoreUtil.sendMessage(msg, it2.uid)
-//
-//                                if(i == array.length()){
-//
-//                                    onComplete()
-//
-//                                }
-//
-//                            }
-//
-//
-//                        }
-//
-//                    }
-//
-//                }
-//
-//            }
+            if(array.length() == 0){
+                onComplete()
+            }
 
-            onComplete()
+            UserUtil.friendsList {
+
+                for (i in 0 until array.length()) {
+
+                    UserUtil.getFacebookFriend(array.getJSONObject(i).getString("id")){it2, b ->
+
+                        if(b) {
+
+                            if (it2.uid != "") {
+
+                                if (!it.contains(it2.uid)) {
+
+                                    UserUtil.addFriend(it2.uid, true) {
+
+                                        val msg: Message = InviteNotificationMessage(
+                                            "Znajomy z Facebook'a",
+                                            "twój znajomy $name, właśnie zarejestrował się w aplikacji",
+                                            UserUtil.user.uid,
+                                            it2.uid,
+                                            name,
+                                            NotificationType.INVITE
+                                        )
+
+                                        FirestoreUtil.sendMessage(msg, it2.uid)
+
+                                        onComplete()
+
+                                    }
+
+                                } else {
+
+                                    onComplete()
+
+                                }
+
+                            } else {
+
+                                onComplete()
+
+                            }
+
+                        } else {
+
+                            onComplete()
+
+                        }
+
+                    }
+
+                }
+
+            }
 
         }
 

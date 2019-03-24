@@ -3,17 +3,17 @@
 package pl.idappstudio.howwelldoyouknoweachother.activity
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
+import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
 import android.view.View
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.InterstitialAd
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import kotlinx.android.synthetic.main.activity_menu.*
 import pl.idappstudio.howwelldoyouknoweachother.R
 import pl.idappstudio.howwelldoyouknoweachother.enums.StatusMessage
 import pl.idappstudio.howwelldoyouknoweachother.fragments.*
 import pl.idappstudio.howwelldoyouknoweachother.util.AdMobUtil
-import pl.idappstudio.howwelldoyouknoweachother.util.FirestoreUtil
 import pl.idappstudio.howwelldoyouknoweachother.util.UserUtil
 
 class MenuActivity : AppCompatActivity() {
@@ -79,6 +79,7 @@ class MenuActivity : AppCompatActivity() {
             when (it.itemId) {
 
                 R.id.navigation_add_friends -> {
+
                     if(!it.isChecked) {
 
                         openFragment(InvitesFragment(), "invites")

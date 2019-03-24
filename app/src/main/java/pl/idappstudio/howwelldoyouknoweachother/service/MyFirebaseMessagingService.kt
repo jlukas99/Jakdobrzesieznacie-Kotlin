@@ -19,6 +19,7 @@ import com.google.firebase.messaging.RemoteMessage
 import pl.idappstudio.howwelldoyouknoweachother.R
 
 import pl.idappstudio.howwelldoyouknoweachother.activity.IntroActivity
+import pl.idappstudio.howwelldoyouknoweachother.activity.MenuActivity
 import pl.idappstudio.howwelldoyouknoweachother.util.FirestoreUtil
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
@@ -31,6 +32,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         private lateinit var messageType: String
 
         fun addTokenToFirestore(newRegistrationToken: String?) {
+
             if (newRegistrationToken == null) throw NullPointerException("FCM token is null.")
 
             if(FirebaseAuth.getInstance().currentUser != null) {
@@ -71,9 +73,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         val notificationId: Int = buildNotificationId(messageBody)
 
-        val intent = Intent(this, IntroActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-
-        val notifyPendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
+//        val intent = Intent(this, IntroActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
+//
+//        val notifyPendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
 
         val bitmapIcon = BitmapFactory.decodeResource(resources, R.mipmap.logo_colored)
 
@@ -83,11 +85,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         if (group == "INVITE") {
 
-            val notificationBuilder: NotificationCompat.Builder
-
             if(title == "Znajomy z Facebook'a"){
 
-                notificationBuilder = NotificationCompat.Builder(this, channelId)
+                val notificationBuilder = NotificationCompat.Builder(this)
                     .setSmallIcon(R.mipmap.ic_facebook)
                     .setBadgeIconType(NotificationCompat.BADGE_ICON_SMALL)
                     .setLargeIcon(bitmapIcon)
@@ -96,25 +96,26 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                     .setColor(resources.getColor(R.color.colorFacebook))
                     .setContentText(messageBody)
                     .setAutoCancel(true)
-                    .setPriority(NotificationCompat.PRIORITY_MAX)
-                    .setContentIntent(notifyPendingIntent)
+                    .setCategory("INVITE_FB")
+                    .setGroupSummary(true)
                     .setDefaults(Notification.DEFAULT_SOUND or Notification.DEFAULT_LIGHTS or Notification.DEFAULT_VIBRATE)
+                    .build()
 
                 val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-                    val channel = NotificationChannel(channelId, "zaproszenie facebook", NotificationManager.IMPORTANCE_HIGH)
+                    val channel = NotificationChannel(channelId, "zaproszenie facebook", NotificationManager.IMPORTANCE_DEFAULT)
 
                     notificationManager.createNotificationChannel(channel)
 
                 }
 
-                notificationManager.notify(notificationId, notificationBuilder.build())
+                notificationManager.notify(notificationId, notificationBuilder)
 
             } else {
 
-                notificationBuilder = NotificationCompat.Builder(this, channelId)
+                val notificationBuilder = NotificationCompat.Builder(this)
                     .setSmallIcon(R.drawable.ic_add_friends_icon)
                     .setBadgeIconType(NotificationCompat.BADGE_ICON_SMALL)
                     .setLargeIcon(bitmapIcon)
@@ -123,27 +124,28 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                     .setColor(resources.getColor(R.color.colorAccent))
                     .setContentText(messageBody)
                     .setAutoCancel(true)
-                    .setPriority(NotificationCompat.PRIORITY_MAX)
-                    .setContentIntent(notifyPendingIntent)
+                    .setCategory("INVITE")
+                    .setGroupSummary(true)
                     .setDefaults(Notification.DEFAULT_SOUND or Notification.DEFAULT_LIGHTS or Notification.DEFAULT_VIBRATE)
+                    .build()
 
                 val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-                    val channel = NotificationChannel(channelId, "zaproszenie", NotificationManager.IMPORTANCE_HIGH)
+                    val channel = NotificationChannel(channelId, "zaproszenie", NotificationManager.IMPORTANCE_DEFAULT)
 
                     notificationManager.createNotificationChannel(channel)
 
                 }
 
-                notificationManager.notify(notificationId, notificationBuilder.build())
+                notificationManager.notify(notificationId, notificationBuilder)
 
             }
 
         } else {
 
-            val notificationBuilder = NotificationCompat.Builder(this, channelId)
+            val notificationBuilder = NotificationCompat.Builder(this)
                 .setSmallIcon(R.mipmap.games_icon)
                 .setBadgeIconType(NotificationCompat.BADGE_ICON_SMALL)
                 .setLargeIcon(bitmapIcon)
@@ -152,22 +154,23 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 .setColor(resources.getColor(R.color.colorRed))
                 .setContentText(messageBody)
                 .setAutoCancel(true)
-                .setSound(defaultSoundUri)
-                .setPriority(NotificationCompat.PRIORITY_MAX)
-                .setContentIntent(notifyPendingIntent)
+                .setCategory("GAMES")
+                .setGroupSummary(true)
+                .setDefaults(Notification.DEFAULT_SOUND or Notification.DEFAULT_LIGHTS or Notification.DEFAULT_VIBRATE)
+                .build()
 
 
             val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-                val channel = NotificationChannel(channelId, "rozgrywka", NotificationManager.IMPORTANCE_HIGH)
+                val channel = NotificationChannel(channelId, "rozgrywka", NotificationManager.IMPORTANCE_DEFAULT)
 
                 notificationManager.createNotificationChannel(channel)
 
             }
 
-                notificationManager.notify(notificationId, notificationBuilder.build())
+                notificationManager.notify(notificationId, notificationBuilder)
 
             }
 

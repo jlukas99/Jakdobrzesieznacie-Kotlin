@@ -23,8 +23,10 @@ import org.jetbrains.anko.support.v4.startActivity
 import pl.idappstudio.howwelldoyouknoweachother.R
 import pl.idappstudio.howwelldoyouknoweachother.activity.CreateSetActivity
 import pl.idappstudio.howwelldoyouknoweachother.adapter.PackAdapater
+import pl.idappstudio.howwelldoyouknoweachother.enums.ColorSnackBar
 import pl.idappstudio.howwelldoyouknoweachother.interfaces.ClickSetListener
 import pl.idappstudio.howwelldoyouknoweachother.model.SetItem
+import pl.idappstudio.howwelldoyouknoweachother.util.SnackBarUtil
 import pl.idappstudio.howwelldoyouknoweachother.util.UserUtil
 
 class PackFragment : androidx.fragment.app.Fragment(), ClickSetListener {
@@ -106,7 +108,7 @@ class PackFragment : androidx.fragment.app.Fragment(), ClickSetListener {
 
     private fun getPacks() {
 
-        setListener = dbSet.whereEqualTo("type", UserUtil.user.uid).addSnapshotListener(EventListener<QuerySnapshot> { doc, e ->
+        setListener = dbSet.whereEqualTo("category", UserUtil.user.uid).addSnapshotListener(EventListener<QuerySnapshot> { doc, e ->
 
             if(e != null){
                 return@EventListener
@@ -127,15 +129,6 @@ class PackFragment : androidx.fragment.app.Fragment(), ClickSetListener {
 
 
                     }
-
-//                    if(it.type == DocumentChange.Type.MODIFIED){
-//
-//                        rvPack.itemAnimator = LandingAnimator()
-//
-//                        addPackItem(it.document.id)
-//                        packSection.update(packItems.values)
-//
-//                    }
 
                     if(it.type == DocumentChange.Type.ADDED){
 
@@ -173,19 +166,26 @@ class PackFragment : androidx.fragment.app.Fragment(), ClickSetListener {
                 pack_btn_add.isEnabled = true
 
                 pack_btn_add.text = "STWORZ ZESTAW"
-                pack_btn_add.background.setColorFilter(
-                    ContextCompat.getColor(this.context!!, R.color.colorPrimary
-                    ), android.graphics.PorterDuff.Mode.SRC_IN
-                )
+
+                if(context != null) {
+
+                    pack_btn_add.background.setColorFilter(
+                        ContextCompat.getColor(
+                            context!!, R.color.colorPrimary
+                        ), android.graphics.PorterDuff.Mode.SRC_IN
+                    )
+
+                }
 
                 pack_btn_add.setOnClickListener {
 
-                    val pack = SetItem("kliknij mnie, żeby zmienić nazwę", 0, false, "default", UserUtil.user.uid, "")
+                    val pack = SetItem("zmień nazwę swojej paczki", 0, false, UserUtil.user.uid, "all", "")
 
                     dbSet.add(pack).addOnSuccessListener {
-                        dbSet.document(it.id).update("id", it.id).addOnSuccessListener {it2 ->
 
-                            startActivity<CreateSetActivity>("id" to it.id)
+                        dbSet.document(it.id).update("id", it.id)
+
+                        SnackBarUtil.setActivitySnack("Stworzono paczkę", ColorSnackBar.SUCCES, R.drawable.ic_pack_icon, pack_btn_add){
 
                         }
 
@@ -205,19 +205,27 @@ class PackFragment : androidx.fragment.app.Fragment(), ClickSetListener {
             pack_btn_add.isEnabled = true
 
             pack_btn_add.text = "STWORZ ZESTAW"
-            pack_btn_add.background.setColorFilter(
-                ContextCompat.getColor(this.context!!, R.color.colorPrimary
-                ), android.graphics.PorterDuff.Mode.SRC_IN
-            )
+
+            if(context != null) {
+
+                pack_btn_add.background.setColorFilter(
+                    ContextCompat.getColor(
+                        context!!, R.color.colorPrimary
+                    ), android.graphics.PorterDuff.Mode.SRC_IN
+                )
+
+            }
 
             pack_btn_add.setOnClickListener {
 
-                val pack = SetItem("kliknij mnie, żeby zmienić nazwę", 0, false, "default", UserUtil.user.uid, "")
+                val pack = SetItem("zmień nazwę swojej paczki", 0, false, "", "all", "")
 
                 dbSet.add(pack).addOnSuccessListener {
-                    dbSet.document(it.id).update("id", it.id).addOnSuccessListener {it2 ->
 
-                        startActivity<CreateSetActivity>("id" to it.id)
+                    dbSet.document(it.id).update("id", it.id)
+                    dbSet.document(it.id).update("category",UserUtil.user.uid)
+
+                        SnackBarUtil.setActivitySnack("Stworzono paczkę", ColorSnackBar.SUCCES, R.drawable.ic_pack_icon, pack_btn_add){
 
                     }
 
@@ -232,6 +240,11 @@ class PackFragment : androidx.fragment.app.Fragment(), ClickSetListener {
 
         }
 
+    }
+
+    override fun onPause() {
+        super.onPause()
+        setListener.remove()
     }
 
 }

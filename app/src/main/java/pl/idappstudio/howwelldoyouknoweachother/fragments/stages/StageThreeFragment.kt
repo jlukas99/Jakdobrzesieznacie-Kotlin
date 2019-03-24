@@ -24,7 +24,7 @@ import pl.idappstudio.howwelldoyouknoweachother.util.GameUtil
 import pl.idappstudio.howwelldoyouknoweachother.util.GlideUtil
 import pl.idappstudio.howwelldoyouknoweachother.util.UserUtil
 
-class StageThreeFragment(private val listener: nextFragment) : androidx.fragment.app.Fragment(), View.OnClickListener {
+class StageThreeFragment(private val listener: nextFragment, private val packUrl: String) : androidx.fragment.app.Fragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
 
@@ -100,11 +100,11 @@ class StageThreeFragment(private val listener: nextFragment) : androidx.fragment
 
         nextQuestion = rootView.findViewById(R.id.nextQuestionBtn)
 
-        loadImage()
-
         lockButton()
 
         setText()
+
+        loadImage()
 
         return rootView
     }
@@ -175,9 +175,9 @@ class StageThreeFragment(private val listener: nextFragment) : androidx.fragment
             } else {
 
                 GameUtil.sendAnswerStageThree(game, UserUtil.user, friends, userAnswer[0], userAnswer[1], userAnswer[2],
-                    "set/${game.uSet.id}/${UserUtil.user.gender}/${questionList.question.questionId}",
-                    "set/${game.uSet.id}/${UserUtil.user.gender}/${questionList.question1.questionId}",
-                    "set/${game.uSet.id}/${UserUtil.user.gender}/${questionList.question2.questionId}"){
+                    "$packUrl/${questionList.question.questionId}",
+                    "$packUrl/${questionList.question1.questionId}",
+                    "$packUrl/${questionList.question2.questionId}"){
 
                     if(userStats.games == 0 && friendsStats.games == 1){
 
@@ -411,6 +411,8 @@ class StageThreeFragment(private val listener: nextFragment) : androidx.fragment
 
             }
         }
+
+        listener.showFragment()
 
     }
 

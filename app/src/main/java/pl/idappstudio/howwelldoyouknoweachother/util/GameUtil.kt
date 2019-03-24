@@ -156,7 +156,7 @@ object GameUtil {
 
     }
 
-    fun getQuestionDataStageThree(s: String, onComplete: (QuestionData) -> Unit) {
+    fun getQuestionDataStageThreeOwnPack(s: String, onComplete: (QuestionData) -> Unit) {
 
         db.firestoreSettings = settings
 
@@ -217,6 +217,82 @@ object GameUtil {
             }
 
         }
+
+    }
+
+    fun getQuestionDataStageThree(s: String, onComplete: (QuestionData, String) -> Unit) {
+
+        db.firestoreSettings = settings
+
+        db.collection("$s/${UserUtil.user.gender}").get().addOnSuccessListener {
+
+            if(it.isEmpty){
+
+                getQuestionDataStageThreeOwnPack("$s/questions"){it2 ->
+
+                    onComplete(it2, "$s/questions")
+
+                }
+
+            } else {
+
+                val questionList = ArrayList<UserQuestionData>()
+
+                for(doc in it.documents){
+
+                    val question = doc.getString("question")!!
+
+                    val a = doc.getString("a")!!
+                    val b = doc.getString("b")!!
+
+                    if(doc.getString("c") != null){
+
+                        val c = doc.getString("c")!!
+
+                        if(doc.getString("d") != null){
+
+                            val d = doc.getString("d")!!
+                            questionList.add(UserQuestionData(question, a, b ,c , d, doc.id))
+
+                        } else {
+
+                            questionList.add(UserQuestionData(question, a, b ,c , "", doc.id))
+
+                        }
+
+                    } else {
+
+                        questionList.add(UserQuestionData(question, a, b ,"" , "", doc.id))
+
+                    }
+
+                    if(it.size() == questionList.size){
+
+                        questionList.shuffle()
+
+                        val questionData = ArrayList<UserQuestionData>()
+
+                        for(i in 0..2){
+
+                            questionData.add(questionList[i])
+
+                            if(questionData.size == 3){
+
+                                val questionItem = QuestionData(questionData[0], questionData[1], questionData[2])
+
+                                onComplete(questionItem, "$s/${UserUtil.user.gender}")
+
+                            }
+
+                        }
+
+                    }
+
+                }
+
+            }
+
+            }
 
     }
 

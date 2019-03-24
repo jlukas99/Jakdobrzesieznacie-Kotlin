@@ -31,12 +31,14 @@ import pl.idappstudio.howwelldoyouknoweachother.activity.MenuActivity.Companion.
 import pl.idappstudio.howwelldoyouknoweachother.activity.MenuActivity.Companion.EXTRA_USER_NAME_TRANSITION_NAME
 import pl.idappstudio.howwelldoyouknoweachother.activity.MenuActivity.Companion.EXTRA_USER_STATUS_GAME_TRANSITION_NAME
 import pl.idappstudio.howwelldoyouknoweachother.adapter.SetAdapater
+import pl.idappstudio.howwelldoyouknoweachother.enums.ColorSnackBar
 import pl.idappstudio.howwelldoyouknoweachother.enums.StatusMessage
 import pl.idappstudio.howwelldoyouknoweachother.interfaces.ClickSetListener
 import pl.idappstudio.howwelldoyouknoweachother.items.HeaderItem
 import pl.idappstudio.howwelldoyouknoweachother.model.*
 import pl.idappstudio.howwelldoyouknoweachother.util.GameUtil
 import pl.idappstudio.howwelldoyouknoweachother.util.GlideUtil
+import pl.idappstudio.howwelldoyouknoweachother.util.SnackBarUtil
 import pl.idappstudio.howwelldoyouknoweachother.util.UserUtil
 
 class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
@@ -55,9 +57,9 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
         } else {
 
-            snackbar = Snackbar.make(setDialog.findViewById(R.id.head_title_text), "Aby wybrać ten zestaw musisz posiadać konto premium", 2500)
-            snackbar.view.setBackgroundColor(this.resources.getColor(R.color.colorYellow))
-            snackbar.show()
+            SnackBarUtil.setActivitySnack("Żeby korzystać z tego zestawu, musisz posiadać konto premium", ColorSnackBar.WARING, R.drawable.ic_corn, setDialog.findViewById(R.id.head_title_text)){
+
+            }
 
         }
 
@@ -238,7 +240,6 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
         friends_profile_favorite.isEnabled = true
         friends_profile_set_btn.isEnabled = true
-        friends_profile_startgame_btn.isEnabled = true
         friends_profile_gamemode_btn.isEnabled = true
 
     }
@@ -286,7 +287,7 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
                             socialItems.remove(it.document.id)
                             socialPack.update(socialItems.values)
 
-                        } else if(it.document.getString("type") == UserUtil.user.uid) {
+                        } else if(it.document.getString("category") == UserUtil.user.uid) {
 
                             yourItems.remove(it.document.id)
                             yourPack.update(yourItems.values)
@@ -309,7 +310,7 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
                             addSocialItem(it.document.id, it.document.toObject(SetItem::class.java))
                             defaultPack.update(defaultItems.values)
 
-                        } else if(it.document.getString("type") == UserUtil.user.uid){
+                        } else if(it.document.getString("category") == UserUtil.user.uid){
 
                             addYourItem(it.document.id, it.document.toObject(SetItem::class.java))
                             yourPack.update(yourItems.values)
@@ -330,15 +331,19 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
                             addSocialItem(it.document.id, it.document.toObject(SetItem::class.java))
                             socialPack.update(socialItems.values)
 
-                        } else if(it.document.getString("type") == UserUtil.user.uid){
+                        } else if(it.document.getString("category") == UserUtil.user.uid){
 
                             addYourItem(it.document.id, it.document.toObject(SetItem::class.java))
                             yourPack.update(yourItems.values)
 
                         } else {
 
-                            addDefaultItem(it.document.id, it.document.toObject(SetItem::class.java))
-                            defaultPack.update(defaultItems.values)
+                            if(it.document.getString("category") == "default" || it.document.getString("category") == "own_question"){
+
+                                addDefaultItem(it.document.id, it.document.toObject(SetItem::class.java))
+                                defaultPack.update(defaultItems.values)
+
+                            }
 
                         }
 
@@ -528,7 +533,15 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
                     userSet = doc.toObject(UserSetData::class.java)!!
 
-                    friends_profile_set_btn.text = userSet.name
+                    if(userSet.category == UserUtil.user.uid){
+
+                        friends_profile_set_btn.text = GameUtil.getSetName(userSet.name)
+
+                    } else {
+
+                        friends_profile_set_btn.text = GameUtil.getSetName(userSet.category)
+
+                    }
 
                 }
 
@@ -569,6 +582,8 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
         if (games.yturn && games.fturn) {
 
+            friends_profile_startgame_btn.isEnabled = true
+
             friends_profile_startgame_btn.text = "GRAJ"
             friends_profile_startgame_btn.background.setColorFilter(
                 ContextCompat.getColor(
@@ -577,6 +592,8 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
             )
 
         } else if(games.yturn && !games.fturn) {
+
+            friends_profile_startgame_btn.isEnabled = true
 
             friends_profile_startgame_btn.text = "GRAJ"
             friends_profile_startgame_btn.background.setColorFilter(

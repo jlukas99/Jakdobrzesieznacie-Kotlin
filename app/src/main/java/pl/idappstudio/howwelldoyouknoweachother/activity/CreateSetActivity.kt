@@ -13,11 +13,8 @@ import kotlinx.android.synthetic.main.activity_create_set.*
 import pl.idappstudio.howwelldoyouknoweachother.R
 import pl.idappstudio.howwelldoyouknoweachother.model.*
 import android.content.Context
-import android.content.Intent
 import android.view.inputmethod.InputMethodManager
 import org.jetbrains.anko.startActivity
-import org.jetbrains.anko.support.v4.startActivity
-
 
 class CreateSetActivity : AppCompatActivity() {
 
@@ -86,6 +83,8 @@ class CreateSetActivity : AppCompatActivity() {
         }
 
         blockFunction()
+
+        getInformation()
 
         getSetData()
 
@@ -183,9 +182,34 @@ class CreateSetActivity : AppCompatActivity() {
 
     }
 
+    fun getInformation(){
+
+        dbSet.document(intent.extras.getString("id").toString()).collection("questions").get().addOnSuccessListener {
+
+            if(!it.isEmpty){
+
+                user_pack_canswer.text = it.size().toString()
+
+                var i = 0
+
+                for(doc in it){
+
+                    i += doc.data.size - 1
+
+                    user_pack_banswer.text = i.toString()
+
+                }
+
+            }
+
+        }
+
+    }
+
     override fun onResume() {
         super.onResume()
         unlockFunction()
+        getInformation()
         hideNavigationBar()
     }
 

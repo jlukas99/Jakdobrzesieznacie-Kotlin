@@ -4,10 +4,7 @@ import android.app.Dialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
-import android.view.Window
+import android.view.*
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -80,7 +77,7 @@ class InvitesFragment : androidx.fragment.app.Fragment(), ClickInviteListener {
                 dialogAdd.isClickable = false
                 dialogDelete.isClickable = false
 
-                UserUtil.addFriend(user.uid) {
+                UserUtil.addFriend(user.uid, false) {
 
                     if (it) {
 

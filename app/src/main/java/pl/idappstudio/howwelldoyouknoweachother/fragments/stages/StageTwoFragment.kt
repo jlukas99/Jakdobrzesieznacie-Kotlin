@@ -348,6 +348,12 @@ class StageTwoFragment(private val listener: nextFragment) : androidx.fragment.a
             }
         }
 
+        if(questionText.text != "...") {
+
+            listener.showFragment()
+
+        }
+
     }
 
     private fun loadImage(){
@@ -453,7 +459,6 @@ class StageTwoFragment(private val listener: nextFragment) : androidx.fragment.a
         }
 
         checkCorrectAnswer()
-        nextQuestion()
 
     }
 
@@ -463,7 +468,7 @@ class StageTwoFragment(private val listener: nextFragment) : androidx.fragment.a
 
             aAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
             aAnswerUserImage.visibility = View.VISIBLE
-
+            nextQuestion()
             return
 
         }
@@ -472,7 +477,7 @@ class StageTwoFragment(private val listener: nextFragment) : androidx.fragment.a
 
             bAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
             bAnswerUserImage.visibility = View.VISIBLE
-
+            nextQuestion()
             return
 
         }
@@ -481,7 +486,7 @@ class StageTwoFragment(private val listener: nextFragment) : androidx.fragment.a
 
             cAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
             cAnswerUserImage.visibility = View.VISIBLE
-
+            nextQuestion()
             return
 
         }
@@ -490,7 +495,7 @@ class StageTwoFragment(private val listener: nextFragment) : androidx.fragment.a
 
             dAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
             dAnswerUserImage.visibility = View.VISIBLE
-
+            nextQuestion()
             return
 
         }

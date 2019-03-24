@@ -91,6 +91,8 @@ class StageThreeOwnQuestionFragment(private val listener: nextFragment) : androi
 
         stageTitle.text = "Stwórz Pytania"
 
+        listener.showFragment()
+
         return rootView
     }
 
@@ -398,6 +400,7 @@ class StageThreeOwnQuestionFragment(private val listener: nextFragment) : androi
 
         if(questionText.text.isNullOrBlank()){
 
+            questionCheck.visibility = View.INVISIBLE
             return
 
         } else {
@@ -409,6 +412,7 @@ class StageThreeOwnQuestionFragment(private val listener: nextFragment) : androi
 
         if(aAnswerText.text.isNullOrBlank()){
 
+            aAnswerCheck.visibility = View.INVISIBLE
             return
 
         } else {
@@ -421,6 +425,7 @@ class StageThreeOwnQuestionFragment(private val listener: nextFragment) : androi
 
         if(bAnswerText.text.isNullOrBlank()){
 
+            bAnswerCheck.visibility = View.INVISIBLE
             return
 
         } else {
@@ -432,6 +437,7 @@ class StageThreeOwnQuestionFragment(private val listener: nextFragment) : androi
 
         if(cAnswerText.text.isNullOrBlank()){
 
+            cAnswerCheck.visibility = View.INVISIBLE
             return
 
         } else {
@@ -443,6 +449,7 @@ class StageThreeOwnQuestionFragment(private val listener: nextFragment) : androi
 
         if(dAnswerText.text.isNullOrBlank()){
 
+            dAnswerCheck.visibility = View.INVISIBLE
             return
 
         } else {

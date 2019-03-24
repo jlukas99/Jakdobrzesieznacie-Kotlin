@@ -359,7 +359,7 @@ class FriendsFragment : androidx.fragment.app.Fragment(), ClickListener {
                                     gamesSection.update(gamesItems.values)
                                 }
 
-                            } else {
+                            } else if(gamesItems[friendId(UserUtil.user.uid, it.document.id)] == null){
 
                                 addGamesItem(friendId(UserUtil.user.uid, it.document.id), it.document.getBoolean("${UserUtil.user.uid}-turn")!!)
                                 checkGamesList {
@@ -368,7 +368,7 @@ class FriendsFragment : androidx.fragment.app.Fragment(), ClickListener {
 
                             }
 
-                        } else {
+                        } else if (it.document.getBoolean("${UserUtil.user.uid}-turn") == false){
 
                             if(gamesItems[friendId(UserUtil.user.uid, it.document.id)] != null){
 
@@ -380,7 +380,7 @@ class FriendsFragment : androidx.fragment.app.Fragment(), ClickListener {
                                     noGamesSection.update(noGamesItems.values)
                                 }
 
-                            } else {
+                            } else if(noGamesItems[friendId(UserUtil.user.uid, it.document.id)] == null){
 
                                 addNoGamesItem(friendId(UserUtil.user.uid, it.document.id), it.document.getBoolean("${UserUtil.user.uid}-turn")!!)
                                 checkGamesList {

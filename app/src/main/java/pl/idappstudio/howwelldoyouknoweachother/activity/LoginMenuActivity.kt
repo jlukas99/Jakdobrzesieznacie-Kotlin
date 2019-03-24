@@ -209,12 +209,6 @@ class LoginMenuActivity : Activity() {
 
                     FirestoreUtil.registerCurrentUser(uid, profile.name, profile.id, true, gender, "free", "") {
 
-                        alertDialog.dismiss()
-
-                        val snackbar: Snackbar? = Snackbar.make(view, "Zalogowano za pomocą Facebook'a", 2500)
-                        snackbar?.view?.setBackgroundColor(resources.getColor(R.color.colorPrimary))
-                        snackbar?.show()
-
                         val registrationToken = FirebaseInstanceId.getInstance().token
                         MyFirebaseMessagingService.addTokenToFirestore(registrationToken)
 
@@ -222,17 +216,29 @@ class LoginMenuActivity : Activity() {
 
                             UserUtil.initializeUser {
 
-//                                FacebookUtil.getFacebookFriends(token, profile.name){
+                                FacebookUtil.getFacebookFriends(token, profile.name){
+
+                                    alertDialog.dismiss()
+
+                                    val snackbar: Snackbar? = Snackbar.make(view, "Zalogowano za pomocą Facebook'a", 2500)
+                                    snackbar?.view?.setBackgroundColor(resources.getColor(R.color.colorPrimary))
+                                    snackbar?.show()
 
                                     startActivity(intentFor<MenuActivity>().newTask().clearTask())
 
-//                                }
+                                }
 
                             }
 
                         } else {
 
                             UserUtil.initialize {
+
+                                alertDialog.dismiss()
+
+                                val snackbar: Snackbar? = Snackbar.make(view, "Zalogowano za pomocą Facebook'a", 2500)
+                                snackbar?.view?.setBackgroundColor(resources.getColor(R.color.colorPrimary))
+                                snackbar?.show()
 
                                 startActivity(intentFor<MenuActivity>().newTask().clearTask())
 

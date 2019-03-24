@@ -116,7 +116,7 @@ class AddQuestionActivity : AppCompatActivity(), TextWatcher {
         rvGamesLLM.orientation = RecyclerView.HORIZONTAL
 
         rv_games.layoutManager = rvGamesLLM
-        rv_games.itemAnimator = SlideInDownAnimator()
+//        rv_games.itemAnimator = SlideInDownAnimator()
 
         questionSection.setHideWhenEmpty(true)
 
@@ -136,6 +136,7 @@ class AddQuestionActivity : AppCompatActivity(), TextWatcher {
 
                 clear()
                 setField(item.data)
+                deleteButton()
 
             }
 
@@ -150,7 +151,11 @@ class AddQuestionActivity : AppCompatActivity(), TextWatcher {
             data.put("a", "")
             data.put("b", "")
 
-            dbSet.document(intent?.extras?.getString("id")!!).collection("questions").add(data).addOnSuccessListener {}
+            dbSet.document(intent?.extras?.getString("id")!!).collection("questions").add(data).addOnSuccessListener {
+
+                getQuestions()
+
+            }
 
         }
 
@@ -163,6 +168,8 @@ class AddQuestionActivity : AppCompatActivity(), TextWatcher {
     }
 
     fun getQuestions(){
+
+        hideSection()
 
         if(setListener != null){
             setListener?.remove()
@@ -233,9 +240,7 @@ class AddQuestionActivity : AppCompatActivity(), TextWatcher {
                     setId = data.questionId
 
                     deleteButton()
-
                     addItem(data)
-                    showSection()
                     nextQuestion()
 
                 }
@@ -461,8 +466,6 @@ class AddQuestionActivity : AppCompatActivity(), TextWatcher {
 
         unlockEditText()
 
-        showSection()
-
     }
 
     fun nextQuestion(){
@@ -543,6 +546,7 @@ class AddQuestionActivity : AppCompatActivity(), TextWatcher {
 
         } else {
 
+            saveButton()
             questionCheck.visibility = View.VISIBLE
             aAnswerText.isEnabled = true
 
@@ -555,6 +559,7 @@ class AddQuestionActivity : AppCompatActivity(), TextWatcher {
 
         } else {
 
+            saveButton()
             aAnswerCheck.visibility = View.VISIBLE
             bAnswerText.isEnabled = true
 
@@ -567,10 +572,9 @@ class AddQuestionActivity : AppCompatActivity(), TextWatcher {
 
         } else {
 
+            saveButton()
             bAnswerCheck.visibility = View.VISIBLE
             cAnswerText.isEnabled = true
-
-            saveButton()
 
         }
 
@@ -581,6 +585,7 @@ class AddQuestionActivity : AppCompatActivity(), TextWatcher {
 
         } else {
 
+            saveButton()
             cAnswerCheck.visibility = View.VISIBLE
             dAnswerText.isEnabled = true
 
@@ -593,6 +598,7 @@ class AddQuestionActivity : AppCompatActivity(), TextWatcher {
 
         } else {
 
+            saveButton()
             dAnswerCheck.visibility = View.VISIBLE
 
         }
@@ -634,6 +640,13 @@ class AddQuestionActivity : AppCompatActivity(), TextWatcher {
 
         window.decorView.systemUiVisibility = flags
 
+    }
+
+    override fun onPause() {
+        super.onPause()
+        if(setListener != null) {
+            setListener?.remove()
+        }
     }
 
 }

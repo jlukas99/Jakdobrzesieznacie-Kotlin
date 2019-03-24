@@ -45,23 +45,23 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
     private lateinit var questionText: TextView
 
     private lateinit var aAnswerText: TextView
-    private lateinit var bText: TextView
-    private lateinit var aText: TextView
+    private lateinit var bAnswerText: TextView
+    private lateinit var cAnswerText: TextView
     private lateinit var dAnswerText: TextView
 
     private lateinit var aAnswerUserImage: ImageView
-    private lateinit var bUserImage: ImageView
-    private lateinit var aUserImage: ImageView
+    private lateinit var bAnswerUserImage: ImageView
+    private lateinit var cAnswerUserImage: ImageView
     private lateinit var dAnswerUserImage: ImageView
 
     private lateinit var aAnswerFriendImage: ImageView
-    private lateinit var bFriendImage: ImageView
-    private lateinit var aFriendImage: ImageView
+    private lateinit var bAnswerFriendImage: ImageView
+    private lateinit var cAnswerFriendImage: ImageView
     private lateinit var dAnswerFriendImage: ImageView
 
     private lateinit var aAnswerButton: ConstraintLayout
-    private lateinit var bButton: ConstraintLayout
-    private lateinit var aButton: ConstraintLayout
+    private lateinit var bAnswerButton: ConstraintLayout
+    private lateinit var cAnswerButton: ConstraintLayout
     private lateinit var dAnswerButton: ConstraintLayout
 
     private lateinit var nextQuestion: Button
@@ -92,28 +92,28 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
         questionText = rootView.findViewById(R.id.questionEditText)
 
         aAnswerText = rootView.findViewById(R.id.aAnswerEditText)
-        bText = rootView.findViewById(R.id.bAnswerEditText)
-        aText = rootView.findViewById(R.id.aAnswerEditText)
+        bAnswerText = rootView.findViewById(R.id.bAnswerEditText)
+        cAnswerText = rootView.findViewById(R.id.cAnswerEditText)
         dAnswerText = rootView.findViewById(R.id.dAnswerEditText)
 
         aAnswerUserImage = rootView.findViewById(R.id.aAnswerUserProfile)
-        bUserImage = rootView.findViewById(R.id.bAnswerUserProfile)
-        aUserImage = rootView.findViewById(R.id.aAnswerUserProfile)
+        bAnswerUserImage = rootView.findViewById(R.id.bAnswerUserProfile)
+        cAnswerUserImage = rootView.findViewById(R.id.cAnswerUserProfile)
         dAnswerUserImage = rootView.findViewById(R.id.dAnswerUserProfile)
 
         aAnswerFriendImage = rootView.findViewById(R.id.aAnswerFriendProfile)
-        bFriendImage = rootView.findViewById(R.id.bAnswerFriendProfile)
-        aFriendImage = rootView.findViewById(R.id.aAnswerFriendProfile)
+        bAnswerFriendImage = rootView.findViewById(R.id.bAnswerFriendProfile)
+        cAnswerFriendImage = rootView.findViewById(R.id.cAnswerFriendProfile)
         dAnswerFriendImage = rootView.findViewById(R.id.dAnswerFriendProfile)
 
         aAnswerButton = rootView.findViewById(R.id.answer_btn_a)
-        bButton = rootView.findViewById(R.id.answer_btn_b)
-        aButton = rootView.findViewById(R.id.answer_btn_c)
+        bAnswerButton = rootView.findViewById(R.id.answer_btn_b)
+        cAnswerButton = rootView.findViewById(R.id.answer_btn_c)
         dAnswerButton = rootView.findViewById(R.id.answer_btn_d)
 
         aAnswerButton.setOnClickListener(this)
-        bButton.setOnClickListener(this)
-        aButton.setOnClickListener(this)
+        bAnswerButton.setOnClickListener(this)
+        cAnswerButton.setOnClickListener(this)
         dAnswerButton.setOnClickListener(this)
 
         nextQuestion = rootView.findViewById(R.id.nextQuestionBtn)
@@ -147,6 +147,8 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
 
         setText()
 
+        loadImage()
+
         return rootView
     }
 
@@ -175,23 +177,23 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
         stageTitle.text = "Zgadnij Odpowiedzi"
 
         aAnswerButton.background = resources.getDrawable(R.drawable.card_background_dark)
-        bButton.background = resources.getDrawable(R.drawable.card_background_dark)
-        aButton.background = resources.getDrawable(R.drawable.card_background_dark)
+        bAnswerButton.background = resources.getDrawable(R.drawable.card_background_dark)
+        cAnswerButton.background = resources.getDrawable(R.drawable.card_background_dark)
         dAnswerButton.background = resources.getDrawable(R.drawable.card_background_dark)
 
         aAnswerFriendImage.visibility = View.INVISIBLE
-        bFriendImage.visibility = View.INVISIBLE
-        aFriendImage.visibility = View.INVISIBLE
+        bAnswerFriendImage.visibility = View.INVISIBLE
+        cAnswerFriendImage.visibility = View.INVISIBLE
         dAnswerFriendImage.visibility = View.INVISIBLE
 
         aAnswerUserImage.visibility = View.INVISIBLE
-        bUserImage.visibility = View.INVISIBLE
-        aUserImage.visibility = View.INVISIBLE
+        bAnswerUserImage.visibility = View.INVISIBLE
+        cAnswerUserImage.visibility = View.INVISIBLE
         dAnswerUserImage.visibility = View.INVISIBLE
 
         aAnswerButton.visibility = View.INVISIBLE
-        bButton.visibility = View.INVISIBLE
-        aButton.visibility = View.INVISIBLE
+        bAnswerButton.visibility = View.INVISIBLE
+        cAnswerButton.visibility = View.INVISIBLE
         dAnswerButton.visibility = View.INVISIBLE
 
         rejectBadAnswer.visibility = View.GONE
@@ -203,8 +205,8 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
     private fun lockButton(){
 
         aAnswerButton.isEnabled = false
-        bButton.isEnabled = false
-        aButton.isEnabled = false
+        bAnswerButton.isEnabled = false
+        cAnswerButton.isEnabled = false
         dAnswerButton.isEnabled = false
 
         rejectBadAnswer.isEnabled = false
@@ -217,8 +219,8 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
         resetButton()
 
         aAnswerText.text = ""
-        bText.text = ""
-        aText.text = ""
+        bAnswerText.text = ""
+        cAnswerText.text = ""
         dAnswerText.text = ""
 
         if(questionNumber == 1){
@@ -289,17 +291,17 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
         }
 
 
-        if(a.equals("tak", true) || a.equals("nie", true)){
+        if((a.equals("tak", true) && b.equals("nie", true)) || (b.equals("tak", true) && a.equals("nie", true))){
 
             aAnswerText.text = "Tak"
 
             aAnswerButton.isEnabled = true
             aAnswerButton.visibility = View.VISIBLE
 
-            bText.text = "Nie"
+            bAnswerText.text = "Nie"
 
-            bButton.isEnabled = true
-            bButton.visibility = View.VISIBLE
+            bAnswerButton.isEnabled = true
+            bAnswerButton.visibility = View.VISIBLE
 
             array.removeAt(0)
             array.removeAt(0)
@@ -328,17 +330,17 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
 
         }
 
-        if (bText.text == "") {
+        if (bAnswerText.text == "") {
 
             for (a in array) {
 
                 if (a != "") {
 
-                    bText.text = a
+                    bAnswerText.text = a
                     array.remove(a)
 
-                    bButton.isEnabled = true
-                    bButton.visibility = View.VISIBLE
+                    bAnswerButton.isEnabled = true
+                    bAnswerButton.visibility = View.VISIBLE
 
                     break
 
@@ -348,17 +350,17 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
 
         }
 
-        if (aText.text == "") {
+        if (cAnswerText.text == "") {
 
             for (a in array) {
 
                 if (a != "") {
 
-                    aText.text = a
+                    cAnswerText.text = a
                     array.remove(a)
 
-                    aButton.isEnabled = true
-                    aButton.visibility = View.VISIBLE
+                    cAnswerButton.isEnabled = true
+                    cAnswerButton.visibility = View.VISIBLE
 
                     break
 
@@ -388,7 +390,7 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
 
         }
 
-        loadImage()
+        listener.showFragment()
 
     }
 
@@ -407,20 +409,20 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
             return
         }
 
-        if(bText.text.equals(badAnswer[0])){
+        if(bAnswerText.text.equals(badAnswer[0])){
 
-            bButton.isEnabled = false
+            bAnswerButton.isEnabled = false
 
-            bButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
+            bAnswerButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
 
             return
         }
 
-        if(aText.text.equals(badAnswer[0])){
+        if(cAnswerText.text.equals(badAnswer[0])){
 
-            aButton.isEnabled = false
+            cAnswerButton.isEnabled = false
 
-            aButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
+            cAnswerButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
 
             return
         }
@@ -491,13 +493,13 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
     private fun loadImage(){
 
         glide.setImage(UserUtil.user.fb, UserUtil.user.image, this.requireContext(), aAnswerUserImage) {}
-        glide.setImage(UserUtil.user.fb, UserUtil.user.image, this.requireContext(), bUserImage) {}
-        glide.setImage(UserUtil.user.fb, UserUtil.user.image, this.requireContext(), aUserImage) {}
+        glide.setImage(UserUtil.user.fb, UserUtil.user.image, this.requireContext(), bAnswerUserImage) {}
+        glide.setImage(UserUtil.user.fb, UserUtil.user.image, this.requireContext(), cAnswerUserImage) {}
         glide.setImage(UserUtil.user.fb, UserUtil.user.image, this.requireContext(), dAnswerUserImage) {}
 
         glide.setImage(friends.fb, friends.image, this.requireContext(), aAnswerFriendImage) {}
-        glide.setImage(friends.fb, friends.image, this.requireContext(), bFriendImage) {}
-        glide.setImage(friends.fb, friends.image, this.requireContext(), aFriendImage) {}
+        glide.setImage(friends.fb, friends.image, this.requireContext(), bAnswerFriendImage) {}
+        glide.setImage(friends.fb, friends.image, this.requireContext(), cAnswerFriendImage) {}
         glide.setImage(friends.fb, friends.image, this.requireContext(), dAnswerFriendImage) {}
 
     }
@@ -529,13 +531,13 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
             checkCorrectAnswer(s)
             aAnswerUserImage.visibility = View.VISIBLE
 
-        } else if(view == bButton){
+        } else if(view == bAnswerButton){
 
-            userAnswer.add(bText.text.toString())
+            userAnswer.add(bAnswerText.text.toString())
 
-            if(bText.text == s) {
+            if(bAnswerText.text == s) {
 
-                bButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
+                bAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
 
                 listener.updateNumber(questionNumber, true)
 
@@ -543,7 +545,7 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
 
             } else {
 
-                bButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
+                bAnswerButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
 
                 listener.updateNumber(questionNumber, false)
 
@@ -552,15 +554,15 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
             }
 
             checkCorrectAnswer(s)
-            bUserImage.visibility = View.VISIBLE
+            bAnswerUserImage.visibility = View.VISIBLE
 
-        } else if(view == aButton){
+        } else if(view == cAnswerButton){
 
-            userAnswer.add(aText.text.toString())
+            userAnswer.add(cAnswerText.text.toString())
 
-            if(aText.text == s) {
+            if(cAnswerText.text == s) {
 
-                aButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
+                cAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
 
                 listener.updateNumber(questionNumber, true)
 
@@ -568,7 +570,7 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
 
             } else {
 
-                aButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
+                cAnswerButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
 
                 listener.updateNumber(questionNumber, false)
 
@@ -577,7 +579,7 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
             }
 
             checkCorrectAnswer(s)
-            aUserImage.visibility = View.VISIBLE
+            cAnswerUserImage.visibility = View.VISIBLE
 
         } else if(view == dAnswerButton){
 
@@ -621,19 +623,19 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
 
         }
 
-        if(bText.text == s){
+        if(bAnswerText.text == s){
 
-            bButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
-            bFriendImage.visibility = View.VISIBLE
+            bAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
+            bAnswerFriendImage.visibility = View.VISIBLE
 
             return
 
         }
 
-        if(aText.text == s){
+        if(cAnswerText.text == s){
 
-            aButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
-            aFriendImage.visibility = View.VISIBLE
+            cAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
+            cAnswerFriendImage.visibility = View.VISIBLE
 
             return
 

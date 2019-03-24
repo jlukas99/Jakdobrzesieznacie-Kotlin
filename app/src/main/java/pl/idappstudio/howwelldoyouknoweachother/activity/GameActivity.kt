@@ -24,6 +24,25 @@ import pl.idappstudio.howwelldoyouknoweachother.util.UserUtil
 
 class GameActivity : AppCompatActivity(), nextFragment {
 
+    override fun showFragment() {
+
+        if(!isFinishing){
+
+            if(b) {
+
+                hideLoading {
+
+                    b = false
+                    mContent = supportFragmentManager.fragments[0]
+
+                }
+
+            }
+
+        }
+
+    }
+
     override fun next() {
 
         showLoading()
@@ -110,6 +129,8 @@ class GameActivity : AppCompatActivity(), nextFragment {
 
     private val glide = GlideUtil
 
+    private var b: Boolean = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
@@ -165,11 +186,13 @@ class GameActivity : AppCompatActivity(), nextFragment {
 
     }
 
-    private fun hideLoading(){
+    private fun hideLoading(onComplete: () -> Unit){
 
         gameIcon.visibility = View.GONE
         gameText.visibility = View.GONE
         gameLoading.visibility = View.GONE
+
+        onComplete()
 
     }
 
@@ -184,20 +207,19 @@ class GameActivity : AppCompatActivity(), nextFragment {
             if(uSet.category == "own_question") {
 
                 if(!isFinishing) {
+                    b = true
                     supportFragmentManager.beginTransaction().disallowAddToBackStack().replace(R.id.fragment, StageThreeOwnQuestionFragment(this)).commit()
-                    mContent = supportFragmentManager.fragments[0]
-                    hideLoading()
                 }
 
             } else {
 
-                GameUtil.getQuestionDataStageThree("set/${game.uSet.id}/${UserUtil.user.gender}") {
+                GameUtil.getQuestionDataStageThree("set/${game.uSet.id}") {it, it2 ->
 
                     questionList = it
 
-                    if(!isFinishing) { supportFragmentManager.beginTransaction().disallowAddToBackStack().replace(R.id.fragment, StageThreeFragment(this)).commit()
-                        mContent = supportFragmentManager.fragments[0]
-                        hideLoading()
+                    if(!isFinishing) {
+                        b = true
+                        supportFragmentManager.beginTransaction().disallowAddToBackStack().replace(R.id.fragment, StageThreeFragment(this, it2)).commit()
                     }
 
                 }
@@ -212,9 +234,8 @@ class GameActivity : AppCompatActivity(), nextFragment {
                 answerList = a
 
                 if(!isFinishing) {
+                    b = true
                     supportFragmentManager.beginTransaction().disallowAddToBackStack().replace(R.id.fragment, StageTwoFragment(this)).commit()
-                    mContent = supportFragmentManager.fragments[0]
-                    hideLoading()
                 }
 
             }
@@ -228,9 +249,8 @@ class GameActivity : AppCompatActivity(), nextFragment {
                 if(it.question.questionId != "" && it.question1.questionId != "" && it.question2.questionId != "") {
 
                     if (!isFinishing) {
+                        b = true
                         supportFragmentManager.beginTransaction().disallowAddToBackStack().replace(R.id.fragment, StageOneFragment(this)).commit()
-                        mContent = supportFragmentManager.fragments[0]
-                        hideLoading()
                     }
 
                 } else {
@@ -304,6 +324,8 @@ class GameActivity : AppCompatActivity(), nextFragment {
         GameUtil.getUserStats(intent?.extras?.getString("uid")!!){ca, ba, ga ->
 
             userStats = StatsData(ca, ba, ga)
+            canswer = userStats.canswer
+            banswer = userStats.banswer
 
         }
 

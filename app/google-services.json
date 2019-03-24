@@ -1,35 +1,27 @@
 {
   "project_info": {
-    "project_number": "1089727771199",
-    "firebase_url": "https://jakdobrzesieznaciekotlin.firebaseio.com",
-    "project_id": "jakdobrzesieznaciekotlin",
-    "storage_bucket": "jakdobrzesieznaciekotlin.appspot.com"
+    "project_number": "741628354397",
+    "firebase_url": "https://jak-dobrze-sie-znacie.firebaseio.com",
+    "project_id": "jak-dobrze-sie-znacie",
+    "storage_bucket": "jak-dobrze-sie-znacie.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:1089727771199:android:789c41c1608e7ddd",
+        "mobilesdk_app_id": "1:741628354397:android:789c41c1608e7ddd",
         "android_client_info": {
           "package_name": "pl.idappstudio.howwelldoyouknoweachother"
         }
       },
       "oauth_client": [
         {
-          "client_id": "1089727771199-672089iavkgn8f4l2jsqvani1a9okdg5.apps.googleusercontent.com",
-          "client_type": 1,
-          "android_info": {
-            "package_name": "pl.idappstudio.howwelldoyouknoweachother",
-            "certificate_hash": "64506144264602a431e7e449c0f09d5051adaf69"
-          }
-        },
-        {
-          "client_id": "1089727771199-148jjm6ih5imv2m1iulukpkgp3fort36.apps.googleusercontent.com",
+          "client_id": "741628354397-rvf9qj0nmraafijgjh37ilce9husqpad.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyBQQOD8yQnGOArMoj-m21Kgj9DkdNX5DFk"
+          "current_key": "AIzaSyClF3cpM7FENL-g7j2yq8zN1yMqgBD9WKk"
         }
       ],
       "services": {
@@ -37,13 +29,8 @@
           "status": 1
         },
         "appinvite_service": {
-          "status": 2,
-          "other_platform_oauth_client": [
-            {
-              "client_id": "1089727771199-148jjm6ih5imv2m1iulukpkgp3fort36.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
+          "status": 1,
+          "other_platform_oauth_client": []
         },
         "ads_service": {
           "status": 2

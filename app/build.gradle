@@ -8,11 +8,11 @@ apply plugin: 'com.google.gms.google-services'
 
 apply plugin: 'io.fabric'
 
-androidExtensions {
-    experimental = true
-}
-
 android {
+
+    androidExtensions {
+        experimental = true
+    }
 
     compileSdkVersion 28
 
@@ -20,8 +20,8 @@ android {
         applicationId "pl.idappstudio.howwelldoyouknoweachother"
         minSdkVersion 22
         targetSdkVersion 28
-        versionCode 3
-        versionName "2.9.4-DEV"
+        versionCode 4
+        versionName "2.9.5-DEV"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -42,11 +42,12 @@ dependencies {
     implementation 'androidx.core:core:1.1.0-alpha05'
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
     implementation 'androidx.vectordrawable:vectordrawable-animated:1.1.0-alpha01'
-    implementation 'androidx.media:media:1.1.0-alpha03'
+    implementation 'androidx.media:media:1.1.0-alpha04'
+    implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.1.0-alpha03'
-    androidTestImplementation 'androidx.test:runner:1.1.2-alpha04'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-alpha02'
+    implementation 'androidx.appcompat:appcompat:1.1.0-alpha04'
+    androidTestImplementation 'androidx.test:runner:1.2.0-alpha04'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-alpha04'
 
     //junit
     testImplementation 'junit:junit:4.12'
@@ -76,9 +77,9 @@ dependencies {
     //firebase
     implementation 'com.google.firebase:firebase-core:16.0.8'
     implementation 'com.google.firebase:firebase-storage:16.1.0'
-    implementation 'com.google.firebase:firebase-firestore:18.1.0'
-    implementation 'com.google.firebase:firebase-auth:16.2.0'
-    implementation 'com.google.firebase:firebase-messaging:17.5.0'
+    implementation 'com.google.firebase:firebase-firestore:18.2.0'
+    implementation 'com.google.firebase:firebase-auth:16.2.1'
+    implementation 'com.google.firebase:firebase-messaging:17.6.0'
     implementation 'com.google.firebase:firebase-inappmessaging-display:17.1.1'
     implementation 'com.google.firebase:firebase-dynamic-links:16.1.8'
     implementation 'com.google.firebase:firebase-ads:17.2.0'
@@ -93,6 +94,5 @@ dependencies {
     implementation 'com.google.android.gms:play-services-ads:17.2.0'
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
     implementation 'com.google.android.gms:play-services-wallet:16.0.1'
-    implementation 'com.google.android.material:material:1.0.0'
 
 }

@@ -406,6 +406,8 @@ class SettingsActivity : AppCompatActivity() {
                 premium_color_switch.isChecked = false
             }
 
+        } else {
+
         }
 
     }
@@ -421,6 +423,8 @@ class SettingsActivity : AppCompatActivity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
         if (requestCode == 2 && resultCode == Activity.RESULT_OK && data != null && data.data != null) {
 
             fileUri = data.data
@@ -434,6 +438,7 @@ class SettingsActivity : AppCompatActivity() {
             text_image.text = fileUri?.lastPathSegment.toString()
 
         }
+
     }
 
     override fun onResume() {

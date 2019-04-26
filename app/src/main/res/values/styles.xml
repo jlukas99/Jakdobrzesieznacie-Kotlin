@@ -19,6 +19,13 @@
 
     </style>
 
+    <style name="MyThemePremium" parent="Theme.MaterialComponents.NoActionBar">
+
+        <item name="android:colorAccent">@color/colorYellow</item>
+        <item name="colorAccent">@color/colorYellow</item>
+
+    </style>
+
     <style name="BottomNavigationView">
         <item name="itemTextAppearanceActive">@style/TextAppearance.BottomNavigationView.Active</item>
         <item name="itemTextAppearanceInactive">@style/TextAppearance.BottomNavigationView.Inactive</item>

@@ -426,7 +426,8 @@
                     android:id="@+id/imageV3" app:layout_constraintStart_toStartOf="parent"
                     android:layout_marginStart="16dp" android:layout_marginTop="16dp"
                     app:layout_constraintTop_toTopOf="parent" android:layout_marginBottom="16dp"
-                    app:layout_constraintBottom_toBottomOf="parent"/>
+                    app:layout_constraintBottom_toBottomOf="parent" />
+
             <TextView
                     android:text="Zarządzaj abonamentem"
                     android:layout_width="wrap_content"

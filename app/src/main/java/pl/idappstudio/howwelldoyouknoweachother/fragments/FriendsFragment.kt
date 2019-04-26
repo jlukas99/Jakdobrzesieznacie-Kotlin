@@ -176,8 +176,8 @@ class FriendsFragment : androidx.fragment.app.Fragment(), ClickListener {
         rvFriends.layoutManager = rvFriendsLLM
         rvGames.layoutManager = rvGamesLLM
 
-        rvFriends.itemAnimator = SlideInDownAnimator()
-        rvGames.itemAnimator = SlideInDownAnimator()
+        
+        
 
         rvFriends.adapter = groupAdapter
         rvGames.adapter = gamesAdapter
@@ -210,7 +210,7 @@ class FriendsFragment : androidx.fragment.app.Fragment(), ClickListener {
 
                     if(it.type == DocumentChange.Type.REMOVED){
 
-                        rvFriends.itemAnimator = LandingAnimator()
+                        
 
                         if(it.document.getBoolean("favorite") == true){
 
@@ -232,7 +232,7 @@ class FriendsFragment : androidx.fragment.app.Fragment(), ClickListener {
 
                     if(it.type == DocumentChange.Type.MODIFIED){
 
-                        rvFriends.itemAnimator = LandingAnimator()
+                        
 
                         if(it.document.getBoolean("favorite") == true){
 
@@ -306,7 +306,7 @@ class FriendsFragment : androidx.fragment.app.Fragment(), ClickListener {
 
                     if(it.type == DocumentChange.Type.REMOVED){
 
-                        rvGames.itemAnimator = LandingAnimator()
+                        
 
                         if(noGamesItems[friendId(UserUtil.user.uid, it.document.id)] != null){
 
@@ -326,7 +326,7 @@ class FriendsFragment : androidx.fragment.app.Fragment(), ClickListener {
 
                     if(it.type == DocumentChange.Type.MODIFIED){
 
-                        rvGames.itemAnimator = LandingAnimator()
+                        
 
                         if(it.document.getBoolean("${UserUtil.user.uid}-turn") == true && it.document.getBoolean("${friendId(UserUtil.user.uid, it.document.id)}-turn") == true) {
 

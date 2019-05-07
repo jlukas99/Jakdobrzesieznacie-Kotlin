@@ -152,7 +152,7 @@
     <fragment
             android:layout_width="0dp"
             android:layout_height="0dp"
-            android:name="pl.idappstudio.howwelldoyouknoweachother.fragments.ClearFragment"
+            android:name="pl.idappstudio.jakdobrzesieznacie.fragments.ClearFragment"
             android:id="@+id/fragment" app:layout_constraintTop_toBottomOf="@+id/userNameText"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

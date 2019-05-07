@@ -11,16 +11,22 @@
         <u>przypomnij</u>
     </string>
 
-    <string name="facebook_app_id">249845939148351</string>
-    <string name="fb_login_protocol_scheme">fb249845939148351</string>
+    <string name="facebook_app_id" translatable="false">249845939148351</string>
+    <string name="fb_login_protocol_scheme" translatable="false">fb249845939148351</string>
 
     <!--AdMob-->
-    <string name="adMob_id">ca-app-pub-3261119979316423~1350182251</string>
-    <!--<string name="adMob_menu_ad_id">ca-app-pub-3261119979316423/2454442952</string>-->
+    <string name="adMob_id" translatable="false">ca-app-pub-9811848924200939~9857440152</string>
+    <!--<string name="adMob_menu_ad_id" translatable="false">ca-app-pub-9811848924200939/1830297398</string>-->
+    <!--<string name="adMob_login_ad_id" translatable="false">ca-app-pub-9811848924200939/1595806759</string>-->
+    <!--<string name="adMob_reward_ad_id" translatable="false">ca-app-pub-9811848924200939/2579793350</string>-->
 
     <!--Test AdMob-->
-    <string name="adMob_menu_ad_id">ca-app-pub-3940256099942544/1033173712</string>
-    <string name="default_notification_channel_id">13</string>
+    <string name="adMob_menu_ad_id" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="adMob_login_ad_id" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
+    <string name="adMob_reward_ad_id" translatable="false">ca-app-pub-3940256099942544/5224354917</string>
+    <string name="adMob_reward2_ad_id" translatable="false">ca-app-pub-3940256099942544/5224354917</string>
+
+    <string name="default_notification_channel_id" translatable="false">13</string>
     <string name="no_search_results">Nie znaleziono gracza o takim nicku\nnie zapomnij o dużych literach</string>
     <string name="title_activity_create_set">CreateSetActivity</string>
 

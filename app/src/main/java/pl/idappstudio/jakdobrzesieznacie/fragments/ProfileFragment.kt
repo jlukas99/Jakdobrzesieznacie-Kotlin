@@ -16,10 +16,12 @@ import org.jetbrains.anko.support.v4.startActivity
 import pl.idappstudio.jakdobrzesieznacie.R
 import pl.idappstudio.jakdobrzesieznacie.activity.LoginMenuActivity
 import pl.idappstudio.jakdobrzesieznacie.activity.SettingsActivity
+import pl.idappstudio.jakdobrzesieznacie.enums.ColorSnackBar
 import pl.idappstudio.jakdobrzesieznacie.model.StatsData
 import pl.idappstudio.jakdobrzesieznacie.model.UserData
 import pl.idappstudio.jakdobrzesieznacie.util.GameUtil
 import pl.idappstudio.jakdobrzesieznacie.util.GlideUtil
+import pl.idappstudio.jakdobrzesieznacie.util.SnackBarUtil
 import pl.idappstudio.jakdobrzesieznacie.util.UserUtil
 
 class ProfileFragment : androidx.fragment.app.Fragment() {
@@ -32,6 +34,7 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
     private lateinit var logout: Button
     private lateinit var settings: Button
     private lateinit var share: Button
+    private lateinit var premium: Button
 
     private lateinit var friends_profile_stats_canswer: TextView
     private lateinit var friends_profile_stats_banswer: TextView
@@ -52,16 +55,22 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
         logout = rootView.findViewById(R.id.profile_logout_btn)
         settings = rootView.findViewById(R.id.profile_settings_button)
         share = rootView.findViewById(R.id.profile_share_button)
+        premium = rootView.findViewById(R.id.friends_profile_set_btn)
 
         friends_profile_stats_canswer = rootView.findViewById(R.id.friends_profile_stats_canswer)
         friends_profile_stats_banswer = rootView.findViewById(R.id.friends_profile_stats_banswer)
         friends_profile_stats_games = rootView.findViewById(R.id.friends_profile_stats_games)
         profile_stats_friend_precent = rootView.findViewById(R.id.profile_stats_friend_precent)
-
         logout.setOnClickListener {
 
             FirebaseAuth.getInstance().signOut()
             startActivity(intentFor<LoginMenuActivity>().newTask().clearTask())
+
+        }
+
+        premium.setOnClickListener {
+
+            SnackBarUtil.setActivitySnack("Opcja na czas testów, została wyłączona", ColorSnackBar.WARING, R.drawable.ic_corn, it){ }
 
         }
 

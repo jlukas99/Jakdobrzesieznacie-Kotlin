@@ -12,19 +12,23 @@ import pl.idappstudio.jakdobrzesieznacie.util.FirestoreUtil
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
+import android.os.Handler
+import android.os.Message
 import android.provider.MediaStore
 import android.util.Log
+import android.view.KeyEvent
 import com.google.android.material.snackbar.Snackbar
 import android.widget.ArrayAdapter
 import android.widget.CompoundButton
 import com.firebase.ui.auth.data.model.User
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
+import pl.idappstudio.jakdobrzesieznacie.enums.ColorSnackBar
 import pl.idappstudio.jakdobrzesieznacie.enums.StatusMessage
+import pl.idappstudio.jakdobrzesieznacie.util.SnackBarUtil
 import pl.idappstudio.jakdobrzesieznacie.util.StorgeUtil
 import pl.idappstudio.jakdobrzesieznacie.util.UserUtil
 import java.io.ByteArrayOutputStream
-
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -42,9 +46,7 @@ class SettingsActivity : AppCompatActivity() {
 
             if(save_button.visibility == View.VISIBLE || save_image.visibility == View.VISIBLE || save_gender.visibility == View.VISIBLE){
 
-                val snackbar = Snackbar.make(view, "Posiadasz nie zapisane zmiany", 2500)
-                snackbar.view.setBackgroundColor(this.resources.getColor(R.color.colorRed))
-                snackbar.show()
+                SnackBarUtil.setActivitySnack("Posiadasz nie zapisane zmiany", ColorSnackBar.ERROR, R.drawable.ic_error_, it){ }
 
             } else {
 
@@ -59,7 +61,7 @@ class SettingsActivity : AppCompatActivity() {
         public_profile_switch.isChecked = UserUtil.user.public
         notification_switch.isChecked = UserUtil.user.notification
 
-        public_profile_switch.setOnCheckedChangeListener { compoundButton: CompoundButton, b: Boolean ->
+        public_profile_switch.setOnCheckedChangeListener { _: CompoundButton, b: Boolean ->
 
             if(b){
 
@@ -81,7 +83,7 @@ class SettingsActivity : AppCompatActivity() {
 
         }
 
-        notification_switch.setOnCheckedChangeListener { compoundButton: CompoundButton, b: Boolean ->
+        notification_switch.setOnCheckedChangeListener { _: CompoundButton, b: Boolean ->
 
             if(b){
 
@@ -106,6 +108,10 @@ class SettingsActivity : AppCompatActivity() {
         cardView_change_nick.setOnClickListener {
 
             text_nick.visibility = View.GONE
+
+            new_nick.setText(UserUtil.user.name)
+            new_nick.isEnabled = true
+
             button_nick.visibility = View.GONE
 
             new_nick.visibility = View.VISIBLE
@@ -115,7 +121,7 @@ class SettingsActivity : AppCompatActivity() {
 
         }
 
-        save_button.setOnClickListener {
+        save_button.setOnClickListener {it2 ->
 
             save_button.visibility = View.GONE
             new_nick.isEnabled = false
@@ -141,19 +147,13 @@ class SettingsActivity : AppCompatActivity() {
 
                     cardView_change_nick.isEnabled = true
 
-                    val snackbar: Snackbar
-
                     if (it.isSuccessful) {
 
-                        snackbar = Snackbar.make(view, "Pomyślnie zmieniono nick", 2500)
-                        snackbar.view.setBackgroundColor(this.resources.getColor(R.color.colorAccent))
-                        snackbar.show()
+                        SnackBarUtil.setActivitySnack("Pomyślnie zmieniono nick", ColorSnackBar.SUCCES, R.drawable.ic_check_icon, it2){ }
 
                     } else {
 
-                        snackbar = Snackbar.make(view, "Nie udało się zmienić nicku", 2500)
-                        snackbar.view.setBackgroundColor(this.resources.getColor(R.color.colorRed))
-                        snackbar.show()
+                        SnackBarUtil.setActivitySnack("Nie udało się zmienić nicku", ColorSnackBar.ERROR, R.drawable.ic_error_, it2){ }
 
                     }
 
@@ -172,10 +172,7 @@ class SettingsActivity : AppCompatActivity() {
 
                     new_nick.setText("")
 
-                    val snackbar: Snackbar = Snackbar.make(view, "Nie udało się zmienić nicku", 2500)
-
-                    snackbar.view.setBackgroundColor(this.resources.getColor(R.color.colorRed))
-                    snackbar.show()
+                    SnackBarUtil.setActivitySnack("Nie udało się zmienić nicku", ColorSnackBar.ERROR, R.drawable.ic_error_, it2){ }
 
                 }
 
@@ -209,15 +206,13 @@ class SettingsActivity : AppCompatActivity() {
 
             } else {
 
-                val snackbar = Snackbar.make(view, "Nie możesz zmienić avataru, ponieważ jesteś zalogowany przez Facebook'a", 3500)
-                snackbar.view.setBackgroundColor(this.resources.getColor(R.color.colorRed))
-                snackbar.show()
+                SnackBarUtil.setActivitySnack("Nie możesz zmienić avataru, ponieważ jesteś zalogowany przez Facebook'a", ColorSnackBar.ERROR, R.drawable.ic_error_, it){ }
 
             }
 
         }
 
-        save_image.setOnClickListener {
+        save_image.setOnClickListener {it2 ->
 
             if (fileUri != null){
 
@@ -240,9 +235,7 @@ class SettingsActivity : AppCompatActivity() {
 
                         if (it.isSuccessful){
 
-                            val snackbar = Snackbar.make(view, "Pomyślnie zmieniono zdjęcie", 2500)
-                            snackbar.view.setBackgroundColor(this.resources.getColor(R.color.colorAccent))
-                            snackbar.show()
+                            SnackBarUtil.setActivitySnack("Pomyślnie zmieniono zdjęcie", ColorSnackBar.SUCCES, R.drawable.ic_check_icon, it2){ }
 
                             text_image.text = "Zmień swój avatar"
 
@@ -255,9 +248,7 @@ class SettingsActivity : AppCompatActivity() {
 
                         } else {
 
-                            val snackbar = Snackbar.make(view, "Nie udało się zmienić zdjęcia", 2500)
-                            snackbar.view.setBackgroundColor(this.resources.getColor(R.color.colorRed))
-                            snackbar.show()
+                            SnackBarUtil.setActivitySnack("Nie udało się zmienić zdjęcia", ColorSnackBar.ERROR, R.drawable.ic_error_, it2){ }
 
                             text_image.text = "Zmień swój avatar"
 
@@ -272,9 +263,7 @@ class SettingsActivity : AppCompatActivity() {
 
                     }.addOnFailureListener {
 
-                        val snackbar = Snackbar.make(view, "Nie udało się zmienić zdjęcia", 2500)
-                        snackbar.view.setBackgroundColor(this.resources.getColor(R.color.colorRed))
-                        snackbar.show()
+                        SnackBarUtil.setActivitySnack("Nie udało się zmienić zdjęcia", ColorSnackBar.ERROR, R.drawable.ic_error_, it2){ }
 
                         text_image.text = "Zmień swój avatar"
 
@@ -327,15 +316,13 @@ class SettingsActivity : AppCompatActivity() {
 
             } else {
 
-                val snackbar = Snackbar.make(view, "Nie możesz zmienić płci, ponieważ jesteś zalogowany przez Facebook'a", 3500)
-                snackbar.view.setBackgroundColor(this.resources.getColor(R.color.colorRed))
-                snackbar.show()
+                SnackBarUtil.setActivitySnack("Nie możesz zmienić płci, ponieważ jesteś zalogowany przez Facebook'a", ColorSnackBar.ERROR, R.drawable.ic_error_, it){ }
 
             }
 
         }
 
-        save_gender.setOnClickListener {
+        save_gender.setOnClickListener {it2 ->
 
             cardView_change_gender.isEnabled = false
             loading_gender.visibility = View.VISIBLE
@@ -349,9 +336,7 @@ class SettingsActivity : AppCompatActivity() {
 
                 if(it.isSuccessful){
 
-                    val snackbar = Snackbar.make(view, "Pomyślnie zmieniono płeć", 2500)
-                    snackbar.view.setBackgroundColor(this.resources.getColor(R.color.colorAccent))
-                    snackbar.show()
+                    SnackBarUtil.setActivitySnack("Pomyślnie zmieniono płeć", ColorSnackBar.SUCCES, R.drawable.ic_check_icon, it2){ }
 
                     text_gender.text = "Zmień swoją płeć"
 
@@ -363,9 +348,7 @@ class SettingsActivity : AppCompatActivity() {
 
                 } else {
 
-                    val snackbar = Snackbar.make(view, "Nie udało się zmienić płci", 2500)
-                    snackbar.view.setBackgroundColor(this.resources.getColor(R.color.colorRed))
-                    snackbar.show()
+                    SnackBarUtil.setActivitySnack("Nie udało się zmienić płci", ColorSnackBar.ERROR, R.drawable.ic_error_, it2){ }
 
                     text_gender.text = "Zmień swoją płeć"
 
@@ -378,9 +361,7 @@ class SettingsActivity : AppCompatActivity() {
                 }
             }.addOnFailureListener {
 
-                val snackbar = Snackbar.make(view, "Nie udało się zmienić płci", 2500)
-                snackbar.view.setBackgroundColor(this.resources.getColor(R.color.colorRed))
-                snackbar.show()
+                SnackBarUtil.setActivitySnack("Nie udało się zmienić płci", ColorSnackBar.ERROR, R.drawable.ic_error_, it2){ }
 
                 text_gender.text = "Zmień swoją płeć"
 
@@ -399,9 +380,7 @@ class SettingsActivity : AppCompatActivity() {
             premium_color_switch.isChecked = false
             premium_color_switch.setOnClickListener {
 
-                val snackbar = Snackbar.make(view, "Aby włączyć tą opcje, musisz posiadać konto Premium", 2500)
-                snackbar.view.setBackgroundColor(this.resources.getColor(R.color.colorYellow))
-                snackbar.show()
+                SnackBarUtil.setActivitySnack("Aby użyć tej opcji, musisz posiadać konto Premium", ColorSnackBar.WARING, R.drawable.ic_corn, it){ }
 
                 premium_color_switch.isChecked = false
             }
@@ -443,20 +422,42 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        hideNavigationBar()
         UserUtil.updateStatus(StatusMessage.insettings)
+        hideSystemUI()
     }
 
-    private fun hideNavigationBar() {
+    override fun onUserInteraction() {
+        super.onUserInteraction()
+        hideSystemUI()
+    }
 
-        val flags = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+    override fun onStart() {
+        super.onStart()
+        hideSystemUI()
+    }
+
+    override fun onBackPressed() {
+        hideSystemUI()
+        exit_settings.callOnClick()
+        super.onBackPressed()
+    }
+
+    private fun hideSystemUI(){
+
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                or View.SYSTEM_UI_FLAG_FULLSCREEN)
-
-        window.decorView.systemUiVisibility = flags
+                or View.SYSTEM_UI_FLAG_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
 
     }
+
+    override fun onWindowFocusChanged(hasFocus:Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+            if (hasFocus) {
+                hideSystemUI()
+        }
+    }
+
 }

@@ -626,20 +626,40 @@ class AddQuestionActivity : AppCompatActivity(), TextWatcher {
 
     override fun onResume() {
         super.onResume()
-        hideNavigationBar()
+        hideSystemUI()
     }
 
-    private fun hideNavigationBar() {
+    override fun onUserInteraction() {
+        super.onUserInteraction()
+        hideSystemUI()
+    }
 
-        val flags = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+    override fun onStart() {
+        super.onStart()
+        hideSystemUI()
+    }
+
+    override fun onBackPressed() {
+        hideSystemUI()
+        super.onBackPressed()
+    }
+
+    private fun hideSystemUI(){
+
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                or View.SYSTEM_UI_FLAG_FULLSCREEN)
+                or View.SYSTEM_UI_FLAG_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
 
-        window.decorView.systemUiVisibility = flags
+    }
 
+    override fun onWindowFocusChanged(hasFocus:Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) {
+            hideSystemUI()
+        }
     }
 
     override fun onPause() {

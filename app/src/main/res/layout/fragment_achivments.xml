@@ -6,6 +6,16 @@
                                                    tools:context=".fragments.AchivmentsFragment"
                                                    android:background="@drawable/background_main">
 
+    <View
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:background="@drawable/background_dark_overlay"
+            android:id="@+id/view7"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
+
     <TextView
             android:text="Pracujemy nad tą zakładką\nmuszisz uzbroić się w cierpliwość"
             android:layout_width="wrap_content"
@@ -25,12 +35,6 @@
             app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.20999998"
             app:srcCompat="@drawable/ic_iconmonstr_medal_6" app:layout_constraintTop_toBottomOf="@+id/linearLayout3"/>
 
-    <View
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/background_dark_overlay" android:id="@+id/view7"
-            app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"/>
     <LinearLayout
             android:orientation="horizontal"
             android:layout_height="wrap_content"

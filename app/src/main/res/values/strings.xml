@@ -7,9 +7,19 @@
     <string name="register_text">nie masz konta?
         <u>stwórz je</u>
     </string>
+
     <string name="passwd_reset_text">zapomniałeś hasła?
         <u>przypomnij</u>
     </string>
+
+    <string name="policy_privacy">
+        <u>polityke prywatności</u>
+    </string>
+
+    <string name="terms">
+        <u>zasady i warunki</u>
+    </string>
+
 
     <string name="facebook_app_id" translatable="false">249845939148351</string>
     <string name="fb_login_protocol_scheme" translatable="false">fb249845939148351</string>

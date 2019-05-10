@@ -25,10 +25,12 @@ import kotlinx.android.synthetic.main.header_title_item.view.*
 import pl.idappstudio.jakdobrzesieznacie.R
 import pl.idappstudio.jakdobrzesieznacie.adapter.InviteAdapater
 import pl.idappstudio.jakdobrzesieznacie.adapter.SearchAdapater
+import pl.idappstudio.jakdobrzesieznacie.enums.ColorSnackBar
 import pl.idappstudio.jakdobrzesieznacie.interfaces.ClickInviteListener
 import pl.idappstudio.jakdobrzesieznacie.model.FriendItem
 import pl.idappstudio.jakdobrzesieznacie.model.UserData
 import pl.idappstudio.jakdobrzesieznacie.util.GlideUtil
+import pl.idappstudio.jakdobrzesieznacie.util.SnackBarUtil
 import pl.idappstudio.jakdobrzesieznacie.util.UserUtil
 
 @Suppress("DEPRECATION")
@@ -38,20 +40,27 @@ class InvitesFragment : androidx.fragment.app.Fragment(), ClickInviteListener {
 
         if (boolean) {
 
-            val snackbar = Snackbar.make(searchHeader, "Wysłano zaproszenia od ${user.name}", 2500)
-            snackbar.view.setBackgroundColor(resources.getColor(R.color.colorAccent))
-            snackbar.show()
+            val view = view?.rootView
+
+            if(view != null) {
+                SnackBarUtil.setActivitySnack(
+                    "Wysłano zaproszenia od ${user.name}",
+                    ColorSnackBar.SUCCES,
+                    R.drawable.ic_iconfinder_arrow_forward_216442,
+                    view) { }
+            }
 
         } else {
 
-            val snackbar = Snackbar.make(
-                searchHeader,
-                "Nie udało się wysłać zaproszenia, bądź już dostałeś zaproszenie od tej osoby!",
-                2500
-            )
+            val view = view?.rootView
 
-            snackbar.view.setBackgroundColor(resources.getColor(R.color.colorRed))
-            snackbar.show()
+            if(view != null) {
+                SnackBarUtil.setActivitySnack(
+                    "Nie udało się wysłać zaproszenia, bądź już dostałeś zaproszenie od tej osoby",
+                    ColorSnackBar.ERROR,
+                    R.drawable.ic_error_,
+                    view) { }
+            }
 
         }
 
@@ -85,19 +94,29 @@ class InvitesFragment : androidx.fragment.app.Fragment(), ClickInviteListener {
 
                             closeDialog()
 
-                            val snackbar =
-                                Snackbar.make(searchHeader, "Zaakceptowano zaproszenie od ${user.name}", 2500)
-                            snackbar.view.setBackgroundColor(resources.getColor(R.color.colorAccent))
-                            snackbar.show()
+                            val view = view?.rootView
+
+                            if(view != null) {
+                                SnackBarUtil.setActivitySnack(
+                                    "Dodano ${user.name} do znajomych",
+                                    ColorSnackBar.SUCCES,
+                                    R.drawable.ic_add_friends_icon,
+                                    view) { }
+                            }
 
                         }
 
                     } else {
 
-                        val snackbar =
-                            Snackbar.make(searchHeader, "Wystąpił błąd!", 2500)
-                        snackbar.view.setBackgroundColor(resources.getColor(R.color.colorRed))
-                        snackbar.show()
+                        val view = view?.rootView
+
+                        if(view != null) {
+                            SnackBarUtil.setActivitySnack(
+                                "Wystąpił błąd podczas dodawania",
+                                ColorSnackBar.ERROR,
+                                R.drawable.ic_error_,
+                                view) { }
+                        }
 
                     }
                 }
@@ -113,9 +132,15 @@ class InvitesFragment : androidx.fragment.app.Fragment(), ClickInviteListener {
 
                     closeDialog()
 
-                    val snackbar = Snackbar.make(searchHeader, "Odrzucono zaproszenie od ${user.name}", 2500)
-                    snackbar.view.setBackgroundColor(resources.getColor(R.color.colorRed))
-                    snackbar.show()
+                    val view = view?.rootView
+
+                    if(view != null) {
+                        SnackBarUtil.setActivitySnack(
+                            "Odrzucono zaproszenie od ${user.name}",
+                            ColorSnackBar.WARING,
+                            R.drawable.ic_remove,
+                            view) { }
+                    }
 
                 }
 

@@ -25,15 +25,43 @@
         }
       ],
       "services": {
-        "analytics_service": {
-          "status": 1
-        },
         "appinvite_service": {
-          "status": 1,
-          "other_platform_oauth_client": []
-        },
-        "ads_service": {
-          "status": 2
+          "other_platform_oauth_client": [
+            {
+              "client_id": "741628354397-rvf9qj0nmraafijgjh37ilce9husqpad.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      },
+      "admob_app_id": "ca-app-pub-9811848924200939~9857440152"
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:741628354397:android:c30c9c93b27786cb",
+        "android_client_info": {
+          "package_name": "pl.idappstudio.jakdobrzesieznacie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "741628354397-rvf9qj0nmraafijgjh37ilce9husqpad.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyClF3cpM7FENL-g7j2yq8zN1yMqgBD9WKk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "741628354397-rvf9qj0nmraafijgjh37ilce9husqpad.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
         }
       }
     }

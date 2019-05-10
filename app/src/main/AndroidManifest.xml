@@ -17,13 +17,14 @@
             android:logo="@mipmap/logo_colored"
             android:roundIcon="@mipmap/ic_launcher_round"
             android:supportsRtl="true"
+            android:largeHeap="true"
             android:theme="@style/MyTheme"
             tools:ignore="AllowBackup"
             tools:replace="android:theme">
 
-        <meta-data
-                android:name="android.max_aspect"
-                android:value="2.1"/>
+        <!--<meta-data-->
+                <!--android:name="android.max_aspect"-->
+                <!--android:value="2.1"/>-->
 
         <meta-data
                 android:name="com.google.android.gms.ads.APPLICATION_ID"
@@ -38,9 +39,9 @@
                 android:value="@string/facebook_app_id"
                 tools:replace="android:value"/>
 
-        <meta-data
-                android:name="com.google.android.gms.wallet.api.enabled"
-                android:value="true" />
+        <!--<meta-data-->
+                <!--android:name="com.google.android.gms.wallet.api.enabled"-->
+                <!--android:value="true" />-->
 
         <activity android:name=".activity.AddQuestionActivity"/>
 
@@ -73,6 +74,7 @@
 
         <activity
                 android:name=".activity.SettingsActivity"
+                android:windowSoftInputMode="adjustUnspecified"
                 android:screenOrientation="portrait"/>
 
         <activity
@@ -81,18 +83,22 @@
 
         <activity
                 android:name=".activity.RegisterActivity"
+                android:windowSoftInputMode="adjustUnspecified"
                 android:screenOrientation="portrait"/>
 
         <activity
                 android:name=".activity.LoginActivity"
+                android:windowSoftInputMode="adjustUnspecified"
                 android:screenOrientation="portrait"/>
 
         <activity
                 android:name=".activity.ResetPasswordActivity"
+                android:windowSoftInputMode="adjustUnspecified"
                 android:screenOrientation="portrait"/>
 
         <activity
                 android:name=".activity.MenuActivity"
+                android:windowSoftInputMode="adjustUnspecified"
                 android:screenOrientation="portrait"/>
 
         <activity

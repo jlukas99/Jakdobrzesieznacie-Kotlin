@@ -85,44 +85,53 @@ object GlideUtil {
 
         if (b) {
 
-            Glide.with(ctx).asBitmap().load("http://graph.facebook.com/${image}/picture?type=large")
-                .apply(options)
-                .placeholder(placeholder)
-                .into(target)
+//            if (target.isAttachedToWindow) {
 
-            onComplete()
-
-        } else {
-
-            if (image == "logo") {
-
-                target.setImageResource(R.mipmap.annonymous)
+                Glide.with(ctx).asBitmap().load("http://graph.facebook.com/${image}/picture?type=large")
+                    .apply(options)
+                    .placeholder(placeholder)
+                    .into(target)
 
                 onComplete()
 
-            } else {
+//            }
 
-                val storageReference =
-                    FirebaseStorage.getInstance().reference.child("profile_image").child(image + "-image").downloadUrl
+        } else {
 
-                storageReference.addOnSuccessListener { Uri ->
+//            if (target.isAttachedToWindow) {
 
-                    Glide.with(ctx).asBitmap().load(Uri.toString())
-                        .apply(options)
-                        .placeholder(placeholder)
-                        .into(target)
-
-                    onComplete()
-
-                }.addOnFailureListener {
+                if (image == "logo") {
 
                     target.setImageResource(R.mipmap.annonymous)
 
                     onComplete()
 
+                } else {
+
+                    val storageReference =
+                        FirebaseStorage.getInstance().reference.child("profile_image").child(image + "-image")
+                            .downloadUrl
+
+                    storageReference.addOnSuccessListener { Uri ->
+
+                        Glide.with(ctx).asBitmap().load(Uri.toString())
+                            .apply(options)
+                            .placeholder(placeholder)
+                            .into(target)
+
+                        onComplete()
+
+                    }.addOnFailureListener {
+
+                        target.setImageResource(R.mipmap.annonymous)
+
+                        onComplete()
+
+                    }
+
                 }
 
-            }
+//            }
 
         }
 

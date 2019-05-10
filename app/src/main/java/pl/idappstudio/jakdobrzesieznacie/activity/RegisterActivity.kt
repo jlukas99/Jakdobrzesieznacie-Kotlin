@@ -14,6 +14,7 @@ import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import android.view.WindowManager
 import android.widget.ArrayAdapter
 import kotlinx.android.synthetic.main.activity_register.*
 import java.util.regex.Pattern
@@ -24,8 +25,10 @@ import org.jetbrains.anko.clearTask
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.newTask
 import pl.idappstudio.jakdobrzesieznacie.R
+import pl.idappstudio.jakdobrzesieznacie.enums.ColorSnackBar
 import pl.idappstudio.jakdobrzesieznacie.service.MyFirebaseMessagingService
 import pl.idappstudio.jakdobrzesieznacie.util.FirestoreUtil
+import pl.idappstudio.jakdobrzesieznacie.util.SnackBarUtil
 import pl.idappstudio.jakdobrzesieznacie.util.StorgeUtil
 import pl.idappstudio.jakdobrzesieznacie.util.UserUtil
 import java.io.ByteArrayOutputStream
@@ -85,11 +88,6 @@ class RegisterActivity : Activity() {
                     emailInput.setBackgroundResource(R.drawable.input_overlay)
                     emailImage.setBackgroundResource(R.drawable.input_overlay_icon)
 
-                } else {
-
-                    emailInput?.error = "Niepoprawny email"
-                    emailInput.setBackgroundResource(R.drawable.input_overlay_error)
-                    emailImage.setBackgroundResource(R.drawable.input_overlay_icon_error)
                 }
 
             }
@@ -108,12 +106,6 @@ class RegisterActivity : Activity() {
 
                     passwordInput.setBackgroundResource(R.drawable.input_overlay)
                     passwordImage.setBackgroundResource(R.drawable.input_overlay_icon)
-
-                } else {
-
-                    passwordInput?.error = "Hasło musi składać się przynajmniej z 6 liter lub cyfr"
-                    passwordInput.setBackgroundResource(R.drawable.input_overlay_error)
-                    passwordImage.setBackgroundResource(R.drawable.input_overlay_icon_error)
 
                 }
 
@@ -135,12 +127,6 @@ class RegisterActivity : Activity() {
                     repasswordInput.setBackgroundResource(R.drawable.input_overlay)
                     repasswordImage.setBackgroundResource(R.drawable.input_overlay_icon)
 
-                } else {
-
-                    repasswordInput?.error = "Hasła się nie zgadzają"
-                    repasswordInput.setBackgroundResource(R.drawable.input_overlay_error)
-                    repasswordImage.setBackgroundResource(R.drawable.input_overlay_icon_error)
-
                 }
 
             }
@@ -150,17 +136,18 @@ class RegisterActivity : Activity() {
 
         })
 
-        btn_send.setOnClickListener {
+        btn_send.setOnClickListener {it2 ->
 
             var error = 0
 
-            if(!isEmailValid(emailInput?.text.toString().trim())) {
+            if(!isRePasswordValid(repasswordInput?.text.toString().trim(), passwordInput?.text.toString().trim())) {
 
                 error++
 
-                emailInput?.error = "Niepoprawny email"
-                emailInput.setBackgroundResource(R.drawable.input_overlay_error)
-                emailImage.setBackgroundResource(R.drawable.input_overlay_icon_error)
+                repasswordInput.setBackgroundResource(R.drawable.input_overlay_error)
+                repasswordImage.setBackgroundResource(R.drawable.input_overlay_icon_error)
+
+                SnackBarUtil.setActivitySnack("Hasła się nie zgadzają", ColorSnackBar.ERROR, R.mipmap.password_icon, it2){ }
 
             }
 
@@ -168,19 +155,21 @@ class RegisterActivity : Activity() {
 
                 error++
 
-                passwordInput?.error = "Hasło musi składać się przynajmniej z 6 liter lub cyfr"
                 passwordInput.setBackgroundResource(R.drawable.input_overlay_error)
                 passwordImage.setBackgroundResource(R.drawable.input_overlay_icon_error)
 
+                SnackBarUtil.setActivitySnack("Hasło musi składać się przynajmniej z 6 znaków liter lub cyf", ColorSnackBar.ERROR, R.mipmap.password_icon, it2){ }
+
             }
 
-            if(!isRePasswordValid(repasswordInput?.text.toString().trim(), passwordInput?.text.toString().trim())) {
+            if(!isEmailValid(emailInput?.text.toString().trim())) {
 
                 error++
 
-                repasswordInput?.error = "Hasła się nie zgadzają"
-                repasswordInput.setBackgroundResource(R.drawable.input_overlay_error)
-                repasswordImage.setBackgroundResource(R.drawable.input_overlay_icon_error)
+                emailInput.setBackgroundResource(R.drawable.input_overlay_error)
+                emailImage.setBackgroundResource(R.drawable.input_overlay_icon_error)
+
+                SnackBarUtil.setActivitySnack("Niepoprawny adres email", ColorSnackBar.ERROR, R.mipmap.email_icon, it2){ }
 
             }
 
@@ -223,9 +212,7 @@ class RegisterActivity : Activity() {
 
                                 alertDialog.dismiss()
 
-                                val snackbar: Snackbar? = Snackbar.make(view, "Utworzono konto", 2500)
-                                snackbar?.view?.setBackgroundColor(resources.getColor(R.color.colorAccent))
-                                snackbar?.show()
+                                SnackBarUtil.setActivitySnack("Pomyślnie utworzono konto", ColorSnackBar.SUCCES, R.drawable.ic_check_icon, it2){ }
 
                                 val registrationToken = FirebaseInstanceId.getInstance().token
                                 MyFirebaseMessagingService.addTokenToFirestore(registrationToken)
@@ -240,9 +227,7 @@ class RegisterActivity : Activity() {
 
                         alertDialog.dismiss()
 
-                        val snackbar: Snackbar? = Snackbar.make(view, "Nie udało się utworzyć konta!", 2500)
-                        snackbar?.view?.setBackgroundColor(resources.getColor(R.color.colorRed))
-                        snackbar?.show()
+                        SnackBarUtil.setActivitySnack("Nie udało utworzyć się konta", ColorSnackBar.ERROR, R.drawable.ic_error_, it2){ }
 
                     }
                 }
@@ -297,20 +282,40 @@ class RegisterActivity : Activity() {
 
     override fun onResume() {
         super.onResume()
-        hideNavigationBar()
+        hideSystemUI()
     }
 
-    private fun hideNavigationBar() {
+    override fun onUserInteraction() {
+        super.onUserInteraction()
+        hideSystemUI()
+    }
 
-        val flags = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+    override fun onStart() {
+        super.onStart()
+        hideSystemUI()
+    }
+
+    override fun onBackPressed() {
+        hideSystemUI()
+        super.onBackPressed()
+    }
+
+    private fun hideSystemUI(){
+
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
                 or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
                 or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
                 or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                or View.SYSTEM_UI_FLAG_FULLSCREEN)
+                or View.SYSTEM_UI_FLAG_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
 
-        window.decorView.systemUiVisibility = flags
+    }
 
+    override fun onWindowFocusChanged(hasFocus:Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) {
+            hideSystemUI()
+        }
     }
 
 }

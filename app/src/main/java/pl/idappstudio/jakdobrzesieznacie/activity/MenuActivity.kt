@@ -30,7 +30,6 @@ class MenuActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_menu)
 
         val adManager = AdMobUtil(this@MenuActivity, resources.getString(R.string.adMob_menu_ad_id))
         val ad:InterstitialAd = adManager.getAd()
@@ -41,10 +40,170 @@ class MenuActivity : AppCompatActivity() {
             }
 
             override fun onAdFailedToLoad(errorCode: Int) {
+
                 adManager.createAd(this@MenuActivity, resources.getString(R.string.adMob_menu_ad_id))
+
+                setContentView(R.layout.activity_menu)
+
+                fab.setOnClickListener {
+
+                    if(!navigation.menu.getItem(2).isChecked || !navigation2.menu.getItem(2).isChecked) {
+                        openFragment(FriendsFragment(), "friends")
+                        navigation.menu.getItem(2).isChecked = true
+                        navigation2.menu.getItem(2).isChecked = true
+                    }
+
+                }
+
+                navigation.menu.getItem(2).isVisible = false
+                navigation2.menu.getItem(2).isVisible = false
+
+                openFragment(FriendsFragment(), "friends")
+
+                navigation2.setOnNavigationItemSelectedListener {
+
+                    when (it.itemId) {
+
+                        R.id.navigation_add_friends -> {
+
+                            if(!it.isChecked) {
+
+                                openFragment(InvitesFragment(), "invites")
+                                navigation.menu.getItem(2).isChecked = true
+
+                            }
+                            true
+                        }
+
+                        R.id.navigation_profile -> {
+                            if(!it.isChecked) {
+
+                                openFragment(ProfileFragment(), "profile")
+                                navigation.menu.getItem(2).isChecked = true
+
+                            }
+                            true
+                        }
+                        else -> false
+                    }
+                }
+
+                navigation.setOnNavigationItemSelectedListener {
+
+                    when (it.itemId) {
+
+                        R.id.navigation_pack -> {
+                            if(!it.isChecked) {
+
+                                openFragment(PackFragment(), "pack")
+                                navigation2.menu.getItem(2).isChecked = true
+
+                            }
+                            true
+                        }
+
+                        R.id.navigation_states -> {
+                            if(!it.isChecked) {
+
+                                openFragment(AchivmentsFragment(), "achivment")
+                                navigation2.menu.getItem(2).isChecked = true
+
+                            }
+                            true
+                        }
+
+                        else -> false
+                    }
+                }
+
+                navigation.menu.getItem(2).isChecked = true
+                navigation2.menu.getItem(2).isChecked = true
+
+                navigation.menu.getItem(2).isEnabled = false
+                navigation2.menu.getItem(2).isEnabled = false
+
             }
 
             override fun onAdOpened() {
+
+                setContentView(R.layout.activity_menu)
+
+                fab.setOnClickListener {
+
+                    if(!navigation.menu.getItem(2).isChecked || !navigation2.menu.getItem(2).isChecked) {
+                        openFragment(FriendsFragment(), "friends")
+                        navigation.menu.getItem(2).isChecked = true
+                        navigation2.menu.getItem(2).isChecked = true
+                    }
+
+                }
+
+                navigation.menu.getItem(2).isVisible = false
+                navigation2.menu.getItem(2).isVisible = false
+
+                openFragment(FriendsFragment(), "friends")
+
+                navigation2.setOnNavigationItemSelectedListener {
+
+                    when (it.itemId) {
+
+                        R.id.navigation_add_friends -> {
+
+                            if(!it.isChecked) {
+
+                                openFragment(InvitesFragment(), "invites")
+                                navigation.menu.getItem(2).isChecked = true
+
+                            }
+                            true
+                        }
+
+                        R.id.navigation_profile -> {
+                            if(!it.isChecked) {
+
+                                openFragment(ProfileFragment(), "profile")
+                                navigation.menu.getItem(2).isChecked = true
+
+                            }
+                            true
+                        }
+                        else -> false
+                    }
+                }
+
+                navigation.setOnNavigationItemSelectedListener {
+
+                    when (it.itemId) {
+
+                        R.id.navigation_pack -> {
+                            if(!it.isChecked) {
+
+                                openFragment(PackFragment(), "pack")
+                                navigation2.menu.getItem(2).isChecked = true
+
+                            }
+                            true
+                        }
+
+                        R.id.navigation_states -> {
+                            if(!it.isChecked) {
+
+                                openFragment(AchivmentsFragment(), "achivment")
+                                navigation2.menu.getItem(2).isChecked = true
+
+                            }
+                            true
+                        }
+
+                        else -> false
+                    }
+                }
+
+                navigation.menu.getItem(2).isChecked = true
+                navigation2.menu.getItem(2).isChecked = true
+
+                navigation.menu.getItem(2).isEnabled = false
+                navigation2.menu.getItem(2).isEnabled = false
 
             }
 
@@ -56,83 +215,6 @@ class MenuActivity : AppCompatActivity() {
                 adManager.createAd(this@MenuActivity, resources.getString(R.string.adMob_menu_ad_id))
             }
         }
-
-        fab.setOnClickListener {
-
-            if(!navigation.menu.getItem(2).isChecked || !navigation2.menu.getItem(2).isChecked) {
-                openFragment(FriendsFragment(), "friends")
-                navigation.menu.getItem(2).isChecked = true
-                navigation2.menu.getItem(2).isChecked = true
-            }
-
-        }
-
-        navigation.menu.getItem(2).isVisible = false
-        navigation2.menu.getItem(2).isVisible = false
-
-        openFragment(FriendsFragment(), "friends")
-
-        navigation2.setOnNavigationItemSelectedListener {
-
-            when (it.itemId) {
-
-                R.id.navigation_add_friends -> {
-
-                    if(!it.isChecked) {
-
-                        openFragment(InvitesFragment(), "invites")
-                        navigation.menu.getItem(2).isChecked = true
-
-                    }
-                    true
-                }
-
-                R.id.navigation_profile -> {
-                    if(!it.isChecked) {
-
-                        openFragment(ProfileFragment(), "profile")
-                        navigation.menu.getItem(2).isChecked = true
-
-                    }
-                    true
-                }
-                else -> false
-            }
-        }
-
-        navigation.setOnNavigationItemSelectedListener {
-
-            when (it.itemId) {
-
-                R.id.navigation_pack -> {
-                    if(!it.isChecked) {
-
-                        openFragment(PackFragment(), "pack")
-                        navigation2.menu.getItem(2).isChecked = true
-
-                    }
-                    true
-                }
-
-                R.id.navigation_states -> {
-                    if(!it.isChecked) {
-
-                        openFragment(AchivmentsFragment(), "achivment")
-                        navigation2.menu.getItem(2).isChecked = true
-
-                    }
-                    true
-                }
-
-                else -> false
-            }
-        }
-
-        navigation.menu.getItem(2).isChecked = true
-        navigation2.menu.getItem(2).isChecked = true
-
-        navigation.menu.getItem(2).isEnabled = false
-        navigation2.menu.getItem(2).isEnabled = false
 
     }
 
@@ -157,9 +239,42 @@ class MenuActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        hideNavigationBar()
         UserUtil.getUser {}
         UserUtil.updateStatus(StatusMessage.inmenu)
+        hideSystemUI()
+    }
+
+    override fun onUserInteraction() {
+        super.onUserInteraction()
+        hideSystemUI()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        hideSystemUI()
+    }
+
+    override fun onBackPressed() {
+        hideSystemUI()
+        super.onBackPressed()
+    }
+
+    private fun hideSystemUI(){
+
+        window.decorView.systemUiVisibility = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
+                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
+                or View.SYSTEM_UI_FLAG_FULLSCREEN
+                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY)
+
+    }
+
+    override fun onWindowFocusChanged(hasFocus:Boolean) {
+        super.onWindowFocusChanged(hasFocus)
+        if (hasFocus) {
+            hideSystemUI()
+        }
     }
 
     override fun onDestroy() {
@@ -168,16 +283,4 @@ class MenuActivity : AppCompatActivity() {
         UserUtil.updateStatus(StatusMessage.offline)
     }
 
-    private fun hideNavigationBar() {
-
-        val flags = (View.SYSTEM_UI_FLAG_LAYOUT_STABLE
-                or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                or View.SYSTEM_UI_FLAG_HIDE_NAVIGATION
-                or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
-                or View.SYSTEM_UI_FLAG_FULLSCREEN)
-
-        window.decorView.systemUiVisibility = flags
-
-    }
 }

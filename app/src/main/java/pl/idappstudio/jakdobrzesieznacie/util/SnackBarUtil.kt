@@ -20,7 +20,7 @@ object SnackBarUtil {
 
             val textView = snackbarView.findViewById(com.androidadvance.topsnackbar.R.id.snackbar_text) as TextView
             textView.setTextColor(view.resources.getColor(R.color.colorWhite))
-            textView.setTypeface(textView.typeface, Typeface.BOLD)
+//            textView.setTypeface(textView.typeface, Typeface.NORMAL)
 
             snackbar.show()
 

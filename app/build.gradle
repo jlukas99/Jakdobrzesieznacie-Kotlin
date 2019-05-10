@@ -25,8 +25,8 @@ android {
         applicationId "pl.idappstudio.jakdobrzesieznacie"
         minSdkVersion 22
         targetSdkVersion 28
-        versionCode 1
-        versionName "v1.0-Alpha"
+        versionCode 3
+        versionName "v1.1-Alpha"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -98,6 +98,6 @@ dependencies {
     //google
     implementation 'com.google.android.gms:play-services-ads:17.2.0'
     implementation 'com.google.android.gms:play-services-auth:16.0.1'
-    implementation 'com.google.android.gms:play-services-wallet:16.0.1'
+//    implementation 'com.google.android.gms:play-services-wallet:16.0.1'
 
 }

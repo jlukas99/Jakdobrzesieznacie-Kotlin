@@ -11,7 +11,12 @@
     <View
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/background_dark_overlay" android:id="@+id/view3"/>
+            android:background="@drawable/background_dark_overlay"
+            android:id="@+id/view3"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"/>
     <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -22,10 +27,14 @@
         <ImageView
                 android:src="@mipmap/logo"
                 android:layout_width="156dp"
-                android:layout_height="156dp" android:id="@+id/selectImage"
-                app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="8dp"
-                app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp"
-                app:layout_constraintTop_toTopOf="parent"/>
+                android:layout_height="156dp"
+                android:id="@+id/selectImage"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="8dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintTop_toTopOf="parent"
+                android:layout_marginTop="32dp"/>
         <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_stworz_konto"
                 android:layout_width="264.09dp"
@@ -81,16 +90,78 @@
                     android:layout_gravity="center" android:layout_weight="1" android:layout_width="wrap_content"/>
 
         </LinearLayout>
-        <TextView
-                android:text="Logując się akceptujesz warunki korzystania z aplikacji."
-                android:layout_width="170dp"
-                android:layout_height="29dp" android:id="@+id/textView2"
-                app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="32dp"
-                app:layout_constraintStart_toStartOf="parent" android:layout_marginStart="32dp"
+
+        <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="32dp"
+                app:layout_constraintTop_toBottomOf="@+id/facebook"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="32dp"
+                android:layout_marginEnd="32dp"
+                android:layout_marginBottom="32dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginTop="32dp" app:layout_constraintTop_toBottomOf="@+id/btn_facebook"
-                android:fontFamily="@font/varela_round" android:textSize="11sp" android:textAlignment="center"
-                app:layout_constraintVertical_bias="0.225"/>
+                android:gravity="center_horizontal|center_vertical">
+
+            <TextView
+                    android:text="Rejestrując bądź logując się do aplikacji akceptujesz"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView2"
+                    android:fontFamily="@font/varela_round"
+                    android:textSize="11sp"
+                    android:textAlignment="center"
+                    />
+
+            <LinearLayout
+                    android:orientation="horizontal"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal|center_vertical">
+
+                <TextView
+                        android:text="@string/policy_privacy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textView11"
+                        android:fontFamily="@font/varela_round"
+                        android:textSize="11sp"
+                        android:textAlignment="textEnd"
+                        />
+
+                <TextView
+                        android:text=" oraz "
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textView13"
+                        android:fontFamily="@font/varela_round"
+                        android:textSize="11sp"
+                        android:textAlignment="center"
+                        />
+
+                <TextView
+                        android:text="@string/terms"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:id="@+id/textView15"
+                        android:fontFamily="@font/varela_round"
+                        android:textSize="11sp"
+                        android:textAlignment="center"
+                        />
+            </LinearLayout>
+
+            <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView16"
+                    android:fontFamily="@font/varela_round"
+                    android:textSize="11sp"
+                    android:textAlignment="center"
+                    android:text="korzystania z niej."/>
+
+        </LinearLayout>
 
         <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_facebook"

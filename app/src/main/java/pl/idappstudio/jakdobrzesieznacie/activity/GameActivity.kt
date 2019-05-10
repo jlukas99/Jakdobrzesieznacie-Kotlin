@@ -4,8 +4,10 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.core.content.ContextCompat
 import android.view.View
+import android.widget.ImageButton
 import android.widget.TextView
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.android.synthetic.main.activity_friends_profile.*
 import kotlinx.android.synthetic.main.activity_game.*
 import pl.idappstudio.jakdobrzesieznacie.R
 import pl.idappstudio.jakdobrzesieznacie.activity.FriendsProfileActivity.Companion.EXTRA_FRIEND_IMAGE_TRANSITION
@@ -136,6 +138,13 @@ class GameActivity : AppCompatActivity(), nextFragment {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
         supportPostponeEnterTransition()
+
+        val back_btn = linearLayout1.findViewById<ImageButton>(R.id.back_btn)
+        back_btn.setOnClickListener {
+
+            onBackPressed()
+
+        }
 
         val extras = intent.extras
         val imageUserTransitionName = extras.getString(EXTRA_USER_IMAGE_TRANSITION)

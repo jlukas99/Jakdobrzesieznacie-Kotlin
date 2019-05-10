@@ -39,6 +39,10 @@
                 android:value="@string/facebook_app_id"
                 tools:replace="android:value"/>
 
+        <provider android:authorities="com.facebook.app.FacebookContentProvider{249845939148351}"
+                  android:name="com.facebook.FacebookContentProvider"
+                  android:exported="true"/>
+
         <!--<meta-data-->
                 <!--android:name="com.google.android.gms.wallet.api.enabled"-->
                 <!--android:value="true" />-->

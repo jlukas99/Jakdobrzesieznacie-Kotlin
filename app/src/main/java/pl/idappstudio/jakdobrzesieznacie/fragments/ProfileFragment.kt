@@ -18,7 +18,6 @@ import pl.idappstudio.jakdobrzesieznacie.activity.LoginMenuActivity
 import pl.idappstudio.jakdobrzesieznacie.activity.SettingsActivity
 import pl.idappstudio.jakdobrzesieznacie.enums.ColorSnackBar
 import pl.idappstudio.jakdobrzesieznacie.model.StatsData
-import pl.idappstudio.jakdobrzesieznacie.model.UserData
 import pl.idappstudio.jakdobrzesieznacie.util.GameUtil
 import pl.idappstudio.jakdobrzesieznacie.util.GlideUtil
 import pl.idappstudio.jakdobrzesieznacie.util.SnackBarUtil
@@ -82,14 +81,14 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
 
         share.setOnClickListener {
 
-//            val sendIntent = Intent()
-//            sendIntent.action = Intent.ACTION_SEND
-//            sendIntent.putExtra(Intent.EXTRA_TEXT, "Cześć, pobierz aplikacje i zagraj ze mną\n\nhttps://jakdobrzesieznacie.page.link/download_game")
-//            sendIntent.putExtra(Intent.EXTRA_SUBJECT, "Jak Dobrze Się Znacie?")
-//            sendIntent.type = "text/plain"
-//            startActivity(Intent.createChooser(sendIntent, FirestoreUtil.currentUser.name)
+//            val shareHashTag = ShareHashtag.Builder().setHashtag("#Jakdobrzesieznacie").setHashtag("#iDappStudio").build()
+//            val shareLinkContent = ShareLinkContent.Builder()
+//                .setShareHashtag(shareHashTag)
+//                .setQuote("Moje statystyki :D")
+//                .setContentUrl(Uri.parse("https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2FJakdobrzesieznacie%2Fphotos%2Fa.562584780804838%2F612757935787522%2F%3Ftype%3D3&width=500"))
+//                .build()
 //
-//            )
+//            ShareDialog.show(this,shareLinkContent)
 
         }
 

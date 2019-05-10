@@ -5,6 +5,7 @@ package pl.idappstudio.jakdobrzesieznacie.activity
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import android.view.View
+import androidx.viewpager.widget.ViewPager
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.InterstitialAd
 import kotlinx.android.synthetic.main.activity_menu.*
@@ -13,6 +14,7 @@ import pl.idappstudio.jakdobrzesieznacie.enums.StatusMessage
 import pl.idappstudio.jakdobrzesieznacie.fragments.*
 import pl.idappstudio.jakdobrzesieznacie.util.AdMobUtil
 import pl.idappstudio.jakdobrzesieznacie.util.UserUtil
+
 
 class MenuActivity : AppCompatActivity() {
 
@@ -36,204 +38,179 @@ class MenuActivity : AppCompatActivity() {
 
         ad.adListener = object: AdListener() {
             override fun onAdLoaded() {
+
                 ad.show()
+
+                setContentView(R.layout.activity_menu)
+
+                setupViewPager(viewPager)
+
             }
 
             override fun onAdFailedToLoad(errorCode: Int) {
 
-                adManager.createAd(this@MenuActivity, resources.getString(R.string.adMob_menu_ad_id))
-
                 setContentView(R.layout.activity_menu)
 
-                fab.setOnClickListener {
+                adManager.createAd(this@MenuActivity, resources.getString(R.string.adMob_menu_ad_id))
 
-                    if(!navigation.menu.getItem(2).isChecked || !navigation2.menu.getItem(2).isChecked) {
-                        openFragment(FriendsFragment(), "friends")
-                        navigation.menu.getItem(2).isChecked = true
-                        navigation2.menu.getItem(2).isChecked = true
-                    }
-
-                }
-
-                navigation.menu.getItem(2).isVisible = false
-                navigation2.menu.getItem(2).isVisible = false
-
-                openFragment(FriendsFragment(), "friends")
-
-                navigation2.setOnNavigationItemSelectedListener {
-
-                    when (it.itemId) {
-
-                        R.id.navigation_add_friends -> {
-
-                            if(!it.isChecked) {
-
-                                openFragment(InvitesFragment(), "invites")
-                                navigation.menu.getItem(2).isChecked = true
-
-                            }
-                            true
-                        }
-
-                        R.id.navigation_profile -> {
-                            if(!it.isChecked) {
-
-                                openFragment(ProfileFragment(), "profile")
-                                navigation.menu.getItem(2).isChecked = true
-
-                            }
-                            true
-                        }
-                        else -> false
-                    }
-                }
-
-                navigation.setOnNavigationItemSelectedListener {
-
-                    when (it.itemId) {
-
-                        R.id.navigation_pack -> {
-                            if(!it.isChecked) {
-
-                                openFragment(PackFragment(), "pack")
-                                navigation2.menu.getItem(2).isChecked = true
-
-                            }
-                            true
-                        }
-
-                        R.id.navigation_states -> {
-                            if(!it.isChecked) {
-
-                                openFragment(AchivmentsFragment(), "achivment")
-                                navigation2.menu.getItem(2).isChecked = true
-
-                            }
-                            true
-                        }
-
-                        else -> false
-                    }
-                }
-
-                navigation.menu.getItem(2).isChecked = true
-                navigation2.menu.getItem(2).isChecked = true
-
-                navigation.menu.getItem(2).isEnabled = false
-                navigation2.menu.getItem(2).isEnabled = false
+                setupViewPager(viewPager)
 
             }
 
             override fun onAdOpened() {
 
-                setContentView(R.layout.activity_menu)
-
-                fab.setOnClickListener {
-
-                    if(!navigation.menu.getItem(2).isChecked || !navigation2.menu.getItem(2).isChecked) {
-                        openFragment(FriendsFragment(), "friends")
-                        navigation.menu.getItem(2).isChecked = true
-                        navigation2.menu.getItem(2).isChecked = true
-                    }
-
-                }
-
-                navigation.menu.getItem(2).isVisible = false
-                navigation2.menu.getItem(2).isVisible = false
-
-                openFragment(FriendsFragment(), "friends")
-
-                navigation2.setOnNavigationItemSelectedListener {
-
-                    when (it.itemId) {
-
-                        R.id.navigation_add_friends -> {
-
-                            if(!it.isChecked) {
-
-                                openFragment(InvitesFragment(), "invites")
-                                navigation.menu.getItem(2).isChecked = true
-
-                            }
-                            true
-                        }
-
-                        R.id.navigation_profile -> {
-                            if(!it.isChecked) {
-
-                                openFragment(ProfileFragment(), "profile")
-                                navigation.menu.getItem(2).isChecked = true
-
-                            }
-                            true
-                        }
-                        else -> false
-                    }
-                }
-
-                navigation.setOnNavigationItemSelectedListener {
-
-                    when (it.itemId) {
-
-                        R.id.navigation_pack -> {
-                            if(!it.isChecked) {
-
-                                openFragment(PackFragment(), "pack")
-                                navigation2.menu.getItem(2).isChecked = true
-
-                            }
-                            true
-                        }
-
-                        R.id.navigation_states -> {
-                            if(!it.isChecked) {
-
-                                openFragment(AchivmentsFragment(), "achivment")
-                                navigation2.menu.getItem(2).isChecked = true
-
-                            }
-                            true
-                        }
-
-                        else -> false
-                    }
-                }
-
-                navigation.menu.getItem(2).isChecked = true
-                navigation2.menu.getItem(2).isChecked = true
-
-                navigation.menu.getItem(2).isEnabled = false
-                navigation2.menu.getItem(2).isEnabled = false
-
             }
 
             override fun onAdLeftApplication() {
 
+                setContentView(R.layout.activity_menu)
+
+                setupViewPager(viewPager)
+
             }
 
             override fun onAdClosed() {
+
                 adManager.createAd(this@MenuActivity, resources.getString(R.string.adMob_menu_ad_id))
+
             }
         }
 
     }
 
-    private fun openFragment(fragment: androidx.fragment.app.Fragment, tag: String) {
+    private fun setupViewPager(viewPager: ViewPager) {
 
-        val fManager = supportFragmentManager
-        val fTransaction = fManager.beginTransaction()
+        fab.setOnClickListener {
 
-        val tag2 = fManager.findFragmentByTag(tag)
+            if(!navigation.menu.getItem(2).isChecked || !navigation2.menu.getItem(2).isChecked) {
 
-        if (tag2 == null) {
+                viewPager.currentItem = 2
+                navigation.menu.getItem(2).isChecked = true
+                navigation2.menu.getItem(2).isChecked = true
 
-            fTransaction.add(R.id.container, fragment, tag).commit()
-
-        } else {
-
-            fTransaction.disallowAddToBackStack().replace(R.id.container, tag2, tag).commit()
+            }
 
         }
+
+        navigation.menu.getItem(2).isVisible = false
+        navigation2.menu.getItem(2).isVisible = false
+
+        navigation2.setOnNavigationItemSelectedListener {
+
+            when (it.itemId) {
+
+                R.id.navigation_add_friends -> {
+
+                    viewPager.currentItem = 3
+                    navigation.menu.getItem(2).isChecked = true
+
+                    true
+                }
+
+                R.id.navigation_profile -> {
+
+                    viewPager.currentItem = 4
+                    navigation.menu.getItem(2).isChecked = true
+
+                    true
+                }
+                else -> false
+            }
+        }
+
+        navigation.setOnNavigationItemSelectedListener {
+
+            when (it.itemId) {
+
+                R.id.navigation_pack -> {
+
+                    viewPager.currentItem = 0
+                    navigation2.menu.getItem(2).isChecked = true
+
+                    true
+                }
+
+                R.id.navigation_states -> {
+
+                    viewPager.currentItem = 1
+                    navigation2.menu.getItem(2).isChecked = true
+
+                    true
+                }
+
+                else -> false
+            }
+        }
+
+        navigation.menu.getItem(2).isEnabled = false
+        navigation2.menu.getItem(2).isEnabled = false
+
+        val adapter = ViewPagerAdapter(supportFragmentManager)
+
+        val packFragment = PackFragment()
+        val achivmentsFragment = AchivmentsFragment()
+        val friendsFragment = FriendsFragment()
+        val invitesFragment = InvitesFragment()
+        val profileFragment = ProfileFragment()
+
+        adapter.addFragment(packFragment, "pack")
+        adapter.addFragment(achivmentsFragment, "achivment")
+        adapter.addFragment(friendsFragment, "friends")
+        adapter.addFragment(invitesFragment, "invites")
+        adapter.addFragment(profileFragment, "profile")
+
+        viewPager.offscreenPageLimit = 4
+
+        viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
+            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
+
+            }
+
+            override fun onPageSelected(position: Int) {
+
+                when(position) {
+
+                    0 -> {
+                        navigation.menu.getItem(0).isChecked = true
+                        navigation2.menu.getItem(2).isChecked = true
+
+                    }
+
+                    1 -> {
+                        navigation.menu.getItem(1).isChecked = true
+                        navigation2.menu.getItem(2).isChecked = true
+
+                    }
+
+                    2 -> {
+                        navigation.menu.getItem(2).isChecked = true
+                        navigation2.menu.getItem(2).isChecked = true
+                    }
+
+                    3 -> {
+                        navigation.menu.getItem(2).isChecked = true
+                        navigation2.menu.getItem(0).isChecked = true
+
+                    }
+
+                    4 ->  {
+                        navigation.menu.getItem(2).isChecked = true
+                        navigation2.menu.getItem(1).isChecked = true
+
+                    }
+
+                }
+
+            }
+
+            override fun onPageScrollStateChanged(state: Int) {
+
+            }
+        })
+
+        viewPager.adapter = adapter
+
+        viewPager.currentItem = 2
 
     }
 
@@ -281,6 +258,30 @@ class MenuActivity : AppCompatActivity() {
         super.onDestroy()
         UserUtil.stopListener()
         UserUtil.updateStatus(StatusMessage.offline)
+    }
+
+    internal inner class ViewPagerAdapter(manager: androidx.fragment.app.FragmentManager) : androidx.fragment.app.FragmentPagerAdapter(manager) {
+
+        private val mFragmentList: ArrayList<androidx.fragment.app.Fragment> = ArrayList()
+        private val mFragmentTitleList: ArrayList<String> = ArrayList()
+
+        override fun getCount(): Int {
+            return mFragmentList.size
+        }
+
+        override fun getItem(position: Int): androidx.fragment.app.Fragment {
+            return mFragmentList[position]
+        }
+
+        fun addFragment(fragment: androidx.fragment.app.Fragment, title: String) {
+            mFragmentList.add(fragment)
+            mFragmentTitleList.add(title)
+        }
+
+        override fun getPageTitle(position: Int): CharSequence {
+            return ""
+        }
+
     }
 
 }

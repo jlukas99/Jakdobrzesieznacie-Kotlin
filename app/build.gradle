@@ -25,8 +25,8 @@ android {
         applicationId "pl.idappstudio.jakdobrzesieznacie"
         minSdkVersion 22
         targetSdkVersion 28
-        versionCode 3
-        versionName "v1.1-Alpha"
+        versionCode 4
+        versionName "v1.2-Alpha"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 

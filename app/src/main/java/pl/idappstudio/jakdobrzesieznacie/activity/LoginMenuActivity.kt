@@ -57,7 +57,13 @@ class LoginMenuActivity : Activity() {
 
         ad.adListener = object: AdListener() {
             override fun onAdLoaded() {
+
                 ad.show()
+
+                setContentView(R.layout.activity_login_menu)
+
+                initialize()
+
             }
 
             override fun onAdFailedToLoad(errorCode: Int) {
@@ -66,211 +72,126 @@ class LoginMenuActivity : Activity() {
 
                 setContentView(R.layout.activity_login_menu)
 
-                callbackManager = CallbackManager.Factory.create()
-
-                auth = FirebaseAuth.getInstance()
-
-                FacebookSdk.sdkInitialize(applicationContext)
-                AppEventsLogger.activateApp(this@LoginMenuActivity)
-
-                val dialogBuilder = AlertDialog.Builder(this@LoginMenuActivity,
-                    R.style.Base_Theme_MaterialComponents_Dialog
-                )
-                val inflater = this@LoginMenuActivity.layoutInflater
-                val dialogView = inflater.inflate(R.layout.dialog_loading_login, null)
-                dialogBuilder.setView(dialogView)
-
-                alertDialog = dialogBuilder.create()
-                alertDialog.window?.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.colorTranspery)))
-                alertDialog.setCanceledOnTouchOutside(false)
-                alertDialog.setCancelable(false)
-
-                textView11.setOnClickListener {
-
-                    val url = "http://idappstudio.pl/privacy_policy.html"
-                    val i = Intent(Intent.ACTION_VIEW)
-
-                    i.data = Uri.parse(url)
-
-                    startActivity(i)
-
-                }
-
-                textView15.setOnClickListener {
-
-                    val url2 = "http://idappstudio.pl/terms_and_conditions.html"
-                    val i = Intent(Intent.ACTION_VIEW)
-
-                    i.data = Uri.parse(url2)
-
-                    startActivity(i)
-
-                }
-
-                btn_stworz_konto.setOnClickListener {
-
-                    startActivity<RegisterActivity>()
-
-                }
-
-                btn_send.setOnClickListener {
-
-                    startActivity<LoginActivity>()
-
-                }
-
-                btn_facebook.setOnClickListener {
-
-                    alertDialog.show()
-
-                    LoginManager.getInstance().logInWithReadPermissions(this@LoginMenuActivity, Arrays.asList("email","user_gender","user_friends","public_profile"))
-                    LoginManager.getInstance().registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
-
-                        override fun onSuccess(loginResult: LoginResult) {
-
-                            handleFacebookAccessToken(loginResult.accessToken)
-                            makeGraphRequest(loginResult.accessToken)
-
-                        }
-
-                        override fun onCancel() {
-
-                            alertDialog.dismiss()
-
-                            SnackBarUtil.setActivitySnack("Anulowano logowanie za pomocą FB", ColorSnackBar.ERROR, R.drawable.ic_error_, view) { }
-                        }
-
-                        override fun onError(error: FacebookException) {
-
-                            if (error is FacebookAuthorizationException) {
-                                if (AccessToken.getCurrentAccessToken() != null) {
-                                    LoginManager.getInstance().logOut()
-
-                                    SnackBarUtil.setActivitySnack("Wylogowano z poprzedniego konta, spróbuj zalogować się ponownie", ColorSnackBar.WARING, R.drawable.ic_error_, view) { }
-
-                                    return
-                                }
-                            }
-
-                            alertDialog.dismiss()
-
-                            SnackBarUtil.setActivitySnack("Nie udało się zalogować", ColorSnackBar.ERROR, R.drawable.ic_error_, view) { }
-
-                        }
-                    })
-
-                }
+                initialize()
 
             }
 
             override fun onAdOpened() {
 
-                setContentView(R.layout.activity_login_menu)
-
-                callbackManager = CallbackManager.Factory.create()
-
-                auth = FirebaseAuth.getInstance()
-
-                FacebookSdk.sdkInitialize(applicationContext)
-                AppEventsLogger.activateApp(this@LoginMenuActivity)
-
-                val dialogBuilder = AlertDialog.Builder(this@LoginMenuActivity,
-                    R.style.Base_Theme_MaterialComponents_Dialog
-                )
-                val inflater = this@LoginMenuActivity.layoutInflater
-                val dialogView = inflater.inflate(R.layout.dialog_loading_login, null)
-                dialogBuilder.setView(dialogView)
-
-                alertDialog = dialogBuilder.create()
-                alertDialog.window?.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.colorTranspery)))
-                alertDialog.setCanceledOnTouchOutside(false)
-                alertDialog.setCancelable(false)
-
-                textView11.setOnClickListener {
-
-                    val url = "http://idappstudio.pl/privacy_policy.html"
-                    val i = Intent(Intent.ACTION_VIEW)
-
-                    i.data = Uri.parse(url)
-
-                    startActivity(i)
-
-                }
-
-                textView15.setOnClickListener {
-
-                    val url2 = "http://idappstudio.pl/terms_and_conditions.html"
-                    val i = Intent(Intent.ACTION_VIEW)
-
-                    i.data = Uri.parse(url2)
-
-                    startActivity(i)
-
-                }
-
-                btn_stworz_konto.setOnClickListener {
-
-                    startActivity<RegisterActivity>()
-
-                }
-
-                btn_send.setOnClickListener {
-
-                    startActivity<LoginActivity>()
-
-                }
-
-                btn_facebook.setOnClickListener {
-
-                    alertDialog.show()
-
-                    LoginManager.getInstance().logInWithReadPermissions(this@LoginMenuActivity, Arrays.asList("email","user_gender","user_friends","public_profile"))
-                    LoginManager.getInstance().registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
-
-                        override fun onSuccess(loginResult: LoginResult) {
-
-                            handleFacebookAccessToken(loginResult.accessToken)
-                            makeGraphRequest(loginResult.accessToken)
-
-                        }
-
-                        override fun onCancel() {
-
-                            alertDialog.dismiss()
-
-                            SnackBarUtil.setActivitySnack("Anulowano logowanie za pomocą FB", ColorSnackBar.ERROR, R.drawable.ic_error_, view) { }
-                        }
-
-                        override fun onError(error: FacebookException) {
-
-                            if (error is FacebookAuthorizationException) {
-                                if (AccessToken.getCurrentAccessToken() != null) {
-                                    LoginManager.getInstance().logOut()
-
-                                    SnackBarUtil.setActivitySnack("Wylogowano z poprzedniego konta, spróbuj zalogować się ponownie", ColorSnackBar.WARING, R.drawable.ic_error_, view) { }
-
-                                    return
-                                }
-                            }
-
-                            alertDialog.dismiss()
-
-                            SnackBarUtil.setActivitySnack("Nie udało się zalogować", ColorSnackBar.ERROR, R.drawable.ic_error_, view) { }
-
-                        }
-                    })
-
-                }
-
             }
 
             override fun onAdLeftApplication() {
 
+                setContentView(R.layout.activity_login_menu)
+
+                initialize()
+
             }
 
             override fun onAdClosed() {
+
                 adManager.createAd(this@LoginMenuActivity, resources.getString(R.string.adMob_login_ad_id))
+
             }
+        }
+
+    }
+
+    fun initialize(){
+
+        callbackManager = CallbackManager.Factory.create()
+
+        auth = FirebaseAuth.getInstance()
+
+        FacebookSdk.sdkInitialize(applicationContext)
+        AppEventsLogger.activateApp(this@LoginMenuActivity)
+
+        val dialogBuilder = AlertDialog.Builder(this@LoginMenuActivity,
+            R.style.Base_Theme_MaterialComponents_Dialog
+        )
+        val inflater = this@LoginMenuActivity.layoutInflater
+        val dialogView = inflater.inflate(R.layout.dialog_loading_login, null)
+        dialogBuilder.setView(dialogView)
+
+        alertDialog = dialogBuilder.create()
+        alertDialog.window?.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.colorTranspery)))
+        alertDialog.setCanceledOnTouchOutside(false)
+        alertDialog.setCancelable(false)
+
+        textView11.setOnClickListener {
+
+            val url = "http://idappstudio.pl/privacy_policy.html"
+            val i = Intent(Intent.ACTION_VIEW)
+
+            i.data = Uri.parse(url)
+
+            startActivity(i)
+
+        }
+
+        textView15.setOnClickListener {
+
+            val url2 = "http://idappstudio.pl/terms_and_conditions.html"
+            val i = Intent(Intent.ACTION_VIEW)
+
+            i.data = Uri.parse(url2)
+
+            startActivity(i)
+
+        }
+
+        btn_stworz_konto.setOnClickListener {
+
+            startActivity<RegisterActivity>()
+
+        }
+
+        btn_send.setOnClickListener {
+
+            startActivity<LoginActivity>()
+
+        }
+
+        btn_facebook.setOnClickListener {
+
+            alertDialog.show()
+
+            LoginManager.getInstance().logInWithReadPermissions(this@LoginMenuActivity, Arrays.asList("email","user_gender","user_friends","public_profile"))
+            LoginManager.getInstance().registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
+
+                override fun onSuccess(loginResult: LoginResult) {
+
+                    handleFacebookAccessToken(loginResult.accessToken)
+                    makeGraphRequest(loginResult.accessToken)
+
+                }
+
+                override fun onCancel() {
+
+                    alertDialog.dismiss()
+
+                    SnackBarUtil.setActivitySnack("Anulowano logowanie za pomocą FB", ColorSnackBar.ERROR, R.drawable.ic_error_, view) { }
+                }
+
+                override fun onError(error: FacebookException) {
+
+                    if (error is FacebookAuthorizationException) {
+                        if (AccessToken.getCurrentAccessToken() != null) {
+                            LoginManager.getInstance().logOut()
+
+                            SnackBarUtil.setActivitySnack("Wylogowano z poprzedniego konta, spróbuj zalogować się ponownie", ColorSnackBar.WARING, R.drawable.ic_error_, view) { }
+
+                            return
+                        }
+                    }
+
+                    alertDialog.dismiss()
+
+                    SnackBarUtil.setActivitySnack("Nie udało się zalogować", ColorSnackBar.ERROR, R.drawable.ic_error_, view) { }
+
+                }
+            })
+
         }
 
     }

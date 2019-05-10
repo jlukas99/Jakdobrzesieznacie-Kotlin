@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Pair
 import android.view.View
 import android.view.Window
+import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
@@ -140,6 +141,13 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
         val nameTransitionName = extras.getString(EXTRA_USER_NAME_TRANSITION_NAME)
         val btnChatTransitionName = extras.getString(EXTRA_USER_BTN_CHAT_TRANSITION_NAME)
         val btnFavoriteTransitionName = extras.getString(EXTRA_USER_BTN_FAVORITE_TRANSITION_NAME)
+
+        val back_btn = linearLayout4.findViewById<ImageButton>(R.id.back_btn)
+        back_btn.setOnClickListener {
+
+            onBackPressed()
+
+        }
 
         statsFriend()
         statsUser()

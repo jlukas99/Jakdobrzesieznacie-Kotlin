@@ -4,7 +4,10 @@ import android.app.Dialog
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.*
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import android.view.Window
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
@@ -13,7 +16,6 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.*
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Section
@@ -43,10 +45,11 @@ class InvitesFragment : androidx.fragment.app.Fragment(), ClickInviteListener {
             val view = view?.rootView
 
             if(view != null) {
+
                 SnackBarUtil.setActivitySnack(
-                    "Wysłano zaproszenia od ${user.name}",
+                    resources.getString(R.string.sended_invite, user.name),
                     ColorSnackBar.SUCCES,
-                    R.drawable.ic_iconfinder_arrow_forward_216442,
+                    R.drawable.ic_forward,
                     view) { }
             }
 
@@ -55,8 +58,9 @@ class InvitesFragment : androidx.fragment.app.Fragment(), ClickInviteListener {
             val view = view?.rootView
 
             if(view != null) {
+
                 SnackBarUtil.setActivitySnack(
-                    "Nie udało się wysłać zaproszenia, bądź już dostałeś zaproszenie od tej osoby",
+                    resources.getString(R.string.sended_invite_error),
                     ColorSnackBar.ERROR,
                     R.drawable.ic_error_,
                     view) { }
@@ -97,8 +101,9 @@ class InvitesFragment : androidx.fragment.app.Fragment(), ClickInviteListener {
                             val view = view?.rootView
 
                             if(view != null) {
+                                resources.getString(R.string.add_friend)
                                 SnackBarUtil.setActivitySnack(
-                                    "Dodano ${user.name} do znajomych",
+                                    resources.getString(R.string.add_friend, user.name),
                                     ColorSnackBar.SUCCES,
                                     R.drawable.ic_add_friends_icon,
                                     view) { }
@@ -112,7 +117,7 @@ class InvitesFragment : androidx.fragment.app.Fragment(), ClickInviteListener {
 
                         if(view != null) {
                             SnackBarUtil.setActivitySnack(
-                                "Wystąpił błąd podczas dodawania",
+                                resources.getString(R.string.add_friend_error),
                                 ColorSnackBar.ERROR,
                                 R.drawable.ic_error_,
                                 view) { }
@@ -136,7 +141,7 @@ class InvitesFragment : androidx.fragment.app.Fragment(), ClickInviteListener {
 
                     if(view != null) {
                         SnackBarUtil.setActivitySnack(
-                            "Odrzucono zaproszenie od ${user.name}",
+                            resources.getString(R.string.reject_invites, user.name),
                             ColorSnackBar.WARING,
                             R.drawable.ic_remove,
                             view) { }
@@ -258,8 +263,8 @@ class InvitesFragment : androidx.fragment.app.Fragment(), ClickInviteListener {
         recyclerInvite.itemAnimator = SlideInDownAnimator()
         recyclerSearch.itemAnimator = SlideInDownAnimator()
 
-        inviteHeader.head_title_text.text = "PROŚBY O DODANIE"
-        searchHeader.head_title_text.text = "WYSZUKIWARKA"
+        inviteHeader.head_title_text.text = resources.getString(R.string.requests_for_adding)
+        searchHeader.head_title_text.text = resources.getString(R.string.search)
 
         recyclerInvite.adapter = inviteAdapter
         recyclerSearch.adapter = searchAdapter
@@ -354,8 +359,8 @@ class InvitesFragment : androidx.fragment.app.Fragment(), ClickInviteListener {
             textSearch.visibility = View.VISIBLE
             imageSearch.visibility = View.VISIBLE
 
-            textSearch.text = "Wpisz nick znajomego\nuwzględniając duże litery"
-            imageSearch.setImageResource(R.drawable.ic_iconfinder_arrow_forward_216442)
+            textSearch.text = resources.getString(R.string.enter_friends_nick_text)
+            imageSearch.setImageResource(R.drawable.ic_forward)
 
             onComplete()
 
@@ -555,7 +560,7 @@ class InvitesFragment : androidx.fragment.app.Fragment(), ClickInviteListener {
 
     private fun checkInviteList(onComplete: () -> Unit) {
 
-        if (!inviteItems.isEmpty()) {
+        if (inviteItems.isNotEmpty()) {
 
             inviteHeader.visibility = View.VISIBLE
 

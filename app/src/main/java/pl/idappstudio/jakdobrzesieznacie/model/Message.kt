@@ -4,7 +4,7 @@ object NotificationType {
 
     const val INVITE = "INVITE"
     const val GAME = "GAME"
-    const val MESSAGE = "MESSAGE"
+//    const val MESSAGE = "MESSAGE"
 
 }
 

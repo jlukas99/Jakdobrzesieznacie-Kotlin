@@ -47,7 +47,7 @@
                 android:layout_weight="1"/>
 
         <TextView
-                android:text="zgłoś pytanie"
+                android:text="@string/report_question_dialog"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/textView"
@@ -82,7 +82,8 @@
             app:layout_constraintStart_toStartOf="@+id/linearLayout"
             android:src="@drawable/ic_error_"
             app:layout_constraintEnd_toEndOf="@+id/linearLayout"
-            android:layout_marginTop="16dp"/>
+            android:layout_marginTop="16dp"
+            android:contentDescription="@string/report_question_dialog"/>
 
     <EditText
             android:layout_width="0dp"
@@ -94,7 +95,7 @@
             android:textSize="18sp"
             app:layout_constraintEnd_toEndOf="@+id/addFriends"
             android:inputType="textMultiLine|text"
-            android:hint="wpisz powód zgłoszenia"
+            android:hint="@string/reason_hint"
             android:layout_marginBottom="32dp"
             app:layout_constraintBottom_toTopOf="@+id/addFriends"
             app:layout_constraintStart_toStartOf="@+id/addFriends"
@@ -109,7 +110,7 @@
             android:layout_height="wrap_content"
             android:id="@+id/profile_name3"
             android:singleLine="false"
-            android:text="Powód zgłoszenia?"
+            android:text="@string/report_text"
             android:textAlignment="center"
             android:textColor="@color/colorWhite"
             android:textSize="18sp"
@@ -123,23 +124,24 @@
             android:layout_height="wrap_content"
             android:id="@+id/profile_name4"
             android:singleLine="false"
-            android:text="ID Pytania:"
+            android:text="@string/question_id"
             android:textAlignment="center"
             android:textColor="@color/colorLigth"
             android:textSize="10sp"
             app:layout_constraintStart_toStartOf="@+id/profile_name2"
             app:layout_constraintEnd_toEndOf="@+id/profile_name2"
             app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintTop_toBottomOf="@+id/profile_name3"/>
+            app:layout_constraintTop_toBottomOf="@+id/profile_name3"
+            tools:ignore="SmallSp"/>
 
     <com.google.android.material.button.MaterialButton
             android:id="@+id/deleteFriends"
             android:layout_width="0dp"
             android:layout_height="38.66dp"
-            android:text="anuluj"
+            android:text="@string/cancel"
             app:cornerRadius="100dp"
             app:layout_constraintEnd_toEndOf="parent"
-            android:textSize="11sp"
+            android:textSize="12sp"
             android:textAlignment="center"
             android:textAllCaps="true"
             android:typeface="normal"
@@ -165,11 +167,11 @@
             android:id="@+id/addFriends"
             android:layout_width="0dp"
             android:layout_height="38.66dp"
-            android:text="Wyślij zgłoszenie"
+            android:text="@string/send_report"
             app:cornerRadius="100dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:backgroundTint="@color/colorAccent"
-            android:textSize="11sp"
+            android:textSize="12sp"
             android:textAlignment="center"
             android:textAllCaps="true"
             android:typeface="normal"

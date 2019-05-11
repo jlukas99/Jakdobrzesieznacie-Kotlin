@@ -1,6 +1,7 @@
 package pl.idappstudio.jakdobrzesieznacie.adapter
 
 import android.content.Context
+import androidx.core.content.ContextCompat
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
@@ -20,7 +21,7 @@ class InviteAdapater(private val user: FriendItem, private val context: Context,
     override fun bind(holder: ViewHolder, position: Int) {
 
         holder.imageView2.setImageResource(R.drawable.input_overlay)
-        holder.friends_profile.borderColor = context.resources.getColor(R.color.colorCorrectAnswer)
+        holder.friends_profile.borderColor = ContextCompat.getColor(context, R.color.colorCorrectAnswer)
         holder.image_passa.setImageResource(R.drawable.ic_add_friends_icon)
         holder.imageView5.setImageResource(R.drawable.input_overlay_icon)
 

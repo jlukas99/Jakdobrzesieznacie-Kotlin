@@ -13,8 +13,8 @@ import org.jetbrains.anko.startActivity
 import pl.idappstudio.jakdobrzesieznacie.R
 import pl.idappstudio.jakdobrzesieznacie.util.AdMobUtil
 import pl.idappstudio.jakdobrzesieznacie.util.UserUtil
-import kotlin.concurrent.schedule
 import java.util.*
+import kotlin.concurrent.schedule
 
 
 class IntroActivity : Activity() {

@@ -1,28 +1,35 @@
 package pl.idappstudio.jakdobrzesieznacie.fragments.stages
 
+import android.annotation.SuppressLint
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
+import android.text.Editable
+import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
+import kotlinx.android.synthetic.main.fragment_stage_three_own_question.*
 import pl.idappstudio.jakdobrzesieznacie.R
-import pl.idappstudio.jakdobrzesieznacie.model.UserQuestionData
-import android.text.Editable
-import android.text.TextWatcher
-import android.widget.*
 import pl.idappstudio.jakdobrzesieznacie.activity.GameActivity.Companion.friends
 import pl.idappstudio.jakdobrzesieznacie.activity.GameActivity.Companion.friendsStats
 import pl.idappstudio.jakdobrzesieznacie.activity.GameActivity.Companion.game
 import pl.idappstudio.jakdobrzesieznacie.activity.GameActivity.Companion.userStats
-import pl.idappstudio.jakdobrzesieznacie.interfaces.nextFragment
+import pl.idappstudio.jakdobrzesieznacie.enums.ColorSnackBar
+import pl.idappstudio.jakdobrzesieznacie.interfaces.NextFragment
 import pl.idappstudio.jakdobrzesieznacie.model.InviteNotificationMessage
 import pl.idappstudio.jakdobrzesieznacie.model.Message
 import pl.idappstudio.jakdobrzesieznacie.model.NotificationType
+import pl.idappstudio.jakdobrzesieznacie.model.UserQuestionData
 import pl.idappstudio.jakdobrzesieznacie.util.FirestoreUtil
 import pl.idappstudio.jakdobrzesieznacie.util.GameUtil
+import pl.idappstudio.jakdobrzesieznacie.util.SnackBarUtil
 import pl.idappstudio.jakdobrzesieznacie.util.UserUtil
 
-class StageThreeOwnQuestionFragment(private val listener: nextFragment) : androidx.fragment.app.Fragment(), TextWatcher {
+class StageThreeOwnQuestionFragment(private val listener: NextFragment) : androidx.fragment.app.Fragment(),
+    TextWatcher {
 
     override fun afterTextChanged(s: Editable?) {
 
@@ -50,7 +57,6 @@ class StageThreeOwnQuestionFragment(private val listener: nextFragment) : androi
     private lateinit var cAnswerCheck: ImageView
     private lateinit var dAnswerCheck: ImageView
 
-    private lateinit var snackbar: Snackbar
     private lateinit var nextQuestion: Button
 
     private var questionList: ArrayList<UserQuestionData> = ArrayList()
@@ -89,40 +95,49 @@ class StageThreeOwnQuestionFragment(private val listener: nextFragment) : androi
         cAnswerText.addTextChangedListener(this)
         dAnswerText.addTextChangedListener(this)
 
-        stageTitle.text = "Stwórz Pytania"
+        stageTitle.text = resources.getString(R.string.create_question)
 
         listener.showFragment()
 
         return rootView
     }
 
-    fun checkAnswers() {
+    private fun checkAnswers() {
 
         if(!questionText.text.isNullOrBlank()) {
 
             if(aAnswerText.text.isNullOrBlank()){
 
-                snackbar = Snackbar.make(this.view!!, "Uzupełnij odpowiedź A", 2500)
-                snackbar.view.setBackgroundColor(resources.getColor(R.color.colorRed))
-                snackbar.show()
+                SnackBarUtil.setActivitySnack(
+                    resources.getString(R.string.enter_answer_a),
+                    ColorSnackBar.ERROR,
+                    R.drawable.ic_edit_text,
+                    gameStageTitle
+                ) {}
 
                 return
             }
 
             if(bAnswerText.text.isNullOrBlank()){
 
-                snackbar = Snackbar.make(this.view!!, "Uzupełnij odpowiedź B", 2500)
-                snackbar.view.setBackgroundColor(resources.getColor(R.color.colorRed))
-                snackbar.show()
+                SnackBarUtil.setActivitySnack(
+                    resources.getString(R.string.enter_answer_b),
+                    ColorSnackBar.ERROR,
+                    R.drawable.ic_edit_text,
+                    gameStageTitle
+                ) {}
 
                 return
             }
 
             if(!(aAnswerCheck.tag == "canswer" || bAnswerCheck.tag == "canswer" || cAnswerCheck.tag == "canswer" || dAnswerCheck.tag == "canswer")){
 
-                snackbar = Snackbar.make(this.view!!, "Kliknij na ptaszek przy treści odpowiedzi, aby zaznaczyć która odpowiedź jest prawidłowa", 5000)
-                snackbar.view.setBackgroundColor(resources.getColor(R.color.colorRed))
-                snackbar.show()
+                SnackBarUtil.setActivitySnack(
+                    resources.getString(R.string.select_correct_answer),
+                    ColorSnackBar.ERROR,
+                    R.drawable.ic_error_,
+                    gameStageTitle
+                ) {}
 
                 return
             }
@@ -138,23 +153,23 @@ class StageThreeOwnQuestionFragment(private val listener: nextFragment) : androi
                 ca = aAnswerText.text.toString()
                 ba1 = bAnswerText.text.toString()
 
-                if (!cAnswerText.text.isNullOrBlank()) {
+                ba2 = if (!cAnswerText.text.isNullOrBlank()) {
 
-                    ba2 = cAnswerText.text.toString()
+                    cAnswerText.text.toString()
 
                 } else {
 
-                    ba2 = ""
+                    ""
 
                 }
 
-                if (!dAnswerText.text.isNullOrBlank()) {
+                ba3 = if (!dAnswerText.text.isNullOrBlank()) {
 
-                    ba3 = dAnswerText.text.toString()
+                    dAnswerText.text.toString()
 
                 } else {
 
-                    ba3 = ""
+                    ""
 
                 }
 
@@ -165,23 +180,23 @@ class StageThreeOwnQuestionFragment(private val listener: nextFragment) : androi
                 ca = bAnswerText.text.toString()
                 ba1 = aAnswerText.text.toString()
 
-                if (!cAnswerText.text.isNullOrBlank()) {
+                ba2 = if (!cAnswerText.text.isNullOrBlank()) {
 
-                    ba2 = cAnswerText.text.toString()
+                    cAnswerText.text.toString()
 
                 } else {
 
-                    ba2 = ""
+                    ""
 
                 }
 
-                if (!dAnswerText.text.isNullOrBlank()) {
+                ba3 = if (!dAnswerText.text.isNullOrBlank()) {
 
-                    ba3 = dAnswerText.text.toString()
+                    dAnswerText.text.toString()
 
                 } else {
 
-                    ba3 = ""
+                    ""
 
                 }
 
@@ -193,13 +208,13 @@ class StageThreeOwnQuestionFragment(private val listener: nextFragment) : androi
                 ba1 = aAnswerText.text.toString()
                 ba2 = bAnswerText.text.toString()
 
-                if (!dAnswerText.text.isNullOrBlank()) {
+                ba3 = if (!dAnswerText.text.isNullOrBlank()) {
 
-                    ba3 = dAnswerText.text.toString()
+                    dAnswerText.text.toString()
 
                 } else {
 
-                    ba3 = ""
+                    ""
 
                 }
 
@@ -217,9 +232,12 @@ class StageThreeOwnQuestionFragment(private val listener: nextFragment) : androi
             if(ca.equals(ba1, true) || ca.equals(ba2, true) || ca.equals(ba3, true) ||
                 ba1.equals(ca, true) || ba1.equals(ba2, true) || ba1.equals(ba3, true)) {
 
-                snackbar = Snackbar.make(this.view!!, "Odpowiedzi nie mogą się powtarzać", 2500)
-                snackbar.view.setBackgroundColor(resources.getColor(R.color.colorRed))
-                snackbar.show()
+                SnackBarUtil.setActivitySnack(
+                    resources.getString(R.string.answers_not_repeat),
+                    ColorSnackBar.ERROR,
+                    R.drawable.ic_error_,
+                    gameStageTitle
+                ) {}
 
                 return
 
@@ -227,9 +245,12 @@ class StageThreeOwnQuestionFragment(private val listener: nextFragment) : androi
 
             if((ba2 != "") && (ba2.equals(ca, true) || ba2.equals(ba1, true) || ba2.equals(ba3, true))){
 
-                snackbar = Snackbar.make(this.view!!, "Odpowiedzi nie mogą się powtarzać", 2500)
-                snackbar.view.setBackgroundColor(resources.getColor(R.color.colorRed))
-                snackbar.show()
+                SnackBarUtil.setActivitySnack(
+                    resources.getString(R.string.answers_not_repeat),
+                    ColorSnackBar.ERROR,
+                    R.drawable.ic_error_,
+                    gameStageTitle
+                ) {}
 
                 return
 
@@ -237,9 +258,12 @@ class StageThreeOwnQuestionFragment(private val listener: nextFragment) : androi
 
             if((ba3 != "") && (ba3.equals(ca, true) || ba3.equals(ba2, true) || ba3.equals(ba1, true))){
 
-                snackbar = Snackbar.make(this.view!!, "Odpowiedzi nie mogą się powtarzać", 2500)
-                snackbar.view.setBackgroundColor(resources.getColor(R.color.colorRed))
-                snackbar.show()
+                SnackBarUtil.setActivitySnack(
+                    resources.getString(R.string.answers_not_repeat),
+                    ColorSnackBar.ERROR,
+                    R.drawable.ic_error_,
+                    gameStageTitle
+                ) {}
 
                 return
             }
@@ -255,14 +279,18 @@ class StageThreeOwnQuestionFragment(private val listener: nextFragment) : androi
 
         } else {
 
-            snackbar = Snackbar.make(this.view!!, "Wpisz treść pytania", 2500)
-            snackbar.view.setBackgroundColor(resources.getColor(R.color.colorRed))
-            snackbar.show()
+            SnackBarUtil.setActivitySnack(
+                resources.getString(R.string.enter_question_text),
+                ColorSnackBar.ERROR,
+                R.drawable.ic_edit_text,
+                gameStageTitle
+            ) {}
 
         }
 
     }
 
+    @SuppressLint("PrivateResource")
     fun onClick(){
 
         aAnswerCheck.setOnClickListener {
@@ -272,7 +300,7 @@ class StageThreeOwnQuestionFragment(private val listener: nextFragment) : androi
             cAnswerCheck.tag = "banswer"
             dAnswerCheck.tag = "banswer"
 
-            aAnswerCheck.setImageResource(R.drawable.fui_ic_check_circle_black_128dp)
+            aAnswerCheck.setImageResource(R.drawable.ic_mtrl_chip_checked_circle)
             bAnswerCheck.setImageResource(R.drawable.ic_check_icon)
             cAnswerCheck.setImageResource(R.drawable.ic_check_icon)
             dAnswerCheck.setImageResource(R.drawable.ic_check_icon)
@@ -287,7 +315,7 @@ class StageThreeOwnQuestionFragment(private val listener: nextFragment) : androi
             dAnswerCheck.tag = "banswer"
 
             aAnswerCheck.setImageResource(R.drawable.ic_check_icon)
-            bAnswerCheck.setImageResource(R.drawable.fui_ic_check_circle_black_128dp)
+            bAnswerCheck.setImageResource(R.drawable.ic_mtrl_chip_checked_circle)
             cAnswerCheck.setImageResource(R.drawable.ic_check_icon)
             dAnswerCheck.setImageResource(R.drawable.ic_check_icon)
 
@@ -302,7 +330,7 @@ class StageThreeOwnQuestionFragment(private val listener: nextFragment) : androi
 
             aAnswerCheck.setImageResource(R.drawable.ic_check_icon)
             bAnswerCheck.setImageResource(R.drawable.ic_check_icon)
-            cAnswerCheck.setImageResource(R.drawable.fui_ic_check_circle_black_128dp)
+            cAnswerCheck.setImageResource(R.drawable.ic_mtrl_chip_checked_circle)
             dAnswerCheck.setImageResource(R.drawable.ic_check_icon)
 
         }
@@ -317,13 +345,13 @@ class StageThreeOwnQuestionFragment(private val listener: nextFragment) : androi
             aAnswerCheck.setImageResource(R.drawable.ic_check_icon)
             bAnswerCheck.setImageResource(R.drawable.ic_check_icon)
             cAnswerCheck.setImageResource(R.drawable.ic_check_icon)
-            dAnswerCheck.setImageResource(R.drawable.fui_ic_check_circle_black_128dp)
+            dAnswerCheck.setImageResource(R.drawable.ic_mtrl_chip_checked_circle)
 
         }
 
     }
 
-    fun clear(){
+    private fun clear() {
 
         questionText.text.clear()
 
@@ -351,7 +379,7 @@ class StageThreeOwnQuestionFragment(private val listener: nextFragment) : androi
 
         if(questionList.size == 2){
 
-            nextQuestion.text = "Zakończ swoją turę"
+            nextQuestion.text = resources.getString(R.string.finish_your_turn)
 
         }
 
@@ -359,44 +387,54 @@ class StageThreeOwnQuestionFragment(private val listener: nextFragment) : androi
 
     }
 
-    fun nextQuestion(){
+    private fun nextQuestion() {
 
-        if(questionList.size == 1){
+        when {
+            questionList.size == 1 -> {
 
-            listener.updateNumber(1, true)
-            clear()
+                listener.updateNumber(1, true)
+                clear()
 
-        } else if(questionList.size == 2){
+            }
+            questionList.size == 2 -> {
 
-            listener.updateNumber(2, true)
-            clear()
+                listener.updateNumber(2, true)
+                clear()
 
-        } else if(questionList.size == 3){
+            }
+            questionList.size == 3 -> {
 
-            listener.updateNumber(3, true)
+                listener.updateNumber(3, true)
 
-            GameUtil.sendOwnQuestion(questionList, game, UserUtil.user, friends){
+                GameUtil.sendOwnQuestion(questionList, game, UserUtil.user, friends) {
 
-                if(userStats.games == 0 && friendsStats.games == 1){
+                    if (userStats.games == 0 && friendsStats.games == 1) {
 
-                    GameUtil.notNewGame(game)
+                        GameUtil.notNewGame(game)
+
+                    }
+
+                    GameUtil.updateGame(userStats.games, UserUtil.user.uid, friends.uid)
+                    val msg: Message = InviteNotificationMessage(
+                        resources.getString(R.string.notification_finish_turn_title),
+                        resources.getString(R.string.notification_finish_turn, UserUtil.user.name),
+                        UserUtil.user.uid,
+                        friends.uid,
+                        UserUtil.user.name,
+                        NotificationType.GAME
+                    )
+                    FirestoreUtil.sendMessage(msg, friends.uid)
+
+                    activity?.onBackPressed()
 
                 }
 
-                GameUtil.updateGame(userStats.games, UserUtil.user.uid, friends.uid)
-
-                val msg: Message = InviteNotificationMessage("Twoja kolej!", "${UserUtil.user.name} skończył swoją turę, czas na ciebie!", UserUtil.user.uid, friends.uid,UserUtil.user.name, NotificationType.GAME)
-                FirestoreUtil.sendMessage(msg, friends.uid)
-
-                activity?.onBackPressed()
-
             }
-
         }
 
     }
 
-    fun checkEditText(){
+    private fun checkEditText() {
 
         if(questionText.text.isNullOrBlank()){
 
@@ -460,7 +498,7 @@ class StageThreeOwnQuestionFragment(private val listener: nextFragment) : androi
 
     }
 
-    fun lockEditText(){
+    private fun lockEditText() {
 
         aAnswerText.isEnabled = false
         bAnswerText.isEnabled = false
@@ -469,7 +507,7 @@ class StageThreeOwnQuestionFragment(private val listener: nextFragment) : androi
 
     }
 
-    fun unlockEditText(){
+    private fun unlockEditText() {
 
         questionText.isEnabled = true
         aAnswerText.isEnabled = false

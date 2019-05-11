@@ -12,7 +12,11 @@
     <View
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:background="@drawable/background_dark_overlay" />
+            android:background="@drawable/background_dark_overlay"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"/>
 
     <ImageView
             android:src="@mipmap/logo"
@@ -22,10 +26,10 @@
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="8dp" android:layout_marginTop="8dp"
             app:layout_constraintTop_toTopOf="parent" android:layout_marginBottom="8dp"
             app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.3"
-            android:id="@+id/logo"/>
+            android:id="@+id/logo"
+            android:contentDescription="@string/app_logo"/>
 
     <com.github.ybq.android.spinkit.SpinKitView
-            xmlns:app="http://schemas.android.com/apk/res-auto"
             android:id="@+id/loading"
             style="@style/SpinKitView.ThreeBounce"
             android:layout_width="wrap_content"
@@ -46,6 +50,8 @@
             android:layout_marginEnd="8dp" android:layout_marginTop="8dp" app:layout_constraintTop_toTopOf="parent"
             android:src="@mipmap/logo_idapp"
             android:layout_marginStart="8dp"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="1.0" />
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="1.0"
+            android:contentDescription="@string/company_logo"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

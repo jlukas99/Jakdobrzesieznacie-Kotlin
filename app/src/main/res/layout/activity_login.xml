@@ -38,7 +38,8 @@
                 android:layout_marginStart="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:layout_marginEnd="8dp"
-                app:layout_constraintTop_toTopOf="parent"/>
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/app_logo"/>
 
         <LinearLayout
                 android:orientation="horizontal"
@@ -66,7 +67,7 @@
                     android:layout_weight="1"/>
 
             <TextView
-                    android:text="ZALOGUJ"
+                    android:text="@string/log_in"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/textView"
@@ -76,7 +77,8 @@
                     android:layout_marginStart="8dp"
                     android:textSize="20sp"
                     android:fontFamily="@font/varela_round"
-                    android:typeface="normal"/>
+                    android:typeface="normal"
+                    android:textAllCaps="true"/>
 
             <View
                     android:layout_height="2dp"
@@ -97,7 +99,7 @@
                 android:layout_height="39dp"
                 android:inputType="textEmailAddress"
                 android:id="@+id/emailInput"
-                android:hint="Email"
+                android:hint="@string/email"
                 android:singleLine="true"
                 android:background="@drawable/input_overlay"
                 android:layout_marginStart="32dp"
@@ -108,8 +110,9 @@
                 app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
                 android:textSize="12sp"
                 android:fontFamily="@font/varela_round"
-                android:paddingLeft="54dp"
-                android:paddingEnd="8dp"/>
+                android:paddingStart="54dp"
+                android:paddingEnd="8dp"
+                tools:ignore="Autofill"/>
 
         <ImageView
                 android:src="@mipmap/email_icon"
@@ -121,13 +124,14 @@
                 app:layout_constraintStart_toStartOf="@+id/emailInput"
                 app:layout_constraintTop_toTopOf="@+id/emailInput"
                 app:layout_constraintBottom_toBottomOf="@+id/emailInput"
-                app:layout_constraintVertical_bias="0.0"/>
+                app:layout_constraintVertical_bias="0.0"
+                android:contentDescription="@string/email_image"/>
 
         <EditText
                 android:layout_width="264.09dp"
                 android:layout_height="39dp"
                 android:id="@+id/passwordInput"
-                android:hint="Hasło"
+                android:hint="@string/password"
                 android:singleLine="true"
                 android:background="@drawable/input_overlay"
                 android:layout_marginStart="32dp"
@@ -136,12 +140,12 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 android:textSize="12sp"
                 android:fontFamily="@font/varela_round"
-                android:paddingLeft="54dp"
+                android:paddingStart="54dp"
                 android:layout_marginTop="8dp"
                 app:layout_constraintTop_toBottomOf="@+id/emailInput"
                 android:inputType="textPassword"
                 android:paddingEnd="8dp"
-                />
+                tools:ignore="Autofill"/>
 
         <ImageView
                 android:src="@mipmap/password_icon"
@@ -153,13 +157,14 @@
                 app:layout_constraintTop_toTopOf="@+id/passwordInput"
                 app:layout_constraintBottom_toBottomOf="@+id/passwordInput"
                 app:layout_constraintStart_toStartOf="@+id/passwordInput"
-                app:layout_constraintVertical_bias="0.0"/>
+                app:layout_constraintVertical_bias="0.0"
+                android:contentDescription="@string/password_image"/>
 
         <com.google.android.material.button.MaterialButton
                 android:id="@+id/btn_send"
                 android:layout_width="264.09dp"
                 android:layout_height="38.66dp"
-                android:text="ZALOGUJ"
+                android:text="@string/log_in"
                 app:cornerRadius="100dp"
                 app:layout_constraintStart_toStartOf="parent"
                 android:layout_marginStart="32dp"
@@ -168,7 +173,7 @@
                 app:backgroundTint="@color/colorPrimary"
                 android:insetBottom="0dp"
                 android:insetTop="0dp"
-                android:textSize="11sp"
+                android:textSize="12sp"
                 android:textAlignment="center"
                 android:textAllCaps="true"
                 android:typeface="normal"
@@ -183,7 +188,7 @@
                 android:id="@+id/btn_register"
                 app:layout_constraintStart_toStartOf="parent"
                 android:fontFamily="@font/varela_round"
-                android:textSize="11sp"
+                android:textSize="12sp"
                 android:textAlignment="center"
                 app:layout_constraintTop_toBottomOf="@+id/btn_send"
                 android:layout_marginTop="16dp"
@@ -201,7 +206,7 @@
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 android:fontFamily="@font/varela_round"
-                android:textSize="11sp"
+                android:textSize="12sp"
                 android:textAlignment="center"
                 android:layout_marginStart="32dp"
                 android:layout_marginEnd="32dp"
@@ -212,4 +217,5 @@
                 android:layout_marginTop="4dp"/>
 
     </androidx.constraintlayout.widget.ConstraintLayout>
+
 </androidx.constraintlayout.widget.ConstraintLayout>

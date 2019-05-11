@@ -2,14 +2,12 @@ package pl.idappstudio.jakdobrzesieznacie.fragments
 
 
 import android.os.Bundle
-import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import androidx.core.content.ContextCompat
 import pl.idappstudio.jakdobrzesieznacie.R
-import pl.idappstudio.jakdobrzesieznacie.util.FirestoreUtil
 
 class AchivmentsFragment : androidx.fragment.app.Fragment() {
 
@@ -24,10 +22,6 @@ class AchivmentsFragment : androidx.fragment.app.Fragment() {
             ), android.graphics.PorterDuff.Mode.SRC_IN)
 
         return rootView
-    }
-
-    companion object {
-        fun newInstance(): AchivmentsFragment = AchivmentsFragment()
     }
 
 }

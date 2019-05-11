@@ -19,7 +19,8 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0"/>
+            app:layout_constraintVertical_bias="0.0"
+            tools:ignore="ContentDescription"/>
 
     <TextView
             android:id="@+id/pack_name"
@@ -30,7 +31,8 @@
             android:transitionName="anim_name_profile"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            android:text="..." android:singleLine="true"
+            android:text="@string/blank"
+            android:singleLine="true"
             android:layout_marginEnd="8dp" app:layout_constraintEnd_toStartOf="@+id/btn_delete_pack"
             app:layout_constraintStart_toEndOf="@+id/imageView8" android:layout_marginStart="8dp"/>
 
@@ -40,7 +42,9 @@
             android:layout_height="50dp" app:srcCompat="@drawable/ic_pack_icon" android:id="@+id/imageView8"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintStart_toStartOf="parent"
-            android:background="@drawable/input_overlay_white" android:padding="15dp"/>
+            android:background="@drawable/input_overlay_white"
+            android:padding="15dp"
+            tools:ignore="ContentDescription"/>
 
 
     <ImageButton
@@ -58,7 +62,8 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_hide_icon"/>
+            app:srcCompat="@drawable/ic_hide_icon"
+            tools:ignore="ContentDescription"/>
 
     <ImageButton
             android:id="@+id/btn_delete_pack"
@@ -72,6 +77,7 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@+id/btn_edit_pack"
             app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/ic_6a8d83618b"/>
+            app:srcCompat="@drawable/ic_trash"
+            tools:ignore="ContentDescription"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

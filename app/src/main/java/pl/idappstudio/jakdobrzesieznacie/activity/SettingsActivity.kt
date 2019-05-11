@@ -3,32 +3,26 @@ package pl.idappstudio.jakdobrzesieznacie.activity
 import android.app.Activity
 import android.app.AlertDialog
 import android.content.Intent
-import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
-import android.view.View
-import kotlinx.android.synthetic.main.activity_settings.*
-import pl.idappstudio.jakdobrzesieznacie.R
-import pl.idappstudio.jakdobrzesieznacie.util.FirestoreUtil
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.net.Uri
-import android.os.Handler
-import android.os.Message
+import android.os.Bundle
 import android.provider.MediaStore
-import android.util.Log
-import android.view.KeyEvent
-import com.google.android.material.snackbar.Snackbar
-import android.widget.ArrayAdapter
+import android.view.View
 import android.widget.CompoundButton
-import com.firebase.ui.auth.data.model.User
+import androidx.appcompat.app.AppCompatActivity
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.android.synthetic.main.activity_settings.*
+import pl.idappstudio.jakdobrzesieznacie.R
 import pl.idappstudio.jakdobrzesieznacie.enums.ColorSnackBar
 import pl.idappstudio.jakdobrzesieznacie.enums.StatusMessage
 import pl.idappstudio.jakdobrzesieznacie.util.SnackBarUtil
 import pl.idappstudio.jakdobrzesieznacie.util.StorgeUtil
 import pl.idappstudio.jakdobrzesieznacie.util.UserUtil
 import java.io.ByteArrayOutputStream
+import java.util.*
+import kotlin.concurrent.schedule
 
 class SettingsActivity : AppCompatActivity() {
 
@@ -46,7 +40,12 @@ class SettingsActivity : AppCompatActivity() {
 
             if(save_button.visibility == View.VISIBLE || save_image.visibility == View.VISIBLE || save_gender.visibility == View.VISIBLE){
 
-                SnackBarUtil.setActivitySnack("Posiadasz nie zapisane zmiany", ColorSnackBar.ERROR, R.drawable.ic_error_, it){ }
+                SnackBarUtil.setActivitySnack(
+                    resources.getString(R.string.not_saved),
+                    ColorSnackBar.ERROR,
+                    R.drawable.ic_error_,
+                    it
+                ) { }
 
             } else {
 
@@ -149,11 +148,21 @@ class SettingsActivity : AppCompatActivity() {
 
                     if (it.isSuccessful) {
 
-                        SnackBarUtil.setActivitySnack("Pomyślnie zmieniono nick", ColorSnackBar.SUCCES, R.drawable.ic_check_icon, it2){ }
+                        SnackBarUtil.setActivitySnack(
+                            resources.getString(R.string.change_your_nick_successful),
+                            ColorSnackBar.SUCCES,
+                            R.drawable.ic_check_icon,
+                            it2
+                        ) { }
 
                     } else {
 
-                        SnackBarUtil.setActivitySnack("Nie udało się zmienić nicku", ColorSnackBar.ERROR, R.drawable.ic_error_, it2){ }
+                        SnackBarUtil.setActivitySnack(
+                            resources.getString(R.string.change_your_nick_error),
+                            ColorSnackBar.ERROR,
+                            R.drawable.ic_error_,
+                            it2
+                        ) { }
 
                     }
 
@@ -172,13 +181,23 @@ class SettingsActivity : AppCompatActivity() {
 
                     new_nick.setText("")
 
-                    SnackBarUtil.setActivitySnack("Nie udało się zmienić nicku", ColorSnackBar.ERROR, R.drawable.ic_error_, it2){ }
+                    SnackBarUtil.setActivitySnack(
+                        resources.getString(R.string.change_your_nick_error),
+                        ColorSnackBar.ERROR,
+                        R.drawable.ic_error_,
+                        it2
+                    ) { }
 
                 }
 
             } else {
 
-                new_nick.error = "Nick musi składać sie przynajmniej z 2 znaków"
+                SnackBarUtil.setActivitySnack(
+                    resources.getString(R.string.change_your_nick_info),
+                    ColorSnackBar.ERROR,
+                    R.drawable.ic_error_,
+                    it2
+                ) { }
 
                 loading_nick.visibility = View.GONE
                 new_nick.isEnabled = true
@@ -202,11 +221,16 @@ class SettingsActivity : AppCompatActivity() {
 
                 }
 
-                startActivityForResult(Intent.createChooser(intent, "Wybierz zdjęcie"), 2)
+                startActivityForResult(Intent.createChooser(intent, resources.getString(R.string.select_picture)), 2)
 
             } else {
 
-                SnackBarUtil.setActivitySnack("Nie możesz zmienić avataru, ponieważ jesteś zalogowany przez Facebook'a", ColorSnackBar.ERROR, R.drawable.ic_error_, it){ }
+                SnackBarUtil.setActivitySnack(
+                    resources.getString(R.string.select_picture_fb_info),
+                    ColorSnackBar.ERROR,
+                    R.drawable.ic_error_,
+                    it
+                ) { }
 
             }
 
@@ -235,9 +259,14 @@ class SettingsActivity : AppCompatActivity() {
 
                         if (it.isSuccessful){
 
-                            SnackBarUtil.setActivitySnack("Pomyślnie zmieniono zdjęcie", ColorSnackBar.SUCCES, R.drawable.ic_check_icon, it2){ }
+                            SnackBarUtil.setActivitySnack(
+                                resources.getString(R.string.change_your_avatar_successful),
+                                ColorSnackBar.SUCCES,
+                                R.drawable.ic_check_icon,
+                                it2
+                            ) { }
 
-                            text_image.text = "Zmień swój avatar"
+                            text_image.text = resources.getString(R.string.change_your_avatar)
 
                             button_image.visibility = View.VISIBLE
                             save_image.visibility = View.GONE
@@ -248,9 +277,14 @@ class SettingsActivity : AppCompatActivity() {
 
                         } else {
 
-                            SnackBarUtil.setActivitySnack("Nie udało się zmienić zdjęcia", ColorSnackBar.ERROR, R.drawable.ic_error_, it2){ }
+                            SnackBarUtil.setActivitySnack(
+                                resources.getString(R.string.change_your_avatar_error),
+                                ColorSnackBar.ERROR,
+                                R.drawable.ic_error_,
+                                it2
+                            ) { }
 
-                            text_image.text = "Zmień swój avatar"
+                            text_image.text = resources.getString(R.string.change_your_avatar)
 
                             button_image.visibility = View.VISIBLE
                             save_image.visibility = View.GONE
@@ -263,9 +297,14 @@ class SettingsActivity : AppCompatActivity() {
 
                     }.addOnFailureListener {
 
-                        SnackBarUtil.setActivitySnack("Nie udało się zmienić zdjęcia", ColorSnackBar.ERROR, R.drawable.ic_error_, it2){ }
+                        SnackBarUtil.setActivitySnack(
+                            resources.getString(R.string.change_your_avatar_error),
+                            ColorSnackBar.ERROR,
+                            R.drawable.ic_error_,
+                            it2
+                        ) { }
 
-                        text_image.text = "Zmień swój avatar"
+                        text_image.text = resources.getString(R.string.change_your_avatar)
 
                         button_image.visibility = View.VISIBLE
                         save_image.visibility = View.GONE
@@ -280,7 +319,7 @@ class SettingsActivity : AppCompatActivity() {
 
             } else {
 
-                text_image.text = "Zmień swój avatar"
+                text_image.text = resources.getString(R.string.change_your_avatar)
 
                 button_image.visibility = View.VISIBLE
                 save_image.visibility = View.GONE
@@ -299,8 +338,8 @@ class SettingsActivity : AppCompatActivity() {
 
                 val builder = AlertDialog.Builder(this)
                 with(builder) {
-                    setTitle("Wybierz swoją płeć")
-                    setItems(items) { dialog, which ->
+                    setTitle(resources.getString(R.string.select_gender))
+                    setItems(items) { _, which ->
 
                         choose = which
 
@@ -316,7 +355,12 @@ class SettingsActivity : AppCompatActivity() {
 
             } else {
 
-                SnackBarUtil.setActivitySnack("Nie możesz zmienić płci, ponieważ jesteś zalogowany przez Facebook'a", ColorSnackBar.ERROR, R.drawable.ic_error_, it){ }
+                SnackBarUtil.setActivitySnack(
+                    resources.getString(R.string.select_gender_fb_info),
+                    ColorSnackBar.ERROR,
+                    R.drawable.ic_error_,
+                    it
+                ) { }
 
             }
 
@@ -336,9 +380,14 @@ class SettingsActivity : AppCompatActivity() {
 
                 if(it.isSuccessful){
 
-                    SnackBarUtil.setActivitySnack("Pomyślnie zmieniono płeć", ColorSnackBar.SUCCES, R.drawable.ic_check_icon, it2){ }
+                    SnackBarUtil.setActivitySnack(
+                        resources.getString(R.string.change_your_gender_successful),
+                        ColorSnackBar.SUCCES,
+                        R.drawable.ic_check_icon,
+                        it2
+                    ) { }
 
-                    text_gender.text = "Zmień swoją płeć"
+                    text_gender.text = resources.getString(R.string.change_your_gender)
 
                     cardView_change_gender.isEnabled = true
                     loading_gender.visibility = View.GONE
@@ -348,9 +397,14 @@ class SettingsActivity : AppCompatActivity() {
 
                 } else {
 
-                    SnackBarUtil.setActivitySnack("Nie udało się zmienić płci", ColorSnackBar.ERROR, R.drawable.ic_error_, it2){ }
+                    SnackBarUtil.setActivitySnack(
+                        resources.getString(R.string.change_your_gender_error),
+                        ColorSnackBar.ERROR,
+                        R.drawable.ic_error_,
+                        it2
+                    ) { }
 
-                    text_gender.text = "Zmień swoją płeć"
+                    text_gender.text = resources.getString(R.string.change_your_gender)
 
                     cardView_change_gender.isEnabled = true
                     loading_gender.visibility = View.GONE
@@ -361,9 +415,14 @@ class SettingsActivity : AppCompatActivity() {
                 }
             }.addOnFailureListener {
 
-                SnackBarUtil.setActivitySnack("Nie udało się zmienić płci", ColorSnackBar.ERROR, R.drawable.ic_error_, it2){ }
+                SnackBarUtil.setActivitySnack(
+                    resources.getString(R.string.change_your_gender_error),
+                    ColorSnackBar.ERROR,
+                    R.drawable.ic_error_,
+                    it2
+                ) { }
 
-                text_gender.text = "Zmień swoją płeć"
+                text_gender.text = resources.getString(R.string.change_your_gender)
 
                 cardView_change_gender.isEnabled = true
                 loading_gender.visibility = View.GONE
@@ -380,7 +439,12 @@ class SettingsActivity : AppCompatActivity() {
             premium_color_switch.isChecked = false
             premium_color_switch.setOnClickListener {
 
-                SnackBarUtil.setActivitySnack("Aby użyć tej opcji, musisz posiadać konto Premium", ColorSnackBar.WARING, R.drawable.ic_corn, it){ }
+                SnackBarUtil.setActivitySnack(
+                    resources.getString(R.string.not_have_a_premium),
+                    ColorSnackBar.WARING,
+                    R.drawable.ic_corn,
+                    it
+                ) { }
 
                 premium_color_switch.isChecked = false
             }
@@ -422,7 +486,9 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        UserUtil.updateStatus(StatusMessage.insettings)
+        Timer("status", false).schedule(700) {
+            UserUtil.updateStatus(resources.getString(StatusMessage.insettings)) {}
+        }
         hideSystemUI()
     }
 
@@ -440,6 +506,11 @@ class SettingsActivity : AppCompatActivity() {
         hideSystemUI()
         exit_settings.callOnClick()
         super.onBackPressed()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        UserUtil.updateStatus(resources.getString(StatusMessage.offline)) {}
     }
 
     private fun hideSystemUI(){

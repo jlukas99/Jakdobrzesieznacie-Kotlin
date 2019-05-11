@@ -3,38 +3,39 @@ package pl.idappstudio.jakdobrzesieznacie.fragments
 import android.app.ActivityOptions
 import android.content.Intent
 import android.os.Bundle
+import android.util.Pair
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.xwray.groupie.*
+import com.google.firebase.firestore.*
+import com.xwray.groupie.GroupAdapter
+import com.xwray.groupie.Section
+import com.xwray.groupie.ViewHolder
 import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.android.synthetic.main.header_title_item.view.*
+import pl.idappstudio.jakdobrzesieznacie.R
 import pl.idappstudio.jakdobrzesieznacie.activity.FriendsProfileActivity
 import pl.idappstudio.jakdobrzesieznacie.activity.MenuActivity.Companion.EXTRA_USER_BTN_CHAT_TRANSITION_NAME
 import pl.idappstudio.jakdobrzesieznacie.activity.MenuActivity.Companion.EXTRA_USER_BTN_FAVORITE_TRANSITION_NAME
+import pl.idappstudio.jakdobrzesieznacie.activity.MenuActivity.Companion.EXTRA_USER_IMAGE_GAME_TRANSITION_NAME
 import pl.idappstudio.jakdobrzesieznacie.activity.MenuActivity.Companion.EXTRA_USER_IMAGE_TRANSITION_NAME
 import pl.idappstudio.jakdobrzesieznacie.activity.MenuActivity.Companion.EXTRA_USER_ITEM
 import pl.idappstudio.jakdobrzesieznacie.activity.MenuActivity.Companion.EXTRA_USER_NAME_TRANSITION_NAME
+import pl.idappstudio.jakdobrzesieznacie.activity.MenuActivity.Companion.EXTRA_USER_STATUS_GAME_TRANSITION_NAME
+import pl.idappstudio.jakdobrzesieznacie.adapter.FriendsAdapater
+import pl.idappstudio.jakdobrzesieznacie.adapter.GamesAdapater
 import pl.idappstudio.jakdobrzesieznacie.interfaces.ClickListener
 import pl.idappstudio.jakdobrzesieznacie.model.FriendItem
 import pl.idappstudio.jakdobrzesieznacie.model.UserData
 import pl.idappstudio.jakdobrzesieznacie.util.UserUtil
-import pl.idappstudio.jakdobrzesieznacie.R
-import android.util.Pair
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.LinearLayoutManager
-import com.google.firebase.firestore.*
-import jp.wasabeef.recyclerview.animators.LandingAnimator
-import jp.wasabeef.recyclerview.animators.SlideInDownAnimator
-import kotlinx.android.synthetic.main.header_title_item.view.*
-import pl.idappstudio.jakdobrzesieznacie.activity.MenuActivity.Companion.EXTRA_USER_IMAGE_GAME_TRANSITION_NAME
-import pl.idappstudio.jakdobrzesieznacie.activity.MenuActivity.Companion.EXTRA_USER_STATUS_GAME_TRANSITION_NAME
-import pl.idappstudio.jakdobrzesieznacie.adapter.*
 
 class FriendsFragment : androidx.fragment.app.Fragment(), ClickListener {
     override fun onClickFriendGame(user: UserData, image: CircleImageView, name: TextView, btnChat: ImageButton, btnFavorite: ImageButton, btnGame: ImageButton, bgGame: ImageView) {
@@ -85,8 +86,8 @@ class FriendsFragment : androidx.fragment.app.Fragment(), ClickListener {
     private lateinit var friendsListener: ListenerRegistration
     private lateinit var gamesListener: ListenerRegistration
 
-    private lateinit var image_friends: ImageView
-    private lateinit var text_none_friends: TextView
+    private lateinit var imageFriends: ImageView
+    private lateinit var textNoneFriends: TextView
 
     private lateinit var gamesHeader: ConstraintLayout
     private lateinit var friendsHeader: ConstraintLayout
@@ -153,8 +154,8 @@ class FriendsFragment : androidx.fragment.app.Fragment(), ClickListener {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView:View = inflater.inflate(R.layout.fragment_friends, container, false)
 
-        image_friends = rootView.findViewById(R.id.image_none_friends)
-        text_none_friends = rootView.findViewById(R.id.text_none_friends)
+        imageFriends = rootView.findViewById(R.id.image_none_friends)
+        textNoneFriends = rootView.findViewById(R.id.text_none_friends)
 
         gamesHeader = rootView.findViewById(R.id.include)
         friendsHeader = rootView.findViewById(R.id.include3)
@@ -162,7 +163,7 @@ class FriendsFragment : androidx.fragment.app.Fragment(), ClickListener {
         rvFriends = rootView.findViewById(R.id.rv_friends)
         rvGames = rootView.findViewById(R.id.rv_games)
 
-        image_friends.setColorFilter(
+        imageFriends.setColorFilter(
             ContextCompat.getColor(
                 rootView.context, R.color.colorLigth
             ), android.graphics.PorterDuff.Mode.SRC_IN)
@@ -182,8 +183,8 @@ class FriendsFragment : androidx.fragment.app.Fragment(), ClickListener {
         rvFriends.adapter = groupAdapter
         rvGames.adapter = gamesAdapter
 
-        gamesHeader.head_title_text.text = "AKTYWNE GRY"
-        friendsHeader.head_title_text.text = "ZNAJOMI"
+        gamesHeader.head_title_text.text = resources.getString(R.string.active_game)
+        friendsHeader.head_title_text.text = resources.getString(R.string.friends)
 
         checkGamesList {
             getGames()
@@ -425,7 +426,7 @@ class FriendsFragment : androidx.fragment.app.Fragment(), ClickListener {
         })
     }
 
-    fun friendId(yourID: String, gameID: String): String {
+    private fun friendId(yourID: String, gameID: String): String {
 
         val bufferId = yourID.toCharArray()
 
@@ -433,31 +434,31 @@ class FriendsFragment : androidx.fragment.app.Fragment(), ClickListener {
 
         val bufferFriend = gameID.substring(idSize)
 
-        if(bufferFriend == yourID){
+        return if (bufferFriend == yourID) {
 
-            return gameID.substring(0, idSize)
+            gameID.substring(0, idSize)
 
         } else {
 
-            return bufferFriend
+            bufferFriend
 
         }
 
     }
 
-    fun checkFriendsList(onComplete: () -> Unit){
+    private fun checkFriendsList(onComplete: () -> Unit) {
 
-        if(!updatableItems.isEmpty() || !favoriteItems.isEmpty()){
+        if (updatableItems.isNotEmpty() || favoriteItems.isNotEmpty()) {
 
-            image_friends.visibility = View.GONE
-            text_none_friends.visibility = View.GONE
+            imageFriends.visibility = View.GONE
+            textNoneFriends.visibility = View.GONE
 
             onComplete()
 
         } else {
 
-            text_none_friends.visibility = View.VISIBLE
-            image_friends.visibility = View.VISIBLE
+            textNoneFriends.visibility = View.VISIBLE
+            imageFriends.visibility = View.VISIBLE
 
             onComplete()
 
@@ -465,9 +466,9 @@ class FriendsFragment : androidx.fragment.app.Fragment(), ClickListener {
 
     }
 
-    fun checkGamesList(onComplete: () -> Unit){
+    private fun checkGamesList(onComplete: () -> Unit) {
 
-        if(!gamesItems.isEmpty() || !noGamesItems.isEmpty()){
+        if (gamesItems.isNotEmpty() || noGamesItems.isNotEmpty()) {
 
             gamesHeader.visibility = View.VISIBLE
 

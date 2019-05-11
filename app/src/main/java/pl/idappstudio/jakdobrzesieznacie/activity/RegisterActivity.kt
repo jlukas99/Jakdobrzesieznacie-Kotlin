@@ -1,5 +1,3 @@
-@file:Suppress("DEPRECATION")
-
 package pl.idappstudio.jakdobrzesieznacie.activity
 
 import android.annotation.SuppressLint
@@ -14,24 +12,21 @@ import android.provider.MediaStore
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
-import android.view.WindowManager
 import android.widget.ArrayAdapter
-import kotlinx.android.synthetic.main.activity_register.*
-import java.util.regex.Pattern
+import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
-import com.google.android.material.snackbar.Snackbar
-import com.google.firebase.iid.FirebaseInstanceId
+import kotlinx.android.synthetic.main.activity_register.*
 import org.jetbrains.anko.clearTask
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.newTask
 import pl.idappstudio.jakdobrzesieznacie.R
 import pl.idappstudio.jakdobrzesieznacie.enums.ColorSnackBar
-import pl.idappstudio.jakdobrzesieznacie.service.MyFirebaseMessagingService
 import pl.idappstudio.jakdobrzesieznacie.util.FirestoreUtil
 import pl.idappstudio.jakdobrzesieznacie.util.SnackBarUtil
 import pl.idappstudio.jakdobrzesieznacie.util.StorgeUtil
 import pl.idappstudio.jakdobrzesieznacie.util.UserUtil
 import java.io.ByteArrayOutputStream
+import java.util.regex.Pattern
 
 class RegisterActivity : Activity() {
 
@@ -61,7 +56,7 @@ class RegisterActivity : Activity() {
         dialogBuilder.setView(dialogView)
 
         val alertDialog = dialogBuilder.create()
-        alertDialog?.window?.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.colorTranspery)))
+        alertDialog?.window?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.colorTranspery)))
         alertDialog.setCanceledOnTouchOutside(false)
         alertDialog.setCancelable(false)
 
@@ -75,7 +70,10 @@ class RegisterActivity : Activity() {
 
             }
 
-            startActivityForResult(Intent.createChooser(intent, "Wybierz zdjęcie"), RC_SELECT_IMAGE)
+            startActivityForResult(
+                Intent.createChooser(intent, resources.getString(R.string.select_picture)),
+                RC_SELECT_IMAGE
+            )
         }
 
         emailInput.addTextChangedListener(object: TextWatcher {
@@ -147,7 +145,12 @@ class RegisterActivity : Activity() {
                 repasswordInput.setBackgroundResource(R.drawable.input_overlay_error)
                 repasswordImage.setBackgroundResource(R.drawable.input_overlay_icon_error)
 
-                SnackBarUtil.setActivitySnack("Hasła się nie zgadzają", ColorSnackBar.ERROR, R.mipmap.password_icon, it2){ }
+                SnackBarUtil.setActivitySnack(
+                    resources.getString(R.string.password_not_same),
+                    ColorSnackBar.ERROR,
+                    R.mipmap.password_icon,
+                    it2
+                ) { }
 
             }
 
@@ -158,7 +161,12 @@ class RegisterActivity : Activity() {
                 passwordInput.setBackgroundResource(R.drawable.input_overlay_error)
                 passwordImage.setBackgroundResource(R.drawable.input_overlay_icon_error)
 
-                SnackBarUtil.setActivitySnack("Hasło musi składać się przynajmniej z 6 znaków liter lub cyf", ColorSnackBar.ERROR, R.mipmap.password_icon, it2){ }
+                SnackBarUtil.setActivitySnack(
+                    resources.getString(R.string.password_validation),
+                    ColorSnackBar.ERROR,
+                    R.mipmap.password_icon,
+                    it2
+                ) { }
 
             }
 
@@ -169,7 +177,12 @@ class RegisterActivity : Activity() {
                 emailInput.setBackgroundResource(R.drawable.input_overlay_error)
                 emailImage.setBackgroundResource(R.drawable.input_overlay_icon_error)
 
-                SnackBarUtil.setActivitySnack("Niepoprawny adres email", ColorSnackBar.ERROR, R.mipmap.email_icon, it2){ }
+                SnackBarUtil.setActivitySnack(
+                    resources.getString(R.string.incoreect_mail),
+                    ColorSnackBar.ERROR,
+                    R.mipmap.email_icon,
+                    it2
+                ) { }
 
             }
 
@@ -222,12 +235,16 @@ class RegisterActivity : Activity() {
 
                                 alertDialog.dismiss()
 
-                                SnackBarUtil.setActivitySnack("Pomyślnie utworzono konto", ColorSnackBar.SUCCES, R.drawable.ic_check_icon, it2){ }
+                                SnackBarUtil.setActivitySnack(
+                                    resources.getString(R.string.create_account_successful),
+                                    ColorSnackBar.SUCCES,
+                                    R.drawable.ic_check_icon,
+                                    it2
+                                ) {
 
-                                val registrationToken = FirebaseInstanceId.getInstance().token
-                                MyFirebaseMessagingService.addTokenToFirestore(registrationToken)
+                                    startActivity(intentFor<MenuActivity>().newTask().clearTask())
 
-                                startActivity(intentFor<MenuActivity>().newTask().clearTask())
+                                }
 
                             }
 
@@ -237,7 +254,12 @@ class RegisterActivity : Activity() {
 
                         alertDialog.dismiss()
 
-                        SnackBarUtil.setActivitySnack("Nie udało utworzyć się konta", ColorSnackBar.ERROR, R.drawable.ic_error_, it2){ }
+                        SnackBarUtil.setActivitySnack(
+                            resources.getString(R.string.create_account_error),
+                            ColorSnackBar.ERROR,
+                            R.drawable.ic_error_,
+                            it2
+                        ) { }
 
                     }
                 }
@@ -255,7 +277,7 @@ class RegisterActivity : Activity() {
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        if (requestCode == RC_SELECT_IMAGE && resultCode == Activity.RESULT_OK && data != null && data.data != null) {
+        if (requestCode == RC_SELECT_IMAGE && resultCode == RESULT_OK && data != null && data.data != null) {
 
             fileUri = data.data
             selectImageText.visibility = View.GONE

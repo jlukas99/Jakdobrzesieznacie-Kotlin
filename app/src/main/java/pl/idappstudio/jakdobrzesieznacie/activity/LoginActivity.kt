@@ -1,5 +1,3 @@
-@file:Suppress("DEPRECATION")
-
 package pl.idappstudio.jakdobrzesieznacie.activity
 
 import android.annotation.SuppressLint
@@ -7,10 +5,10 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_login.*
 import org.jetbrains.anko.clearTask
@@ -29,7 +27,7 @@ class LoginActivity : Activity() {
 
     private lateinit var alertDialog: AlertDialog
 
-    @SuppressLint("InflateParams", "PrivateResource")
+    @SuppressLint("PrivateResource", "InflateParams")
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
@@ -39,12 +37,13 @@ class LoginActivity : Activity() {
         val dialogBuilder = AlertDialog.Builder(this,
             R.style.Base_Theme_MaterialComponents_Dialog
         )
+
         val inflater = this.layoutInflater
         val dialogView = inflater.inflate(R.layout.dialog_loading_login, null)
         dialogBuilder.setView(dialogView)
 
         alertDialog = dialogBuilder.create()
-        alertDialog.window?.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.colorTranspery)))
+        alertDialog.window?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.colorTranspery)))
         alertDialog.setCanceledOnTouchOutside(false)
         alertDialog.setCancelable(false)
 
@@ -74,7 +73,12 @@ class LoginActivity : Activity() {
                 emailInput.setBackgroundResource(R.drawable.input_overlay_error)
                 emailImage.setBackgroundResource(R.drawable.input_overlay_icon_error)
 
-                SnackBarUtil.setActivitySnack("Niepoprawny adres email", ColorSnackBar.ERROR, R.mipmap.email_icon, it2){ }
+                SnackBarUtil.setActivitySnack(
+                    resources.getString(R.string.incoreect_mail),
+                    ColorSnackBar.ERROR,
+                    R.mipmap.email_icon,
+                    it2
+                ) { }
 
                 return@setOnClickListener
 
@@ -83,7 +87,12 @@ class LoginActivity : Activity() {
                 passwordInput.setBackgroundResource(R.drawable.input_overlay_error)
                 passwordImage.setBackgroundResource(R.drawable.input_overlay_icon_error)
 
-                SnackBarUtil.setActivitySnack("Wpisz hasło", ColorSnackBar.ERROR, R.mipmap.password_icon, it2){ }
+                SnackBarUtil.setActivitySnack(
+                    resources.getString(R.string.write_password),
+                    ColorSnackBar.ERROR,
+                    R.mipmap.password_icon,
+                    it2
+                ) { }
 
                 return@setOnClickListener
 
@@ -99,13 +108,23 @@ class LoginActivity : Activity() {
 
                     if(it.uid != ""){
 
-                        SnackBarUtil.setActivitySnack("Udało się zalogować", ColorSnackBar.SUCCES, R.drawable.ic_check_icon, it2){ }
+                        SnackBarUtil.setActivitySnack(
+                            resources.getString(R.string.login_successful),
+                            ColorSnackBar.SUCCES,
+                            R.drawable.ic_check_icon,
+                            it2
+                        ) { }
 
                         startActivity(intentFor<MenuActivity>().newTask().clearTask())
 
                     } else {
 
-                        SnackBarUtil.setActivitySnack("Wystapił problem z twoim kontem, skontaktuj się znami.", ColorSnackBar.ERROR, R.drawable.ic_error_, it2){ }
+                        SnackBarUtil.setActivitySnack(
+                            resources.getString(R.string.error_login),
+                            ColorSnackBar.ERROR,
+                            R.drawable.ic_error_,
+                            it2
+                        ) { }
 
                     }
 
@@ -115,13 +134,23 @@ class LoginActivity : Activity() {
 
                 alertDialog.dismiss()
 
-                SnackBarUtil.setActivitySnack("Anulowano logowanie", ColorSnackBar.ERROR, R.drawable.ic_error_, it2){ }
+                SnackBarUtil.setActivitySnack(
+                    resources.getString(R.string.cancel_login),
+                    ColorSnackBar.ERROR,
+                    R.drawable.ic_error_,
+                    it2
+                ) { }
 
             }.addOnFailureListener {
 
                 alertDialog.dismiss()
 
-                SnackBarUtil.setActivitySnack("Niepoprawny email bądź hasło", ColorSnackBar.ERROR, R.drawable.ic_error_, it2){ }
+                SnackBarUtil.setActivitySnack(
+                    resources.getString(R.string.incorrect_email_or_password),
+                    ColorSnackBar.ERROR,
+                    R.drawable.ic_error_,
+                    it2
+                ) { }
 
                 passwordInput.setBackgroundResource(R.drawable.input_overlay_error)
                 passwordImage.setBackgroundResource(R.drawable.input_overlay_icon_error)

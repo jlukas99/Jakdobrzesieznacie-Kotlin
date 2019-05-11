@@ -1,17 +1,21 @@
 package pl.idappstudio.jakdobrzesieznacie.fragments.stages
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.pm.PackageManager
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.Window
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageView
+import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.reward.RewardItem
@@ -20,7 +24,6 @@ import com.google.android.gms.ads.reward.RewardedVideoAdListener
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_stage_one.*
-
 import pl.idappstudio.jakdobrzesieznacie.R
 import pl.idappstudio.jakdobrzesieznacie.activity.GameActivity
 import pl.idappstudio.jakdobrzesieznacie.activity.GameActivity.Companion.friends
@@ -28,14 +31,14 @@ import pl.idappstudio.jakdobrzesieznacie.activity.GameActivity.Companion.game
 import pl.idappstudio.jakdobrzesieznacie.activity.GameActivity.Companion.questionList
 import pl.idappstudio.jakdobrzesieznacie.activity.GameActivity.Companion.userStats
 import pl.idappstudio.jakdobrzesieznacie.enums.ColorSnackBar
-import pl.idappstudio.jakdobrzesieznacie.interfaces.nextFragment
+import pl.idappstudio.jakdobrzesieznacie.interfaces.NextFragment
 import pl.idappstudio.jakdobrzesieznacie.model.UserQuestionData
 import pl.idappstudio.jakdobrzesieznacie.util.GameUtil
 import pl.idappstudio.jakdobrzesieznacie.util.GlideUtil
 import pl.idappstudio.jakdobrzesieznacie.util.SnackBarUtil
 import pl.idappstudio.jakdobrzesieznacie.util.UserUtil
 
-class StageOneFragment(private val listener: nextFragment) : androidx.fragment.app.Fragment(), View.OnClickListener {
+class StageOneFragment(private val listener: NextFragment) : androidx.fragment.app.Fragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
 
@@ -102,6 +105,7 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
 
     private lateinit var alertDialog: AlertDialog
 
+    @SuppressLint("PrivateResource", "InflateParams")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView: View = inflater.inflate(R.layout.fragment_stage_one, container, false)
 
@@ -140,33 +144,6 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
         rejectBadAnswer = rootView.findViewById(R.id.loadingAds)
 
         reportQuestion = rootView.findViewById(R.id.btnReport)
-
-//        if(userStats.games == 0) {
-//
-//            TapTargetView.showFor(
-//                this.activity,
-//                TapTarget.forView(
-//                    reportQuestion,
-//                    "Zgłoś pytanie",
-//                    "Jeśli w pytaniu coś nie gra lub ma niestosowną treść możesz nam je zgłosić"
-//                )
-//                    .outerCircleColor(R.color.colorPrimaryDark)
-//                    .outerCircleAlpha(0.96f)
-//                    .targetCircleColor(R.color.colorWhite)
-//                    .titleTextSize(20)
-//                    .titleTextColor(R.color.colorWhite)
-//                    .descriptionTextSize(12)
-//                    .descriptionTextColor(R.color.colorWhite)
-//                    .textColor(R.color.colorWhite)
-//                    .dimColor(R.color.colorButtonSecondary)
-//                    .drawShadow(true)
-//                    .cancelable(true)
-//                    .tintTarget(true)
-//                    .transparentTarget(false)
-//                    .targetRadius(60)
-//            )
-//
-//        }
 
         setDialog()
 
@@ -222,12 +199,18 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
         }
 
         val dialogBuilder = AlertDialog.Builder(this.context, R.style.Base_Theme_MaterialComponents_Dialog)
-        val inflater = this.layoutInflater
-        val dialogView = inflater.inflate(R.layout.dialog_loading, null)
+        val dialogView = this.layoutInflater.inflate(R.layout.dialog_loading, null)
         dialogBuilder.setView(dialogView)
 
         alertDialog = dialogBuilder.create()
-        alertDialog.window?.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.colorTranspery)))
+        alertDialog.window?.setBackgroundDrawable(
+            ColorDrawable(
+                ContextCompat.getColor(
+                    this.context!!,
+                    R.color.colorTranspery
+                )
+            )
+        )
         alertDialog.setCanceledOnTouchOutside(false)
         alertDialog.setCancelable(false)
 
@@ -256,18 +239,18 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
 
     private fun resetButton(){
 
-        nextQuestion.text = "Zgadnij odpowiedź znajomego"
+        nextQuestion.text = resources.getString(R.string.guess_answer)
         nextQuestion.background.setColorFilter(
             ContextCompat.getColor(
                 this.context!!, R.color.colorBadAnswer
             ), android.graphics.PorterDuff.Mode.SRC_IN)
 
-        stageTitle.text = "Zgadnij Odpowiedzi"
+        stageTitle.text = resources.getString(R.string.guess_answer_title)
 
-        aAnswerButton.background = resources.getDrawable(R.drawable.card_background_dark)
-        bAnswerButton.background = resources.getDrawable(R.drawable.card_background_dark)
-        cAnswerButton.background = resources.getDrawable(R.drawable.card_background_dark)
-        dAnswerButton.background = resources.getDrawable(R.drawable.card_background_dark)
+        aAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.card_background_dark)
+        bAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.card_background_dark)
+        cAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.card_background_dark)
+        dAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.card_background_dark)
 
         aAnswerFriendImage.visibility = View.INVISIBLE
         bAnswerFriendImage.visibility = View.INVISIBLE
@@ -310,30 +293,52 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
         cAnswerText.text = ""
         dAnswerText.text = ""
 
-        if(questionNumber == 1){
+        when (questionNumber) {
+            1 -> {
 
-            question = questionList.question.question
-            a = questionList.question.a
-            b = questionList.question.b
-            c = questionList.question.c
-            d = questionList.question.d
+                question = questionList.question.question
+                a = questionList.question.a
+                b = questionList.question.b
+                c = questionList.question.c
+                d = questionList.question.d
 
-        } else if(questionNumber == 2){
+            }
+            2 -> {
 
-            question = questionList.question1.question
-            a = questionList.question1.a
-            b = questionList.question1.b
-            c = questionList.question1.c
-            d = questionList.question1.d
+                question = questionList.question1.question
+                a = questionList.question1.a
+                b = questionList.question1.b
+                c = questionList.question1.c
+                d = questionList.question1.d
 
-        } else if(questionNumber == 3){
+            }
+            3 -> {
 
-            question = questionList.question2.question
-            a = questionList.question2.a
-            b = questionList.question2.b
-            c = questionList.question2.c
-            d = questionList.question2.d
+                question = questionList.question2.question
+                a = questionList.question2.a
+                b = questionList.question2.b
+                c = questionList.question2.c
+                d = questionList.question2.d
 
+            }
+
+
+            //        if((a.equals("tak", true) && b.equals("nie", true)) || (b.equals("tak", true) && a.equals("nie", true))){
+            //
+            //            aAnswerText.text = "Tak"
+            //
+            //            aAnswerButton.isEnabled = true
+            //            aAnswerButton.visibility = View.VISIBLE
+            //
+            //            bAnswerText.text = "Nie"
+            //
+            //            bAnswerButton.isEnabled = true
+            //            bAnswerButton.visibility = View.VISIBLE
+            //
+            //            array.removeAt(0)
+            //            array.removeAt(0)
+            //
+            //        }
         }
 
         questionText.text = question
@@ -497,38 +502,38 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
 
         badAnswer.shuffle()
 
-        if(aAnswerText.text.equals(badAnswer[0])){
+        if (aAnswerText.text == badAnswer[0]) {
 
             aAnswerButton.isEnabled = false
 
-            aAnswerButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
+            aAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.number_bad_overlay)
 
             return
         }
 
-        if(bAnswerText.text.equals(badAnswer[0])){
+        if (bAnswerText.text == badAnswer[0]) {
 
             bAnswerButton.isEnabled = false
 
-            bAnswerButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
+            bAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.number_bad_overlay)
 
             return
         }
 
-        if(cAnswerText.text.equals(badAnswer[0])){
+        if (cAnswerText.text == badAnswer[0]) {
 
             cAnswerButton.isEnabled = false
 
-            cAnswerButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
+            cAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.number_bad_overlay)
 
             return
         }
 
-        if(dAnswerText.text.equals(badAnswer[0])){
+        if (dAnswerText.text == badAnswer[0]) {
 
             dAnswerButton.isEnabled = false
 
-            dAnswerButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
+            dAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.number_bad_overlay)
 
             return
         }
@@ -542,7 +547,7 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
 
         if (questionNumber == 3) {
 
-            nextQuestion.text = "nastepny etap"
+            nextQuestion.text = resources.getString(R.string.next_stage)
             nextQuestion.background.setColorFilter(
                 ContextCompat.getColor(
                     this.context!!, R.color.colorCorrectAnswer
@@ -551,7 +556,7 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
 
         } else {
 
-            nextQuestion.text = "następne pytanie"
+            nextQuestion.text = resources.getString(R.string.next_question)
             nextQuestion.background.setColorFilter(
                 ContextCompat.getColor(
                     this.context!!, R.color.colorPrimary
@@ -627,7 +632,12 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
 
             if(dialogReason.text.trim().length < 5){
 
-                SnackBarUtil.setActivitySnack("Powód jest za krótki", ColorSnackBar.WARING, R.drawable.ic_edit_text, setDialog.window.decorView){
+                SnackBarUtil.setActivitySnack(
+                    resources.getString(R.string.reason_is_to_short),
+                    ColorSnackBar.WARING,
+                    R.drawable.ic_edit_text,
+                    setDialog.window?.decorView!!
+                ) {
 
                     dialogReason.isEnabled = true
                     dialogSend.isEnabled = true
@@ -646,7 +656,12 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
             FirebaseFirestore.getInstance().collection("reports").add(data).addOnSuccessListener {it2 ->
 
                 closeDialog()
-                SnackBarUtil.setActivitySnack("Wysłano zgłoszenie o id: ${it2.id}", ColorSnackBar.SUCCES, R.drawable.ic_check_icon, gameStageTitle){
+                SnackBarUtil.setActivitySnack(
+                    resources.getString(R.string.send_report_successful, it2.id),
+                    ColorSnackBar.SUCCES,
+                    R.drawable.ic_check_icon,
+                    gameStageTitle
+                ) {
 
                     resetDialog()
 
@@ -654,7 +669,12 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
 
             }.addOnFailureListener {
 
-                SnackBarUtil.setActivitySnack("Nie udało się wysłać zgłoszenia", ColorSnackBar.ERROR, R.drawable.ic_error_, setDialog.window.decorView){
+                SnackBarUtil.setActivitySnack(
+                    resources.getString(R.string.send_report_error),
+                    ColorSnackBar.ERROR,
+                    R.drawable.ic_error_,
+                    setDialog.window?.decorView!!
+                ) {
 
                     dialogReason.isEnabled = true
                     dialogSend.isEnabled = true
@@ -670,7 +690,7 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
 
     private fun resetDialog() {
 
-        dialogIdQuestion.text = "ID: ${getQuestionData()?.questionId}"
+        dialogIdQuestion.text = resources.getString(R.string.question_id, getQuestionData()?.questionId)
         dialogReason.text.clear()
 
         dialogReason.isEnabled = true
@@ -726,106 +746,115 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
 
     private fun checkAnswer(view: View, s: String){
 
-        if(view == aAnswerButton){
+        when (view) {
+            aAnswerButton -> {
 
-            userAnswer.add(aAnswerText.text.toString())
+                userAnswer.add(aAnswerText.text.toString())
 
-            if(aAnswerText.text == s) {
+                if (aAnswerText.text == s) {
 
-                aAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
+                    aAnswerButton.background =
+                        ContextCompat.getDrawable(this.context!!, R.drawable.number_correct_overlay)
 
-                listener.updateNumber(questionNumber, true)
+                    listener.updateNumber(questionNumber, true)
 
-                GameActivity.canswer++
+                    GameActivity.canswer++
 
-            } else {
+                } else {
 
-                aAnswerButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
+                    aAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.number_bad_overlay)
 
-                listener.updateNumber(questionNumber, false)
+                    listener.updateNumber(questionNumber, false)
 
-                GameActivity.banswer++
+                    GameActivity.banswer++
 
-            }
+                }
 
-            checkCorrectAnswer(s)
-            aAnswerUserImage.visibility = View.VISIBLE
-
-        } else if(view == bAnswerButton){
-
-            userAnswer.add(bAnswerText.text.toString())
-
-            if(bAnswerText.text == s) {
-
-                bAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
-
-                listener.updateNumber(questionNumber, true)
-
-                GameActivity.canswer++
-
-            } else {
-
-                bAnswerButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
-
-                listener.updateNumber(questionNumber, false)
-
-                GameActivity.banswer++
+                checkCorrectAnswer(s)
+                aAnswerUserImage.visibility = View.VISIBLE
 
             }
+            bAnswerButton -> {
 
-            checkCorrectAnswer(s)
-            bAnswerUserImage.visibility = View.VISIBLE
+                userAnswer.add(bAnswerText.text.toString())
 
-        } else if(view == cAnswerButton){
+                if (bAnswerText.text == s) {
 
-            userAnswer.add(cAnswerText.text.toString())
+                    bAnswerButton.background =
+                        ContextCompat.getDrawable(this.context!!, R.drawable.number_correct_overlay)
 
-            if(cAnswerText.text == s) {
+                    listener.updateNumber(questionNumber, true)
 
-                cAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
+                    GameActivity.canswer++
 
-                listener.updateNumber(questionNumber, true)
+                } else {
 
-                GameActivity.canswer++
+                    bAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.number_bad_overlay)
 
-            } else {
+                    listener.updateNumber(questionNumber, false)
 
-                cAnswerButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
+                    GameActivity.banswer++
 
-                listener.updateNumber(questionNumber, false)
+                }
 
-                GameActivity.banswer++
-
-            }
-
-            checkCorrectAnswer(s)
-            cAnswerUserImage.visibility = View.VISIBLE
-
-        } else if(view == dAnswerButton){
-
-            userAnswer.add(dAnswerText.text.toString())
-
-            if(dAnswerText.text == s) {
-
-                dAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
-
-                listener.updateNumber(questionNumber, true)
-
-                GameActivity.canswer++
-
-            } else {
-
-                dAnswerButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
-
-                listener.updateNumber(questionNumber, false)
-
-                GameActivity.banswer++
+                checkCorrectAnswer(s)
+                bAnswerUserImage.visibility = View.VISIBLE
 
             }
+            cAnswerButton -> {
 
-            checkCorrectAnswer(s)
-            dAnswerUserImage.visibility = View.VISIBLE
+                userAnswer.add(cAnswerText.text.toString())
 
+                if (cAnswerText.text == s) {
+
+                    cAnswerButton.background =
+                        ContextCompat.getDrawable(this.context!!, R.drawable.number_correct_overlay)
+
+                    listener.updateNumber(questionNumber, true)
+
+                    GameActivity.canswer++
+
+                } else {
+
+                    cAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.number_bad_overlay)
+
+                    listener.updateNumber(questionNumber, false)
+
+                    GameActivity.banswer++
+
+                }
+
+                checkCorrectAnswer(s)
+                cAnswerUserImage.visibility = View.VISIBLE
+
+            }
+            dAnswerButton -> {
+
+                userAnswer.add(dAnswerText.text.toString())
+
+                if (dAnswerText.text == s) {
+
+                    dAnswerButton.background =
+                        ContextCompat.getDrawable(this.context!!, R.drawable.number_correct_overlay)
+
+                    listener.updateNumber(questionNumber, true)
+
+                    GameActivity.canswer++
+
+                } else {
+
+                    dAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.number_bad_overlay)
+
+                    listener.updateNumber(questionNumber, false)
+
+                    GameActivity.banswer++
+
+                }
+
+                checkCorrectAnswer(s)
+                dAnswerUserImage.visibility = View.VISIBLE
+
+            }
         }
 
         nextQuestion()
@@ -836,7 +865,7 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
 
         if(aAnswerText.text == s){
 
-            aAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
+            aAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.number_correct_overlay)
             aAnswerFriendImage.visibility = View.VISIBLE
 
             return
@@ -845,7 +874,7 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
 
         if(bAnswerText.text == s){
 
-            bAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
+            bAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.number_correct_overlay)
             bAnswerFriendImage.visibility = View.VISIBLE
 
             return
@@ -854,7 +883,7 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
 
         if(cAnswerText.text == s){
 
-            cAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
+            cAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.number_correct_overlay)
             cAnswerFriendImage.visibility = View.VISIBLE
 
             return
@@ -863,7 +892,7 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
 
         if(dAnswerText.text == s){
 
-            dAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
+            dAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.number_correct_overlay)
             dAnswerFriendImage.visibility = View.VISIBLE
 
             return

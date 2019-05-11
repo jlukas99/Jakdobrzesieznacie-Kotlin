@@ -10,12 +10,12 @@
             android:id="@+id/nextQuestionBtn"
             android:layout_width="0dp"
             android:layout_height="38.66dp"
-            android:text="następne pytanie"
+            android:text="@string/next_question"
             app:cornerRadius="100dp"
             app:backgroundTint="@color/colorPrimary"
             android:insetBottom="0dp"
             android:insetTop="0dp"
-            android:textSize="11sp"
+            android:textSize="12sp"
             android:textAlignment="center"
             android:textAllCaps="true"
             android:typeface="normal"
@@ -34,12 +34,12 @@
             android:id="@+id/skipStage"
             android:layout_width="0dp"
             android:layout_height="38.66dp"
-            android:text="pomin ten etap"
+            android:text="@string/skip_stage"
             app:cornerRadius="100dp"
             app:backgroundTint="@color/colorButtonSecondary"
             android:insetBottom="0dp"
             android:insetTop="0dp"
-            android:textSize="11sp"
+            android:textSize="12sp"
             android:textAlignment="center"
             android:textAllCaps="true"
             android:typeface="normal"
@@ -83,7 +83,7 @@
                 android:layout_weight="1"/>
 
         <TextView
-                android:text="..."
+                android:text="@string/blank"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:id="@+id/gameStageTitle"
@@ -135,7 +135,8 @@
                 android:padding="18dp"
                 android:background="@drawable/input_overlay_white"
                 app:layout_constraintHeight_min="60dp"
-                app:layout_constraintWidth_min="60dp"/>
+                app:layout_constraintWidth_min="60dp"
+                tools:ignore="ContentDescription"/>
 
         <TextView
                 android:layout_width="0dp"
@@ -149,7 +150,7 @@
                 android:textAlignment="center"
                 app:layout_constraintStart_toEndOf="@+id/invite_profile"
                 android:selectAllOnFocus="false"
-                android:text="..."
+                android:text="@string/blank"
                 android:layout_marginStart="8dp"
                 app:layout_constraintEnd_toStartOf="@+id/btnReport"
                 android:layout_marginEnd="8dp"/>
@@ -167,7 +168,8 @@
                 android:tint="@color/colorWhite"
                 app:layout_constraintEnd_toEndOf="parent"
                 android:visibility="visible"
-                android:padding="16dp"/>
+                android:padding="16dp"
+                tools:ignore="ContentDescription"/>
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>
@@ -202,7 +204,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:text="A"
+                    android:text="@string/a"
                     android:gravity="center_horizontal|center_vertical"
                     android:textSize="24sp"
                     android:textAllCaps="true"
@@ -224,7 +226,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     app:layout_constraintEnd_toStartOf="@+id/aAnswerFriendProfile"
-                    android:text="..."/>
+                    android:text="@string/blank"/>
 
             <de.hdodenhof.circleimageview.CircleImageView
                     android:layout_width="50dp"
@@ -275,7 +277,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:text="B"
+                    android:text="@string/b"
                     android:gravity="center_horizontal|center_vertical"
                     android:textSize="24sp"
                     android:textAllCaps="true"
@@ -297,7 +299,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     app:layout_constraintEnd_toStartOf="@+id/bAnswerFriendProfile"
-                    android:text="..."/>
+                    android:text="@string/blank"/>
 
             <de.hdodenhof.circleimageview.CircleImageView
                     android:layout_width="50dp"
@@ -347,7 +349,7 @@
                     android:id="@+id/cTextAnswer"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    android:text="C"
+                    android:text="@string/c"
                     android:gravity="center_horizontal|center_vertical"
                     android:textSize="24sp"
                     android:textAllCaps="true"
@@ -370,7 +372,7 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     app:layout_constraintEnd_toStartOf="@+id/cAnswerFriendProfile"
-                    android:text="..."/>
+                    android:text="@string/blank"/>
 
             <de.hdodenhof.circleimageview.CircleImageView
                     android:layout_width="50dp"
@@ -423,7 +425,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    android:text="D"
+                    android:text="@string/d"
                     android:gravity="center_horizontal|center_vertical"
                     android:textSize="24sp"
                     android:textAllCaps="true"
@@ -468,7 +470,7 @@
                     app:layout_constraintTop_toTopOf="parent"
                     android:textSize="14sp"
                     android:textAlignment="center"
-                    android:text="..."
+                    android:text="@string/blank"
                     app:layout_constraintEnd_toStartOf="@+id/dAnswerFriendProfile"
                     app:layout_constraintStart_toEndOf="@+id/dAnswerUserProfile"
                     android:layout_marginStart="8dp"

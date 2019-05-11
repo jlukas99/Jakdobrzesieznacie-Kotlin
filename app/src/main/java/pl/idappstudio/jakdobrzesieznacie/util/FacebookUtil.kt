@@ -1,10 +1,8 @@
 package pl.idappstudio.jakdobrzesieznacie.util
 
 import android.os.Bundle
-import android.util.Log
 import com.facebook.AccessToken
 import com.facebook.GraphRequest
-import com.google.firebase.auth.FirebaseAuth
 import pl.idappstudio.jakdobrzesieznacie.model.InviteNotificationMessage
 import pl.idappstudio.jakdobrzesieznacie.model.Message
 import pl.idappstudio.jakdobrzesieznacie.model.NotificationType
@@ -12,7 +10,7 @@ import pl.idappstudio.jakdobrzesieznacie.model.NotificationType
 object FacebookUtil {
 
     fun getFacebookFriends(token: AccessToken, name: String, onComplete: () -> Unit) {
-        val request = GraphRequest.newMyFriendsRequest(token) { array, response ->
+        val request = GraphRequest.newMyFriendsRequest(token) { array, _ ->
 
             if(array.length() == 0){
                 onComplete()
@@ -30,41 +28,37 @@ object FacebookUtil {
 
                                 if (!it.contains(it2.uid)) {
 
-                                    UserUtil.addFriend(it2.uid, true) {
+                                    if (it2.public) {
 
-                                        val msg: Message = InviteNotificationMessage(
-                                            "Znajomy z Facebook'a",
-                                            "twój znajomy $name, właśnie zarejestrował się w aplikacji",
-                                            UserUtil.user.uid,
-                                            it2.uid,
-                                            name,
-                                            NotificationType.INVITE
-                                        )
+                                        UserUtil.addFriend(it2.uid, true) {
 
-                                        FirestoreUtil.sendMessage(msg, it2.uid)
+                                            val msg: Message = InviteNotificationMessage(
+                                                "Znajomy z Facebook'a",
+                                                "twój znajomy $name, właśnie zarejestrował się w aplikacji",
+                                                UserUtil.user.uid,
+                                                it2.uid,
+                                                name,
+                                                NotificationType.INVITE
+                                            )
 
-                                        onComplete()
+                                            FirestoreUtil.sendMessage(msg, it2.uid)
+
+                                            onComplete()
+
+                                        }
 
                                     }
 
-                                } else {
-
-                                    onComplete()
-
                                 }
-
-                            } else {
-
-                                onComplete()
 
                             }
 
-                        } else {
-
-                            onComplete()
-
                         }
 
+                    }
+
+                    if (i == array.length()) {
+                        onComplete()
                     }
 
                 }

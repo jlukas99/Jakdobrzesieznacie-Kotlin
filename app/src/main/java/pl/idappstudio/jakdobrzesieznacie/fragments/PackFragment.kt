@@ -6,28 +6,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.button.MaterialButton
-import com.google.firebase.firestore.*
-import com.xwray.groupie.GroupAdapter
-import com.xwray.groupie.Section
-import com.xwray.groupie.kotlinandroidextensions.ViewHolder
-import jp.wasabeef.recyclerview.animators.LandingAnimator
-import jp.wasabeef.recyclerview.animators.SlideInDownAnimator
-import kotlinx.android.synthetic.main.header_title_item.view.*
-import org.jetbrains.anko.support.v4.intentFor
-import org.jetbrains.anko.support.v4.startActivity
 import pl.idappstudio.jakdobrzesieznacie.R
-import pl.idappstudio.jakdobrzesieznacie.activity.CreateSetActivity
-import pl.idappstudio.jakdobrzesieznacie.adapter.PackAdapater
-import pl.idappstudio.jakdobrzesieznacie.enums.ColorSnackBar
 import pl.idappstudio.jakdobrzesieznacie.interfaces.ClickSetListener
 import pl.idappstudio.jakdobrzesieznacie.model.SetItem
-import pl.idappstudio.jakdobrzesieznacie.util.SnackBarUtil
-import pl.idappstudio.jakdobrzesieznacie.util.UserUtil
 
 class PackFragment : androidx.fragment.app.Fragment(), ClickSetListener {
 
@@ -37,8 +19,8 @@ class PackFragment : androidx.fragment.app.Fragment(), ClickSetListener {
 
 //    private lateinit var setListener: ListenerRegistration
 //
-    private lateinit var pack_icon: ImageView
-    private lateinit var pack_text: TextView
+private lateinit var packIcon: ImageView
+    private lateinit var packText: TextView
 //
 //    private lateinit var pack_btn_add: MaterialButton
 //
@@ -72,15 +54,15 @@ class PackFragment : androidx.fragment.app.Fragment(), ClickSetListener {
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_pack, container, false)
 
-        pack_icon = rootView.findViewById(R.id.image_none_pack)
-        pack_text = rootView.findViewById(R.id.text_none_pack)
+        packIcon = rootView.findViewById(R.id.image_none_pack)
+        packText = rootView.findViewById(R.id.text_none_pack)
 
 //        pack_btn_add = rootView.findViewById(R.id.pack_btn_add)
 //
 //        packHeader = rootView.findViewById(R.id.include3)
 //        buttonHeader = rootView.findViewById(R.id.include)
 
-        pack_icon.setColorFilter(
+        packIcon.setColorFilter(
             ContextCompat.getColor(
                 rootView.context, R.color.colorLigth
             ), android.graphics.PorterDuff.Mode.SRC_IN)

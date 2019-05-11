@@ -40,9 +40,9 @@
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:id="@+id/back_btn"
-                    android:background="@drawable/ic_keyboard_arrow_left_black_24dp"
+                    android:background="@drawable/ic_back_arrow"
                     android:layout_gravity="center_horizontal|center_vertical"
-                    />
+                    android:contentDescription="@string/back_btn"/>
 
         </LinearLayout>
 
@@ -89,13 +89,13 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:fontFamily="@font/varela_round"
-                    android:text="KLASYCZNY"
+                    android:text="@string/classic"
                     android:textAlignment="center"
                     android:textColor="@color/colorWhite"
                     android:textSize="20sp"
                     android:transitionName="anim_name_profile"
                     android:typeface="normal"
-                    />
+                    android:textAllCaps="true"/>
 
         </LinearLayout>
 
@@ -168,7 +168,7 @@
             android:layout_marginStart="16dp" app:layout_constraintStart_toStartOf="@+id/linearLayout1"
             android:layout_marginEnd="8dp" app:layout_constraintEnd_toStartOf="@+id/etapText"/>
     <TextView
-            android:text="..."
+            android:text="@string/blank"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/userNameText"
             android:textAlignment="center"
@@ -176,7 +176,7 @@
             app:layout_constraintEnd_toEndOf="@+id/userProfileImage"
             app:layout_constraintTop_toBottomOf="@+id/userProfileImage" android:layout_marginTop="8dp"/>
     <TextView
-            android:text="... z ..."
+            android:text="@string/blank_and_blank"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/etapText"
             android:textAlignment="center" android:textStyle="bold"
@@ -186,13 +186,15 @@
             app:layout_constraintStart_toStartOf="@+id/linearLayout1"
             app:layout_constraintEnd_toEndOf="@+id/linearLayout1"/>
     <TextView
-            android:text="ETAP"
+            android:text="@string/stage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/userPrecentText2"
             android:textAlignment="center"
-            android:textAllCaps="true" android:textSize="10sp"
+            android:textAllCaps="true"
+            android:textSize="12sp"
             android:layout_marginBottom="18dp" app:layout_constraintBottom_toBottomOf="@+id/etapText"
             app:layout_constraintStart_toStartOf="@+id/etapText" app:layout_constraintEnd_toEndOf="@+id/etapText"/>
+
     <com.github.ybq.android.spinkit.SpinKitView android:layout_width="0dp"
                                                 android:layout_height="0dp"
                                                 style="@style/SpinKitView.MultiplePulse"
@@ -216,7 +218,7 @@
             app:layout_constraintStart_toEndOf="@+id/etapText" android:layout_marginStart="8dp"/>
 
     <TextView
-            android:text="..."
+            android:text="@string/blank"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/friendNameText"
             android:textAlignment="center"
@@ -224,33 +226,38 @@
             app:layout_constraintEnd_toEndOf="@+id/friendProfileImage"
             app:layout_constraintStart_toStartOf="@+id/friendProfileImage" android:layout_marginTop="8dp"/>
     <TextView
-            android:text="1"
+            android:text="@string/one"
             android:layout_width="18dp"
             android:layout_height="18dp" android:id="@+id/questionOneText"
             android:background="@drawable/game_number_overlay" android:gravity="center_horizontal|center_vertical"
             app:layout_constraintBottom_toBottomOf="@+id/questionTwoText"
             app:layout_constraintEnd_toStartOf="@+id/questionTwoText"
             app:layout_constraintTop_toTopOf="@+id/questionTwoText"
-            android:layout_marginEnd="4dp" android:textSize="10sp" android:textColor="@color/colorWhite"/>
+            android:layout_marginEnd="4dp"
+            android:textSize="12sp"
+            android:textColor="@color/colorWhite"/>
     <TextView
-            android:text="2"
+            android:text="@string/two"
             android:layout_width="18dp"
             android:layout_height="18dp" android:id="@+id/questionTwoText"
             app:layout_constraintTop_toBottomOf="@+id/etapText"
             android:background="@drawable/game_number_overlay" android:gravity="center_horizontal|center_vertical"
             app:layout_constraintStart_toEndOf="@+id/userProfileImage"
             android:layout_marginStart="8dp" android:layout_marginEnd="8dp"
-            app:layout_constraintEnd_toStartOf="@+id/friendProfileImage" android:textSize="10sp"
+            app:layout_constraintEnd_toStartOf="@+id/friendProfileImage"
+            android:textSize="12sp"
             android:textColor="@color/colorWhite" android:layout_marginTop="2dp"/>
     <TextView
-            android:text="3"
+            android:text="@string/three"
             android:layout_width="18dp"
             android:layout_height="18dp" android:id="@+id/questionThreeText"
             android:background="@drawable/game_number_overlay" android:gravity="center_horizontal|center_vertical"
             app:layout_constraintTop_toTopOf="@+id/questionTwoText"
             app:layout_constraintBottom_toBottomOf="@+id/questionTwoText"
             app:layout_constraintStart_toEndOf="@+id/questionTwoText"
-            android:layout_marginStart="4dp" android:textSize="10sp" android:textColor="@color/colorWhite"/>
+            android:layout_marginStart="4dp"
+            android:textSize="12sp"
+            android:textColor="@color/colorWhite"/>
     <fragment
             android:layout_width="0dp"
             android:layout_height="0dp"
@@ -261,7 +268,7 @@
             app:layout_constraintBottom_toBottomOf="parent"/>
 
     <TextView
-            android:text="Poczekaj chwilkę\nmusimy wszystko załadować"
+            android:text="@string/loading_game_info"
             android:layout_width="300dp"
             android:layout_height="wrap_content" android:id="@+id/gameText" app:layout_constraintEnd_toEndOf="parent"
             android:layout_marginEnd="8dp" app:layout_constraintStart_toStartOf="parent"
@@ -271,11 +278,18 @@
 
     <ImageView
             android:layout_width="60dp"
-            android:layout_height="50dp" app:srcCompat="@mipmap/games_icon" android:id="@+id/gameIcon"
-            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="16dp"
+            android:layout_height="50dp"
+            app:srcCompat="@mipmap/games_icon"
+            android:id="@+id/gameIcon"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="16dp"
             app:layout_constraintStart_toStartOf="parent"
             android:layout_marginStart="16dp"
-            app:layout_constraintTop_toBottomOf="@+id/userNameText" android:layout_marginTop="48dp"/>
+            app:layout_constraintTop_toBottomOf="@+id/userNameText"
+            android:layout_marginTop="48dp"
+            android:contentDescription="@string/image_sword"
+            android:tint="@color/colorLigth"
+            android:tintMode="src_in"/>
 
     <com.github.ybq.android.spinkit.SpinKitView
             android:id="@+id/gameLoading"

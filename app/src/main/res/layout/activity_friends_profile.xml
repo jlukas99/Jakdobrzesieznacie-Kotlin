@@ -41,9 +41,9 @@
                     android:layout_width="32dp"
                     android:layout_height="32dp"
                     android:id="@+id/back_btn"
-                    android:background="@drawable/ic_keyboard_arrow_left_black_24dp"
+                    android:background="@drawable/ic_back_arrow"
                     android:layout_gravity="center_horizontal|center_vertical"
-                    />
+                    android:contentDescription="@string/back_btn"/>
 
         </LinearLayout>
 
@@ -90,13 +90,13 @@
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:fontFamily="@font/varela_round"
-                    android:text="PROFIL ZNAJOMEGO"
+                    android:text="@string/profile_friend"
                     android:textAlignment="center"
                     android:textColor="@color/colorWhite"
                     android:textSize="20sp"
                     android:transitionName="anim_name_profile"
                     android:typeface="normal"
-                    />
+                    android:textAllCaps="true"/>
 
         </LinearLayout>
 
@@ -108,8 +108,7 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/linearLayout7"
                 app:layout_constraintEnd_toStartOf="@+id/linearLayout10"
-                android:id="@+id/linearLayout9"
-                >
+                android:id="@+id/linearLayout9">
 
             <View
                     android:layout_height="2dp"
@@ -131,8 +130,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
                 android:id="@+id/linearLayout10"
-                app:layout_constraintEnd_toEndOf="parent"
-                >
+                app:layout_constraintEnd_toEndOf="parent">
 
             <View
                     android:layout_width="32dp"
@@ -181,7 +179,8 @@
                 app:layout_constraintEnd_toStartOf="@+id/friends_profile_image"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="@+id/friends_profile_image"
-                app:srcCompat="@drawable/ic_chat"/>
+                app:srcCompat="@drawable/ic_chat"
+                android:contentDescription="@string/chat_btn"/>
 
         <ImageButton
                 android:id="@+id/friends_profile_favorite"
@@ -197,69 +196,76 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/friends_profile_image"
                 app:layout_constraintTop_toTopOf="@+id/friends_profile_image"
-                app:srcCompat="@drawable/ic_heart_over"/>
+                app:srcCompat="@drawable/ic_heart_over"
+                android:contentDescription="@string/favorite_btn"/>
 
         <TextView
-            android:text="0%"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:id="@+id/user_profile_stats_precent"
-            android:textAlignment="viewEnd"
-            android:textColor="@color/colorLigth"
-            app:layout_constraintStart_toStartOf="@+id/linearLayout5" android:layout_marginTop="12dp"
-            app:layout_constraintTop_toBottomOf="@+id/user_profile_stats_games"/>
+                android:text="@string/percent"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:id="@+id/user_profile_stats_precent"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/colorLigth"
+                app:layout_constraintStart_toStartOf="@+id/linearLayout5"
+                android:layout_marginTop="12dp"
+                app:layout_constraintTop_toBottomOf="@+id/user_profile_stats_games"/>
 
         <TextView
-            android:text="0"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/user_profile_stats_games"
-            android:textAlignment="viewEnd"
-            android:textColor="@color/colorLigth"
-            android:layout_marginTop="12dp"
-            app:layout_constraintTop_toBottomOf="@+id/user_profile_stats_banswer"
-            app:layout_constraintStart_toStartOf="@+id/linearLayout5"/>
+                android:text="@string/zero"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/user_profile_stats_games"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/colorLigth"
+                android:layout_marginTop="12dp"
+                app:layout_constraintTop_toBottomOf="@+id/user_profile_stats_banswer"
+                app:layout_constraintStart_toStartOf="@+id/linearLayout5"/>
 
         <TextView
-            android:text="0"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/user_profile_stats_banswer"
-            android:textAlignment="viewEnd"
-            android:textColor="@color/colorLigth"
-            android:layout_marginTop="12dp" app:layout_constraintTop_toBottomOf="@+id/user_profile_stats_canswer"
-            app:layout_constraintStart_toStartOf="@+id/linearLayout5"/>
+                android:text="@string/zero"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/user_profile_stats_banswer"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/colorLigth"
+                android:layout_marginTop="12dp"
+                app:layout_constraintTop_toBottomOf="@+id/user_profile_stats_canswer"
+                app:layout_constraintStart_toStartOf="@+id/linearLayout5"/>
 
         <TextView
-            android:text="0"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/user_profile_stats_canswer"
-            android:textAlignment="viewEnd"
-            android:textColor="@color/colorLigth"
-            android:layout_marginTop="16dp" app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
-            app:layout_constraintStart_toStartOf="@+id/linearLayout5"/>
+                android:text="@string/zero"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/user_profile_stats_canswer"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/colorLigth"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
+                app:layout_constraintStart_toStartOf="@+id/linearLayout5"/>
 
         <TextView
-            android:text="Błędne odpowiedzi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView10"
-            android:textColor="@color/colorLigth"
-            android:layout_marginTop="12dp" app:layout_constraintTop_toBottomOf="@+id/text_nick"
-            android:layout_marginEnd="8dp" app:layout_constraintEnd_toStartOf="@+id/friends_profile_image_stats"
-            app:layout_constraintStart_toEndOf="@+id/user_profile_image_stats" android:layout_marginStart="8dp"/>
+                android:text="@string/bad_answers"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView10"
+                android:textColor="@color/colorLigth"
+                android:layout_marginTop="12dp"
+                app:layout_constraintTop_toBottomOf="@+id/text_nick"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toStartOf="@+id/friends_profile_image_stats"
+                app:layout_constraintStart_toEndOf="@+id/user_profile_image_stats"
+                android:layout_marginStart="8dp"/>
 
         <TextView
-            android:text="0%"
-            android:layout_width="wrap_content"
-            android:layout_height="0dp"
-            android:id="@+id/friends_profile_stats_precent"
-            android:textAlignment="viewEnd"
-            android:textColor="@color/colorLigth"
-            android:layout_marginTop="12dp"
-            app:layout_constraintTop_toBottomOf="@+id/friends_profile_stats_games"
-            app:layout_constraintEnd_toEndOf="@+id/linearLayout5"/>
+                android:text="@string/percent"
+                android:layout_width="wrap_content"
+                android:layout_height="0dp"
+                android:id="@+id/friends_profile_stats_precent"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/colorLigth"
+                android:layout_marginTop="12dp"
+                app:layout_constraintTop_toBottomOf="@+id/friends_profile_stats_games"
+                app:layout_constraintEnd_toEndOf="@+id/linearLayout5"/>
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/friends_profile_image"
@@ -276,65 +282,81 @@
             app:layout_constraintVertical_bias="0.0" android:layout_marginTop="32dp"/>
 
         <TextView
-            android:text="0"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/friends_profile_stats_games"
-            android:textAlignment="viewEnd"
-            android:textColor="@color/colorLigth"
-            android:layout_marginTop="12dp"
-            app:layout_constraintTop_toBottomOf="@+id/friends_profile_stats_banswer"
-            app:layout_constraintEnd_toEndOf="@+id/linearLayout5"/>
+                android:text="@string/zero"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/friends_profile_stats_games"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/colorLigth"
+                android:layout_marginTop="12dp"
+                app:layout_constraintTop_toBottomOf="@+id/friends_profile_stats_banswer"
+                app:layout_constraintEnd_toEndOf="@+id/linearLayout5"/>
 
         <TextView
-            android:text="0"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/friends_profile_stats_banswer"
-            android:textAlignment="viewEnd"
-            android:textColor="@color/colorLigth"
-            android:layout_marginTop="12dp"
-            app:layout_constraintTop_toBottomOf="@+id/friends_profile_stats_canswer"
-            app:layout_constraintEnd_toEndOf="@+id/linearLayout5"/>
+                android:text="@string/zero"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/friends_profile_stats_banswer"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/colorLigth"
+                android:layout_marginTop="12dp"
+                app:layout_constraintTop_toBottomOf="@+id/friends_profile_stats_canswer"
+                app:layout_constraintEnd_toEndOf="@+id/linearLayout5"/>
 
         <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView14"
-            android:textColor="@color/colorLigth"
-            android:layout_marginTop="12dp" app:layout_constraintTop_toBottomOf="@+id/textView12"
-            android:text="Średnia znajomość"
-            app:layout_constraintStart_toEndOf="@+id/user_profile_image_stats" android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp" app:layout_constraintEnd_toStartOf="@+id/friends_profile_image_stats"/>
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView14"
+                android:textColor="@color/colorLigth"
+                android:layout_marginTop="12dp"
+                app:layout_constraintTop_toBottomOf="@+id/textView12"
+                android:text="@string/average_knowledge"
+                app:layout_constraintStart_toEndOf="@+id/user_profile_image_stats"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toStartOf="@+id/friends_profile_image_stats"/>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/friends_profile_startgame_btn"
-            android:layout_width="264.09dp"
-            android:layout_height="38.66dp"
-            android:text="..."
-            app:cornerRadius="100dp"
-            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="48dp"
-            app:backgroundTint="@color/colorPrimary"
-            android:insetBottom="0dp" android:insetTop="0dp" android:textSize="11sp" android:textAlignment="center"
-            android:textAllCaps="true" android:typeface="normal" android:fontFamily="@font/varela_round"
-            android:layout_marginStart="48dp" app:layout_constraintStart_toStartOf="parent"
-            app:iconPadding="0dp" app:iconTint="@color/colorWhite"
-            android:textColor="@color/colorWhite"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginBottom="32dp" android:layout_marginTop="32dp"
-            app:layout_constraintTop_toBottomOf="@+id/friends_profile_gamemode_btn"
-            app:layout_constraintVertical_bias="0.0" app:backgroundTintMode="src_over"
+                android:id="@+id/friends_profile_startgame_btn"
+                android:layout_width="264.09dp"
+                android:layout_height="38.66dp"
+                android:text="@string/blank"
+                app:cornerRadius="100dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="48dp"
+                app:backgroundTint="@color/colorPrimary"
+                android:insetBottom="0dp"
+                android:insetTop="0dp"
+                android:textSize="12sp"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:typeface="normal"
+                android:fontFamily="@font/varela_round"
+                android:layout_marginStart="48dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:iconPadding="0dp"
+                app:iconTint="@color/colorWhite"
+                android:textColor="@color/colorWhite"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:layout_marginBottom="32dp"
+                android:layout_marginTop="32dp"
+                app:layout_constraintTop_toBottomOf="@+id/friends_profile_gamemode_btn"
+                app:layout_constraintVertical_bias="0.0"
+                app:backgroundTintMode="src_over"
             />
 
         <TextView
-            android:text="Poprawne odpowiedzi"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/text_nick" android:layout_marginTop="16dp"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
-            android:textColor="@color/colorLigth"
-            app:layout_constraintStart_toEndOf="@+id/user_profile_image_stats" android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp" app:layout_constraintEnd_toStartOf="@+id/friends_profile_image_stats"/>
+                android:text="@string/correct_answer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/text_nick"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
+                android:textColor="@color/colorLigth"
+                app:layout_constraintStart_toEndOf="@+id/user_profile_image_stats"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toStartOf="@+id/friends_profile_image_stats"/>
 
         <LinearLayout
             android:id="@+id/linearLayout3"
@@ -361,18 +383,18 @@
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/textView4"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"
-                android:fontFamily="@font/varela_round"
-                android:text="STATYSTYKI"
-                android:textAlignment="center"
-                android:textAllCaps="false"
-                android:textColor="@color/colorWhite"
-                android:textSize="16sp"
-                android:typeface="normal" />
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginEnd="8dp"
+                    android:fontFamily="@font/varela_round"
+                    android:text="@string/statistics"
+                    android:textAlignment="center"
+                    android:textAllCaps="true"
+                    android:textColor="@color/colorWhite"
+                    android:textSize="16sp"
+                    android:typeface="normal"/>
 
             <View
                 android:id="@+id/view5"
@@ -415,63 +437,76 @@
             app:layout_constraintTop_toTopOf="@+id/linearLayout3"/>
 
         <TextView
-            android:text="Rozegrane gry"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/textView12"
-            android:textColor="@color/colorLigth"
-            android:layout_marginTop="12dp" app:layout_constraintTop_toBottomOf="@+id/textView10"
-            app:layout_constraintStart_toEndOf="@+id/user_profile_image_stats" android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp" app:layout_constraintEnd_toStartOf="@+id/friends_profile_image_stats"/>
+                android:text="@string/games_played"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/textView12"
+                android:textColor="@color/colorLigth"
+                android:layout_marginTop="12dp"
+                app:layout_constraintTop_toBottomOf="@+id/textView10"
+                app:layout_constraintStart_toEndOf="@+id/user_profile_image_stats"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                app:layout_constraintEnd_toStartOf="@+id/friends_profile_image_stats"/>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/friends_profile_set_btn"
-            android:layout_width="264.09dp"
-            android:layout_height="38.66dp"
-            android:layout_marginStart="48dp"
-            android:layout_marginTop="16dp"
-            android:layout_marginEnd="48dp"
-            android:fontFamily="@font/varela_round"
-            android:insetTop="0dp"
-            android:insetBottom="0dp"
-            android:text="..."
-            android:textAlignment="center"
-            android:textAllCaps="true"
-            android:textSize="11sp"
-            android:typeface="normal"
-            app:backgroundTint="@color/colorButtonSecondary"
-            app:cornerRadius="100dp"
-            app:icon="@drawable/ic_pack_icon"
-            app:iconPadding="0dp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.49"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/linearLayout5" />
+                android:id="@+id/friends_profile_set_btn"
+                android:layout_width="264.09dp"
+                android:layout_height="38.66dp"
+                android:layout_marginStart="48dp"
+                android:layout_marginTop="16dp"
+                android:layout_marginEnd="48dp"
+                android:fontFamily="@font/varela_round"
+                android:insetTop="0dp"
+                android:insetBottom="0dp"
+                android:text="@string/blank"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:textSize="12sp"
+                android:typeface="normal"
+                app:backgroundTint="@color/colorButtonSecondary"
+                app:cornerRadius="100dp"
+                app:icon="@drawable/ic_pack_icon"
+                app:iconPadding="0dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.49"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout5"/>
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/friends_profile_gamemode_btn"
-            android:layout_width="264.09dp"
-            android:layout_height="38.66dp"
-            android:text="..."
-            app:cornerRadius="100dp"
-            app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="48dp"
-            app:backgroundTint="@color/colorButtonSecondary"
-            android:insetBottom="0dp" android:insetTop="0dp" android:textSize="11sp" android:textAlignment="center"
-            android:textAllCaps="true" android:typeface="normal" android:fontFamily="@font/varela_round"
-            android:layout_marginStart="48dp" app:layout_constraintStart_toStartOf="parent"
-            app:icon="@drawable/ic_gamepad" app:iconPadding="0dp"
-            app:layout_constraintHorizontal_bias="0.49"
-            android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/friends_profile_set_btn"/>
+                android:id="@+id/friends_profile_gamemode_btn"
+                android:layout_width="264.09dp"
+                android:layout_height="38.66dp"
+                android:text="@string/blank"
+                app:cornerRadius="100dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                android:layout_marginEnd="48dp"
+                app:backgroundTint="@color/colorButtonSecondary"
+                android:insetBottom="0dp"
+                android:insetTop="0dp"
+                android:textSize="12sp"
+                android:textAlignment="center"
+                android:textAllCaps="true"
+                android:typeface="normal"
+                android:fontFamily="@font/varela_round"
+                android:layout_marginStart="48dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:icon="@drawable/ic_gamepad"
+                app:iconPadding="0dp"
+                app:layout_constraintHorizontal_bias="0.49"
+                android:layout_marginTop="8dp"
+                app:layout_constraintTop_toBottomOf="@+id/friends_profile_set_btn"/>
 
         <TextView
-            android:text="0"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/friends_profile_stats_canswer"
-            android:textAlignment="viewEnd"
-            android:textColor="@color/colorLigth"
-            android:layout_marginTop="16dp" app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
-            app:layout_constraintEnd_toEndOf="@+id/linearLayout5"/>
+                android:text="@string/zero"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/friends_profile_stats_canswer"
+                android:textAlignment="viewEnd"
+                android:textColor="@color/colorLigth"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/linearLayout3"
+                app:layout_constraintEnd_toEndOf="@+id/linearLayout5"/>
 
         <LinearLayout
             android:orientation="horizontal"
@@ -492,12 +527,18 @@
                 app:layout_constraintBottom_toBottomOf="parent" android:background="@color/colorLigth"
                 android:layout_gravity="center" android:layout_weight="1"/>
             <TextView
-                android:text="Rozgrywka"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content" android:id="@+id/textView8"
-                android:textColor="@color/colorWhite" android:textAlignment="center" android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp" android:textSize="16sp" android:fontFamily="@font/varela_round"
-                android:typeface="normal" android:textAllCaps="true"/>
+                    android:text="@string/game"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/textView8"
+                    android:textColor="@color/colorWhite"
+                    android:textAlignment="center"
+                    android:layout_marginEnd="8dp"
+                    android:layout_marginStart="8dp"
+                    android:textSize="16sp"
+                    android:fontFamily="@font/varela_round"
+                    android:typeface="normal"
+                    android:textAllCaps="true"/>
 
             <View
                 android:layout_height="2dp" android:id="@+id/view9"

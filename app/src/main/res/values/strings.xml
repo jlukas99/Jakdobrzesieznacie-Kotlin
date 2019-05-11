@@ -1,34 +1,19 @@
-<resources>
+<resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">Jak dobrze sie znacie?</string>
-    <string name="select_gender">Wybierz płeć</string>
-    <string name="login_text">masz już konto?
-        <u>zaloguj się</u>
-    </string>
-    <string name="register_text">nie masz konta?
-        <u>stwórz je</u>
-    </string>
 
-    <string name="passwd_reset_text">zapomniałeś hasła?
-        <u>przypomnij</u>
-    </string>
-
-    <string name="policy_privacy">
-        <u>polityke prywatności</u>
-    </string>
-
-    <string name="terms">
-        <u>zasady i warunki</u>
-    </string>
-
-
+    <!--Facebook-->
     <string name="facebook_app_id" translatable="false">249845939148351</string>
     <string name="fb_login_protocol_scheme" translatable="false">fb249845939148351</string>
+
+    <!--Firebase-->
+    <string name="default_notification_channel_id" translatable="false">13</string>
 
     <!--AdMob-->
     <string name="adMob_id" translatable="false">ca-app-pub-9811848924200939~9857440152</string>
     <!--<string name="adMob_menu_ad_id" translatable="false">ca-app-pub-9811848924200939/1830297398</string>-->
     <!--<string name="adMob_login_ad_id" translatable="false">ca-app-pub-9811848924200939/1595806759</string>-->
     <!--<string name="adMob_reward_ad_id" translatable="false">ca-app-pub-9811848924200939/2579793350</string>-->
+    <!--<string name="adMob_reward2_ad_id" translatable="false">ca-app-pub-9811848924200939/2579793350</string>-->
 
     <!--Test AdMob-->
     <string name="adMob_menu_ad_id" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
@@ -36,9 +21,235 @@
     <string name="adMob_reward_ad_id" translatable="false">ca-app-pub-3940256099942544/5224354917</string>
     <string name="adMob_reward2_ad_id" translatable="false">ca-app-pub-3940256099942544/5224354917</string>
 
-    <string name="default_notification_channel_id" translatable="false">13</string>
-    <string name="no_search_results">Nie znaleziono gracza o takim nicku\nnie zapomnij o dużych literach</string>
-    <string name="title_activity_create_set">CreateSetActivity</string>
+    <!--Login & Register-->
+    <string name="select_gender">Wybierz swoją płeć</string>
+    <string name="login_text">masz już konto? <u>zaloguj się</u></string>
+    <string name="register_text">nie masz konta? <u>stwórz je</u></string>
+    <string name="passwd_reset_text">zapomniałeś hasła? <u>przypomnij</u></string>
+    <string name="policy_privacy"><u>polityke prywatności</u></string>
+    <string name="terms"><u>zasady i warunki</u></string>
 
+    <!--Invite & Search-->
+    <string name="no_search_results">Nie znaleziono gracza o takim nicku\nnie zapomnij o dużych literach</string>
+
+    <!--Snackbar-->
+    <string name="have_premium">Żeby korzystać z tego zestawu, musisz posiadać konto premium</string>
+    <string name="chat_in_progress">Pracujemy dopiero nad czatem</string>
+    <string name="head_pack_default">podstawowe</string>
+    <string name="header_pack_yours">twoje</string>
+    <string name="chat_in_build">Pracujemy dopiero nad czatem</string>
+    <string name="guess_answer">Zgadnij odpowiedź znajomego</string>
+    <string name="guess_answer_title">Zgadnij odpowiedzi</string>
+    <string name="reason_is_to_short">Powód jest za krótki</string>
+    <string name="send_report_successful">Wysłano zgłoszenie o id: %1$s</string>
+    <string name="send_report_error">Nie udało się wysłać zgłoszenia</string>
+    <string name="select_correct_answer">Kliknij na ptaszek przy treści odpowiedzi, aby zaznaczyć która odpowiedź jest prawidłowa</string>
+    <string name="answers_not_repeat">Odpowiedzi nie mogą się powtarzać</string>
+    <string name="sended_invite">Wysłano zaproszenia do %1$s</string>
+    <string name="sended_invite_error">Nie udało się wysłać zaproszenia, bądź już dostałeś zaproszenie do tej osoby</string>
+    <string name="add_friend">Dodano %1$s do znajomych</string>
+    <string name="add_friend_error">Wystąpił błąd podczas dodawania</string>
+    <string name="reject_invites">Odrzucono zaproszenie od %1$s</string>
+    <string name="premium_disabled">Opcja na czas testów, została wyłączona</string>
+    <string name="statistics_disabled">Pracujemy nad udostępnianiem statystyk profilu</string>
+
+    <!--Friend Profile-->
+    <string name="back_btn">wróć</string>
+    <string name="blank" translatable="false">…</string>
+    <string name="profile_friend">profil znajomego</string>
+    <string name="chat_btn">czat</string>
+    <string name="favorite_btn">ulubiony</string>
+    <string name="percent" translatable="false">0%</string>
+    <string name="zero" translatable="false">0</string>
+    <string name="bad_answers">Błędne odpowiedzi</string>
+    <string name="average_knowledge">Średnia znajomość</string>
+    <string name="games_played">Rozegrane gry</string>
+    <string name="statistics">statystyki</string>
+    <string name="game">rozgrywka</string>
+    <string name="correct_answer">Poprawne odpowiedzi</string>
+    <string name="play">Graj</string>
+    <string name="friend_turn">Kolej znajomego</string>
+
+    <!--Game-->
+    <string name="classic">Klasyczny</string>
+    <string name="blank_and_blank">… z …</string>
+    <string name="stage">Etap</string>
+    <string name="one" translatable="false">1</string>
+    <string name="two" translatable="false">2</string>
+    <string name="three" translatable="false">3</string>
+    <string name="loading_game_info">Poczekaj chwilkę musimy wszystko załadować</string>
+    <string name="image_sword">miecze</string>
+    <string name="fail_load_question">Nie udało się załadować pytań\nczy chcesz zrestartować grę?</string>
+    <string name="stage_of_stage">%1$d z 3</string>
+    <string name="report_text_info">Jeśli w pytaniu coś nie gra lub ma niestosowną treść możesz nam je zgłosić</string>
+
+    <!--Intro-->
+    <string name="company_logo">Logo Firmy</string>
+    <string name="app_logo">Logo Aplikacji</string>
+
+    <!--Login-->
+    <string name="log_in">zaloguj</string>
+    <string name="email">Email</string>
+    <string name="email_image">Ikona maila</string>
+    <string name="password">Hasło</string>
+    <string name="password_image">Ikona hasła</string>
+    <string name="incoreect_mail" tools:ignore="Typos">Niepoprawny adres email</string>
+    <string name="write_password">Wpisz hasło</string>
+    <string name="login_successful">Udało się zalogować</string>
+    <string name="error_login">Wystapił problem z twoim kontem, skontaktuj się znami.</string>
+    <string name="cancel_login">Anulowano logowanie</string>
+    <string name="incorrect_email_or_password">Niepoprawny email lub hasło</string>
+
+    <!--Facebook Login-->
+    <string name="cancel_login_facebook">Anulowano logowanie za pomocą Facebook\'a</string>
+    <string name="logout_facebook">Wylogowano z poprzedniego konta, spróbuj zalogować się ponownie</string>
+    <string name="error_facebook_login">Nie udało się zalogować</string>
+    <string name="login_successful_facebook">Zalogowano za pomocą Facebook\'a</string>
+    <string name="create_account">Stwórz konto</string>
+    <string name="title_login_menu">Zaczynajmy</string>
+    <string name="terms_and_privacy">Rejestrując bądź logując się do aplikacji akceptujesz</string>
+    <string name="and">\u0020oraz\u0020</string>
+    <string name="terms_and_privacy_footer">korzystania z niej.</string>
+    <string name="login_by_facebook">zaloguj się za pomocą fb</string>
+
+    <!--Register-->
+    <string name="select_picture_image">Wybierz zdjęcie profilowe</string>
+    <string name="select_picture">Wybierz zdjęcie</string>
+    <string name="re_password">Powtórz hasło</string>
+    <string name="gender_image">Obrazek Płci</string>
+    <string name="password_not_same">Hasła się nie zgadzają</string>
+    <string name="password_validation">Hasło musi składać się przynajmniej z 6 znaków liter lub cyf</string>
+    <string name="create_account_successful">Pomyślnie utworzono konto</string>
+    <string name="create_account_error">Nie udało utworzyć się konta</string>
+
+    <!--Remind Password-->
+    <string name="remind_password_title">Przypomnij hasło</string>
+    <string name="remind_password_text">Wpisz swój email, wyślemy ci wiadomość z nowym hasłem</string>
+    <string name="send_email">WYŚLIJ EMAIL</string>
+    <string name="send_mail_successful">Wysłano wiadomość, sprawdź mail\'a</string>
+    <string name="send_mail_canceled">Anulowano przywracanie hasła</string>
+    <string name="send_mail_error">Nie udało się wysłać mail\'a</string>
+
+    <!--Settings-->
+    <string name="permium_options">OPCJE PREMIUM</string>
+    <string name="settings">USTAWIENIA</string>
+    <string name="notification">Powiadomienia</string>
+    <string name="public_profile">Profil Publiczny</string>
+    <string name="write_new_nick">Wpisz nowy nick</string>
+    <string name="change_your_nick">Zmień swój nick</string>
+    <string name="user_image">Ikona Użytkownika</string>
+    <string name="change_your_avatar">Zmień swój avatar</string>
+    <string name="accept">zaakceptuj</string>
+    <string name="change_your_gender">Zmień swoją płeć</string>
+    <string name="on_premium_style">Włącz wygląd premium</string>
+    <string name="manage_subscribe">Zarządzaj abonamentem</string>
+    <string name="information">INFORMACJE</string>
+    <string name="app_version">Wersja aplikacji</string>
+    <string name="return_back">powrót</string>
+    <string name="not_saved">Posiadasz nie zapisane zmiany</string>
+    <string name="change_your_nick_successful">Pomyślnie zmieniono nick</string>
+    <string name="change_your_nick_error">Nie udało się zmienić nicku</string>
+    <string name="change_your_nick_info">Nick musi składać sie przynajmniej z 2 znaków</string>
+    <string name="select_picture_fb_info">Nie możesz zmienić avataru, ponieważ jesteś zalogowany przez Facebook\'a</string>
+    <string name="change_your_avatar_successful">Pomyślnie zmieniono zdjęcie</string>
+    <string name="change_your_avatar_error">Nie udało się zmienić zdjęcia</string>
+    <string name="select_gender_fb_info">Nie możesz zmienić płci, ponieważ jesteś zalogowany przez Facebook\'a</string>
+    <string name="change_your_gender_successful">Pomyślnie zmieniono płeć</string>
+    <string name="change_your_gender_error">Nie udało się zmienić płci</string>
+    <string name="not_have_a_premium">Aby użyć tej opcji, musisz posiadać konto Premium</string>
+
+    <!--Dialogs-->
+    <string name="sets_title">ZESTAWY</string>
+    <string name="invite_dialog_title">prośba o dodanie</string>
+    <string name="invite_dialog_text">Czy chcesz dodać tę osobę do znajomych?</string>
+    <string name="discard">ODRZUĆ</string>
+    <string name="add">DODAJ</string>
+    <string name="loading">Ładowanie…</string>
+    <string name="create_account_loading">Tworzenie konta…</string>
+    <string name="login_loading">Logowanie…</string>
+    <string name="report_question_dialog">zgłoś pytanie</string>
+    <string name="reason_hint">wpisz powód zgłoszenia</string>
+    <string name="report_text">Powód zgłoszenia?</string>
+    <string name="question_id" translatable="false">ID: %1$s</string>
+    <string name="cancel">anuluj</string>
+    <string name="send_report">Wyślij zgłoszenie</string>
+    <string name="premium">Premium</string>
+
+    <!--Achivments Fragment-->
+    <string name="achivments_build_text">Pracujemy nad tą zakładką\nmuszisz uzbroić się w cierpliwość</string>
+    <string name="medal">medal</string>
+    <string name="achivments">Osiągnięcia</string>
+
+    <!--Play Fragment-->
+    <string name="gamepad">ikona kontrolera</string>
+    <string name="play_info">Nie masz żadnego znajomego\nz którym mógłbyś zagrać</string>
+    <string name="active_game">Aktywne gry</string>
+    <string name="friends">Znajomi</string>
+
+    <!--Invite Fragment-->
+    <string name="invites">ZAPROSZENIA</string>
+    <string name="enter_friends_nick">Wpisz nick znajomego…</string>
+    <string name="search_info">Wpisz nick znajomego aby wyszukiwanie sie powiodło uwzględnij duże litery</string>
+    <string name="requests_for_adding">Prośby o dodanie</string>
+    <string name="search">Wyszukiwarka</string>
+    <string name="enter_friends_nick_text">Wpisz nick znajomego\nuwzględniając duże litery</string>
+
+    <!--Sets-->
+    <string name="activate_premium">AKTYWUJ KONTO PREMIUM</string>
+    <string name="create_set">STWÓRZ ZESTAW</string>
+    <string name="sets_build_info">Pracujemy nad tą zakładką\nmuszisz uzbroić się w cierpliwość</string>
+    <string name="deafult_question">Domyślne pytania</string>
+    <string name="own_question">Własne pytania</string>
+
+    <!--Profile-->
+    <string name="profile">PROFIL</string>
+    <string name="sum_incorrect_answers">Suma błędnych odpowiedzi</string>
+    <string name="nick">Nick</string>
+    <string name="average_knowledge_of_friends">Średnia znajomość znajomych</string>
+    <string name="logout">WYLOGUJ</string>
+    <string name="sum_correct_answers">Suma poprawnych odpowiedzi</string>
+    <string name="sum_play_games">Suma rozegranych gier</string>
+
+    <!--Stage One-->
+    <string name="next_question">następne pytanie</string>
+    <string name="reject_bad_answer">odrzuć jedną błędną odpowiedź</string>
+    <string name="a" translatable="false">A</string>
+    <string name="b" translatable="false">B</string>
+    <string name="c" translatable="false">C</string>
+    <string name="d" translatable="false">D</string>
+
+    <!--Stage Three Own Question-->
+    <string name="enter_question_text">Wpisz treść pytania</string>
+    <string name="enter_answer_a">Wpisz odpowiedź A</string>
+    <string name="enter_answer_b">Wpisz odpowiedź B</string>
+    <string name="enter_answer_c">Wpisz odpowiedź C</string>
+    <string name="enter_answer_d">Wpisz odpowiedź D</string>
+
+    <!--Stage Three-->
+    <string name="change_question">zmień pytanie</string>
+    <string name="finish_your_turn">Zakończ swoją turę</string>
+    <string name="answer_the_question">Odpowiedz na pytanie</string>
+
+    <!--Stage Two-->
+    <string name="skip_stage">pomin ten etap</string>
+    <string name="next_stage">Następny etap</string>
+    <string name="next_answer">Następna odpowiedz</string>
+    <string name="friend_answer">Odpowiedzi znajomego</string>
+
+    <!--Creaste Set-->
+    <string name="create_question">Stwórz Pytania</string>
+
+    <!--Notification-->
+    <string name="notification_finish_turn_title">Twoja kolej!</string>
+    <string name="notification_finish_turn">%1$s skończył swoją turę, czas na ciebie!</string>
+    <string name="friend_from_facebook">Znajomy z Facebook\'a</string>
+    <string name="friend_from_facebook_subtitle">twój znajomy %1$s, właśnie zarejestrował się w aplikacji</string>
+
+    <!--Statuses-->
+    <string name="in_game">W grze</string>
+    <string name="in_menu">Błąka się po menu</string>
+    <string name="in_settings">Majstruje coś w ustawieniach</string>
+    <string name="in_profile">Przegląda profil znajomego</string>
+    <string name="offline" translatable="false">offline</string>
 
 </resources>

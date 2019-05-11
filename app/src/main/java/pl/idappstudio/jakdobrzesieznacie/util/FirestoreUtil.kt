@@ -4,14 +4,15 @@ import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.CollectionReference
 import com.google.firebase.firestore.DocumentReference
 import com.google.firebase.firestore.FirebaseFirestore
-import pl.idappstudio.jakdobrzesieznacie.model.*
+import pl.idappstudio.jakdobrzesieznacie.model.Message
+import pl.idappstudio.jakdobrzesieznacie.model.UserData
 
 object FirestoreUtil {
 
     private val firestoreInstance: FirebaseFirestore by lazy { FirebaseFirestore.getInstance() }
 
     private val db: CollectionReference get() = firestoreInstance.collection("users")
-    private val dbSet: CollectionReference get() = firestoreInstance.collection("set")
+    //    private val dbSet: CollectionReference get() = firestoreInstance.collection("set")
     private val dbGame: CollectionReference get() = firestoreInstance.collection("games")
     private val currentUserDocRef: DocumentReference get() = firestoreInstance.document("users/${FirebaseAuth.getInstance().currentUser?.uid}")
 

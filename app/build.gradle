@@ -14,10 +14,9 @@ android {
         experimental = true
     }
 
-    lintOptions {
-        checkReleaseBuilds false
-    }
-
+//    lintOptions {
+//        checkReleaseBuilds false
+//    }
 
     compileSdkVersion 28
 
@@ -25,8 +24,8 @@ android {
         applicationId "pl.idappstudio.jakdobrzesieznacie"
         minSdkVersion 22
         targetSdkVersion 28
-        versionCode 5
-        versionName "v1.3-Alpha"
+        versionCode 6
+        versionName "v1.4-Alpha"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -36,23 +35,32 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
+    compileOptions {
+        sourceCompatibility = '1.8'
+        targetCompatibility = '1.8'
+    }
+    buildToolsVersion = '28.0.3'
 
 }
 
 dependencies {
     implementation fileTree(include: ['*.jar'], dir: 'libs')
 
+    //kotlin
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$kotlin_version"
+    implementation "org.jetbrains.kotlin:kotlin-reflect:1.3.31"
+
     //androidx
-    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-alpha5'
-    implementation 'androidx.core:core:1.1.0-alpha05'
+    implementation 'androidx.constraintlayout:constraintlayout:2.0.0-beta1'
+    implementation 'androidx.core:core:1.2.0-alpha01'
     implementation 'androidx.percentlayout:percentlayout:1.0.0'
-    implementation 'androidx.vectordrawable:vectordrawable-animated:1.1.0-alpha01'
-    implementation 'androidx.media:media:1.1.0-alpha04'
+    implementation 'androidx.vectordrawable:vectordrawable-animated:1.1.0-beta01'
+    implementation 'androidx.media:media:1.1.0-beta01'
     implementation 'com.google.android.material:material:1.0.0'
     implementation 'androidx.legacy:legacy-support-v4:1.0.0'
-    implementation 'androidx.appcompat:appcompat:1.1.0-alpha04'
-    androidTestImplementation 'androidx.test:runner:1.2.0-alpha05'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-alpha05'
+    implementation 'androidx.appcompat:appcompat:1.1.0-alpha05'
+    androidTestImplementation 'androidx.test:runner:1.2.0-beta01'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0-beta01'
 
     //junit
     testImplementation 'junit:junit:4.13-beta-2'
@@ -81,20 +89,20 @@ dependencies {
     implementation "org.jetbrains.anko:anko-coroutines:$anko_version"
 
     //firebase
-    implementation 'com.google.firebase:firebase-core:16.0.8'
-    implementation 'com.google.firebase:firebase-storage:16.1.0'
-    implementation 'com.google.firebase:firebase-firestore:18.2.0'
-    implementation 'com.google.firebase:firebase-auth:16.2.1'
-    implementation 'com.google.firebase:firebase-messaging:17.6.0'
-    implementation 'com.google.firebase:firebase-inappmessaging-display:17.1.1'
-    implementation 'com.google.firebase:firebase-dynamic-links:16.1.8'
+    implementation 'com.google.firebase:firebase-core:16.0.9'
+    implementation 'com.google.firebase:firebase-storage:17.0.0'
+    implementation 'com.google.firebase:firebase-firestore:19.0.0'
+    implementation 'com.google.firebase:firebase-auth:17.0.0'
+    implementation 'com.google.firebase:firebase-messaging:18.0.0'
+//    implementation 'com.google.firebase:firebase-inappmessaging-display:17.1.1'
+//    implementation 'com.google.firebase:firebase-dynamic-links:17.0.0'
     implementation 'com.google.firebase:firebase-ads:17.2.0'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.0'
 
     //firebaseUI
-    implementation 'com.firebaseui:firebase-ui-firestore:4.3.1'
-    implementation 'com.firebaseui:firebase-ui-auth:4.3.1'
-    implementation 'com.firebaseui:firebase-ui-storage:4.3.1'
+//    implementation 'com.firebaseui:firebase-ui-firestore:4.3.1'
+//    implementation 'com.firebaseui:firebase-ui-auth:4.3.1'
+//    implementation 'com.firebaseui:firebase-ui-storage:4.3.1'
 
     //google
     implementation 'com.google.android.gms:play-services-ads:17.2.0'

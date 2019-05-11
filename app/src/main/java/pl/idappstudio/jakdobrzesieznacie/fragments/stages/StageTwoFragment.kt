@@ -3,9 +3,6 @@ package pl.idappstudio.jakdobrzesieznacie.fragments.stages
 import android.app.Dialog
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.util.Log
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -14,10 +11,11 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.fragment_stage_two.*
-
 import pl.idappstudio.jakdobrzesieznacie.R
 import pl.idappstudio.jakdobrzesieznacie.activity.GameActivity.Companion.answerList
 import pl.idappstudio.jakdobrzesieznacie.activity.GameActivity.Companion.friends
@@ -25,14 +23,14 @@ import pl.idappstudio.jakdobrzesieznacie.activity.GameActivity.Companion.game
 import pl.idappstudio.jakdobrzesieznacie.activity.GameActivity.Companion.questionList
 import pl.idappstudio.jakdobrzesieznacie.activity.GameActivity.Companion.yourAnswerList
 import pl.idappstudio.jakdobrzesieznacie.enums.ColorSnackBar
-import pl.idappstudio.jakdobrzesieznacie.interfaces.nextFragment
+import pl.idappstudio.jakdobrzesieznacie.interfaces.NextFragment
 import pl.idappstudio.jakdobrzesieznacie.model.UserQuestionData
 import pl.idappstudio.jakdobrzesieznacie.util.FirestoreUtil
 import pl.idappstudio.jakdobrzesieznacie.util.GlideUtil
 import pl.idappstudio.jakdobrzesieznacie.util.SnackBarUtil
 import pl.idappstudio.jakdobrzesieznacie.util.UserUtil
 
-class StageTwoFragment(private val listener: nextFragment) : androidx.fragment.app.Fragment() {
+class StageTwoFragment(private val listener: NextFragment) : androidx.fragment.app.Fragment() {
 
     private lateinit var stageTitle: TextView
 
@@ -139,18 +137,18 @@ class StageTwoFragment(private val listener: nextFragment) : androidx.fragment.a
 
     private fun resetButton(){
 
-        nextQuestion.text = "nastepna odpowiedz"
+        nextQuestion.text = resources.getString(R.string.next_answer)
         nextQuestion.background.setColorFilter(
             ContextCompat.getColor(
                 this.context!!, R.color.colorPrimary
             ), android.graphics.PorterDuff.Mode.SRC_IN)
 
-        stageTitle.text = "Odpowiedzi Znajomego"
+        stageTitle.text = resources.getString(R.string.friend_answer)
 
-        aAnswerButton.background = resources.getDrawable(R.drawable.card_background_dark)
-        bAnswerButton.background = resources.getDrawable(R.drawable.card_background_dark)
-        cAnswerButton.background = resources.getDrawable(R.drawable.card_background_dark)
-        dAnswerButton.background = resources.getDrawable(R.drawable.card_background_dark)
+        aAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.card_background_dark)
+        bAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.card_background_dark)
+        cAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.card_background_dark)
+        dAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.card_background_dark)
 
         aAnswerButton.visibility = View.INVISIBLE
         bAnswerButton.visibility = View.INVISIBLE
@@ -339,7 +337,7 @@ class StageTwoFragment(private val listener: nextFragment) : androidx.fragment.a
 
         if (questionNumber == 3) {
 
-            nextQuestion.text = "nastepny etap"
+            nextQuestion.text = resources.getString(R.string.next_stage)
             nextQuestion.background.setColorFilter(
                 ContextCompat.getColor(
                     this.context!!, R.color.colorCorrectAnswer
@@ -397,7 +395,7 @@ class StageTwoFragment(private val listener: nextFragment) : androidx.fragment.a
 
             if(aAnswerText.text.toString().trimEnd().trimStart() == answer.trimEnd().trimStart()){
 
-                aAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
+                aAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.number_correct_overlay)
 
                 listener.updateNumber(questionNumber, true)
 
@@ -407,7 +405,7 @@ class StageTwoFragment(private val listener: nextFragment) : androidx.fragment.a
 
             if(bAnswerText.text.toString().trimEnd().trimStart() == answer.trimEnd().trimStart()){
 
-                bAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
+                bAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.number_correct_overlay)
 
                 listener.updateNumber(questionNumber, true)
 
@@ -417,7 +415,7 @@ class StageTwoFragment(private val listener: nextFragment) : androidx.fragment.a
 
             if(cAnswerText.text.toString().trimEnd().trimStart() == answer.trimEnd().trimStart()){
 
-                cAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
+                cAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.number_correct_overlay)
 
                 listener.updateNumber(questionNumber, true)
 
@@ -427,7 +425,7 @@ class StageTwoFragment(private val listener: nextFragment) : androidx.fragment.a
 
             if(dAnswerText.text.toString().trimEnd().trimStart() == answer.trimEnd().trimStart()){
 
-                dAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
+                dAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.number_correct_overlay)
 
                 listener.updateNumber(questionNumber, true)
 
@@ -441,7 +439,7 @@ class StageTwoFragment(private val listener: nextFragment) : androidx.fragment.a
 
             if(aAnswerText.text.toString().trimEnd().trimStart() == answer.trimEnd().trimStart()){
 
-                aAnswerButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
+                aAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.number_bad_overlay)
 
                 listener.updateNumber(questionNumber, false)
 
@@ -451,7 +449,7 @@ class StageTwoFragment(private val listener: nextFragment) : androidx.fragment.a
 
             if(bAnswerText.text.toString().trimEnd().trimStart() == answer.trimEnd().trimStart()){
 
-                bAnswerButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
+                bAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.number_bad_overlay)
 
                 listener.updateNumber(questionNumber, false)
 
@@ -461,7 +459,7 @@ class StageTwoFragment(private val listener: nextFragment) : androidx.fragment.a
 
             if(cAnswerText.text.toString().trimEnd().trimStart() == answer.trimEnd().trimStart()){
 
-                cAnswerButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
+                cAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.number_bad_overlay)
 
                 listener.updateNumber(questionNumber, false)
 
@@ -471,7 +469,7 @@ class StageTwoFragment(private val listener: nextFragment) : androidx.fragment.a
 
             if(dAnswerText.text.toString().trimEnd().trimStart() == answer.trimEnd().trimStart()){
 
-                dAnswerButton.background = resources.getDrawable(R.drawable.number_bad_overlay)
+                dAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.number_bad_overlay)
 
                 listener.updateNumber(questionNumber, false)
 
@@ -489,7 +487,7 @@ class StageTwoFragment(private val listener: nextFragment) : androidx.fragment.a
 
         if(aAnswerText.text.trimEnd().trimStart() == yanswer.trimEnd().trimStart()){
 
-            aAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
+            aAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.number_correct_overlay)
             aAnswerUserImage.visibility = View.VISIBLE
 
             nextQuestion()
@@ -499,7 +497,7 @@ class StageTwoFragment(private val listener: nextFragment) : androidx.fragment.a
 
         if(bAnswerText.text.trimEnd().trimStart() == yanswer.trimEnd().trimStart()){
 
-            bAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
+            bAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.number_correct_overlay)
             bAnswerUserImage.visibility = View.VISIBLE
 
             nextQuestion()
@@ -509,7 +507,7 @@ class StageTwoFragment(private val listener: nextFragment) : androidx.fragment.a
 
         if(cAnswerText.text.trimEnd().trimStart() == yanswer.trimEnd().trimStart()){
 
-            cAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
+            cAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.number_correct_overlay)
             cAnswerUserImage.visibility = View.VISIBLE
 
             nextQuestion()
@@ -519,7 +517,7 @@ class StageTwoFragment(private val listener: nextFragment) : androidx.fragment.a
 
         if(dAnswerText.text.trimEnd().trimStart() == yanswer.trimEnd().trimStart()){
 
-            dAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
+            dAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.number_correct_overlay)
             dAnswerUserImage.visibility = View.VISIBLE
 
             nextQuestion()
@@ -554,7 +552,12 @@ class StageTwoFragment(private val listener: nextFragment) : androidx.fragment.a
 
             if(dialogReason.text.trim().length < 5){
 
-                SnackBarUtil.setActivitySnack("Powód jest za krótki", ColorSnackBar.WARING, R.drawable.ic_edit_text, setDialog.window.decorView){
+                SnackBarUtil.setActivitySnack(
+                    resources.getString(R.string.reason_is_to_short),
+                    ColorSnackBar.WARING,
+                    R.drawable.ic_edit_text,
+                    setDialog.window?.decorView!!
+                ) {
 
                     dialogReason.isEnabled = true
                     dialogSend.isEnabled = true
@@ -573,7 +576,12 @@ class StageTwoFragment(private val listener: nextFragment) : androidx.fragment.a
             FirebaseFirestore.getInstance().collection("reports").add(data).addOnSuccessListener { it2 ->
 
                 closeDialog()
-                SnackBarUtil.setActivitySnack("Wysłano zgłoszenie o id: ${it2.id}", ColorSnackBar.SUCCES, R.drawable.ic_check_icon, gameStageTitle){
+                SnackBarUtil.setActivitySnack(
+                    resources.getString(R.string.send_report_successful, it2.id),
+                    ColorSnackBar.SUCCES,
+                    R.drawable.ic_check_icon,
+                    gameStageTitle
+                ) {
 
                     resetDialog()
 
@@ -581,7 +589,12 @@ class StageTwoFragment(private val listener: nextFragment) : androidx.fragment.a
 
             }.addOnFailureListener {
 
-                SnackBarUtil.setActivitySnack("Nie udało się wysłać zgłoszenia", ColorSnackBar.ERROR, R.drawable.ic_error_, setDialog.window.decorView){
+                SnackBarUtil.setActivitySnack(
+                    resources.getString(R.string.send_report_error),
+                    ColorSnackBar.ERROR,
+                    R.drawable.ic_error_,
+                    setDialog.window?.decorView!!
+                ) {
 
                     dialogReason.isEnabled = true
                     dialogSend.isEnabled = true
@@ -597,7 +610,7 @@ class StageTwoFragment(private val listener: nextFragment) : androidx.fragment.a
 
     private fun resetDialog() {
 
-        dialogIdQuestion.text = "ID: ${getQuestionData()?.questionId}"
+        dialogIdQuestion.text = resources.getString(R.string.question_id, getQuestionData()?.questionId)
         dialogReason.text.clear()
 
         dialogReason.isEnabled = true

@@ -1,12 +1,10 @@
 package pl.idappstudio.jakdobrzesieznacie.util
 
-import android.util.Log
+import android.content.res.Resources
 import com.google.firebase.firestore.*
+import pl.idappstudio.jakdobrzesieznacie.R
 import pl.idappstudio.jakdobrzesieznacie.model.*
 import java.util.concurrent.ThreadLocalRandom
-import kotlin.collections.ArrayList
-import kotlin.collections.HashMap
-import kotlin.random.Random
 
 object GameUtil {
 
@@ -19,17 +17,21 @@ object GameUtil {
     private var getUserStatsListener: ListenerRegistration? = null
     private var getFriendStatsListener: ListenerRegistration? = null
 
-    fun getSetName(s: String) : String{
+    fun getSetName(s: String, res: Resources): String {
 
-        if(s == "default"){ return "domyślne pytania"
-        } else if(s == "own_question") { return "własne pytania"
-        } else { return s }
+        return when (s) {
+            "default" -> res.getString(R.string.deafult_question)
+            "own_question" -> res.getString(R.string.own_question)
+            else -> s
+        }
 
     }
 
-    fun getGamemodeName(s: String) : String{
+    fun getGamemodeName(s: String, res: Resources): String {
 
-        if(s == "classic"){ return "klasyczny" }
+        if (s == "classic") {
+            return res.getString(R.string.classic)
+        }
         return "error"
 
     }
@@ -40,17 +42,13 @@ object GameUtil {
         val b: Float = stats.banswer.toFloat()
 
         val sum: Float = a/(a+b)
-        val suma: Int = if(sum.toInt().toString().length == 1) {
-            (sum*100).toInt()
-        } else if(sum.toInt().toString().length == 2) {
-            (sum*10).toInt()
-        } else if(sum.toInt().toString().length == 3) {
-            sum.toInt()
-        } else {
-            sum.toString().substring(0, 3).toInt()
-        }
 
-        return suma
+        return when {
+            sum.toInt().toString().length == 1 -> (sum * 100).toInt()
+            sum.toInt().toString().length == 2 -> (sum * 10).toInt()
+            sum.toInt().toString().length == 3 -> sum.toInt()
+            else -> sum.toString().substring(0, 3).toInt()
+        }
 
     }
 
@@ -63,15 +61,15 @@ object GameUtil {
                 if (it.exists()) {
 
                     val gamemode: String = it.getString("gamemode")!!
-                    val friendStage: Int = it.getLong("${uid}-stage")!!.toInt()
+                    val friendStage: Int = it.getLong("$uid-stage")!!.toInt()
                     val yourStage: Int = it.getLong("${UserUtil.user.uid}-stage")!!.toInt()
-                    val friendTurn: Boolean = it.getBoolean("${uid}-turn")!!
+                    val friendTurn: Boolean = it.getBoolean("$uid-turn")!!
                     val yourTurn: Boolean = it.getBoolean("${UserUtil.user.uid}-turn")!!
-                    val friendSet: String = it.getString("${uid}-set")!!
+                    val friendSet: String = it.getString("$uid-set")!!
                     val yourSet: String = it.getString("${UserUtil.user.uid}-set")!!
                     val newGame: Boolean = it.getBoolean("newGame")!!
                     val userID: String = it.getString("${UserUtil.user.uid}-id")!!
-                    val friendID: String = it.getString("${uid}-id")!!
+                    val friendID: String = it.getString("$uid-id")!!
 
                     val games = GamesItem(
                         it.id,
@@ -114,9 +112,9 @@ object GameUtil {
         db.firestoreSettings = settings
 
         val user = HashMap<String, String>()
-        user.put("answer1", a1)
-        user.put("answer2", a2)
-        user.put("answer3", a3)
+        user["answer1"] = a1
+        user["answer2"] = a2
+        user["answer3"] = a3
 
         db.collection("games").document(game.gameID).collection(userData.uid).document("1").set(user).addOnSuccessListener {
 
@@ -142,12 +140,12 @@ object GameUtil {
         db.firestoreSettings = settings
 
         val user = HashMap<String, String>()
-        user.put("answer1", a1)
-        user.put("answer2", a2)
-        user.put("answer3", a3)
-        user.put("id1", id1)
-        user.put("id2", id2)
-        user.put("id3", id3)
+        user["answer1"] = a1
+        user["answer2"] = a2
+        user["answer3"] = a3
+        user["id1"] = id1
+        user["id2"] = id2
+        user["id3"] = id3
 
         db.collection("games").document(game.gameID).collection(userData.uid).document("3").set(user).addOnSuccessListener {
 
@@ -159,7 +157,7 @@ object GameUtil {
 
     }
 
-    fun getQuestionDataStageThreeOwnPack(s: String, onComplete: (QuestionData) -> Unit) {
+    private fun getQuestionDataStageThreeOwnPack(s: String, onComplete: (QuestionData) -> Unit) {
 
         db.firestoreSettings = settings
 
@@ -227,21 +225,21 @@ object GameUtil {
 
         db.firestoreSettings = settings
 
-        db.collection("$s/${UserUtil.user.gender}").get().addOnSuccessListener {
+        db.collection("$s/${UserUtil.user.gender}").get().addOnSuccessListener { it2 ->
 
                 val documents = ArrayList<String>()
 
-                for(doc in it.documents){
+            for (doc in it2.documents) {
 
                     documents.add(doc.id)
 
-                    if(it.size() == documents.size){
+                if (it2.size() == documents.size) {
 
                         documents.shuffle()
 
                         val x = ThreadLocalRandom.current().nextInt(0, documents.size)
 
-                        db.document("$s/${UserUtil.user.gender}/${documents[x]}").get().addOnSuccessListener { it ->
+                    db.document("$s/${UserUtil.user.gender}/${documents[x]}").get().addOnSuccessListener {
 
                             val question = it.getString("question")!!
 
@@ -283,9 +281,9 @@ object GameUtil {
 
         db.firestoreSettings = settings
 
-        db.collection("$s/${UserUtil.user.gender}").get().addOnSuccessListener {
+        db.collection("$s/${UserUtil.user.gender}").get().addOnSuccessListener { it3 ->
 
-            if(it.isEmpty){
+            if (it3.isEmpty) {
 
                 getQuestionDataStageThreeOwnPack("$s/questions"){it2 ->
 
@@ -298,17 +296,17 @@ object GameUtil {
                 val questionList = ArrayList<UserQuestionData>()
                 val documents = ArrayList<String>()
 
-                for(doc in it.documents){
+                for (doc in it3.documents) {
 
                     documents.add(doc.id)
 
-                    if(it.size() == documents.size){
+                    if (it3.size() == documents.size) {
 
                         documents.shuffle()
 
                         for(rand in 0..2){
 
-                            db.document("$s/${UserUtil.user.gender}/${documents[rand]}").get().addOnSuccessListener { it ->
+                            db.document("$s/${UserUtil.user.gender}/${documents[rand]}").get().addOnSuccessListener {
 
                                 val question = it.getString("question")!!
 
@@ -448,7 +446,7 @@ object GameUtil {
 //
 //    }
 
-    fun getQuestionData2(s: String, onComplete: (AnswerData, AnswerData, QuestionData) -> Unit) {
+    private fun getQuestionData2(s: String, onComplete: (AnswerData, AnswerData, QuestionData) -> Unit) {
 
         db.firestoreSettings = settings
 
@@ -651,11 +649,11 @@ object GameUtil {
 
         db.firestoreSettings = settings
 
-            db.document(s).get().addOnSuccessListener {
+        db.document(s).get().addOnSuccessListener { it2 ->
 
-                val answerItem = it.toObject(AnswerData::class.java)!!
+            val answerItem = it2.toObject(AnswerData::class.java)!!
 
-                db.document(s2).get().addOnSuccessListener { it ->
+            db.document(s2).get().addOnSuccessListener {
 
                     val yourAnswerItem = it.toObject(AnswerData::class.java)!!
 
@@ -803,7 +801,7 @@ object GameUtil {
 
     }
 
-    fun getQuestionDataStageTwo2(s: String, onComplete: (AnswerData, AnswerData, QuestionData) -> Unit) {
+    private fun getQuestionDataStageTwo2(s: String, onComplete: (AnswerData, AnswerData, QuestionData) -> Unit) {
 
         db.firestoreSettings = settings
 
@@ -886,9 +884,9 @@ object GameUtil {
         db.firestoreSettings = settings
 
         val user = HashMap<String, UserQuestionData>()
-        user.put("question", questionData[0])
-        user.put("question1", questionData[1])
-        user.put("question2", questionData[2])
+        user["question"] = questionData[0]
+        user["question1"] = questionData[1]
+        user["question2"] = questionData[2]
 
         db.collection("games").document(game.gameID).collection(userData.uid).document("3").set(user).addOnSuccessListener {
 

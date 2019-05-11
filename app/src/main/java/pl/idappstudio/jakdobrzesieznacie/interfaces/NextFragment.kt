@@ -1,6 +1,6 @@
 package pl.idappstudio.jakdobrzesieznacie.interfaces
 
-interface nextFragment {
+interface NextFragment {
 
     fun next()
 

@@ -16,12 +16,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent" app:srcCompat="@drawable/input_overlay_white"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:srcCompat="@drawable/input_overlay_white"
+            tools:ignore="ContentDescription"/>
+
     <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content" android:id="@+id/question_number"
             android:maxLines="1" android:singleLine="true"
-            android:text="0"
+            android:text="@string/zero"
             android:textAlignment="center"
             app:layout_constraintTop_toTopOf="@+id/question_number_background"
             app:layout_constraintEnd_toEndOf="@+id/question_number_background"

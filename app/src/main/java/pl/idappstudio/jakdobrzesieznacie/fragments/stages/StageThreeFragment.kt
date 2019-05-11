@@ -1,13 +1,11 @@
 package pl.idappstudio.jakdobrzesieznacie.fragments.stages
 
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.pm.PackageManager
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
-import androidx.constraintlayout.widget.ConstraintLayout
-import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -16,6 +14,8 @@ import android.widget.Button
 import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.content.ContextCompat
 import com.getkeepsafe.taptargetview.TapTarget
 import com.getkeepsafe.taptargetview.TapTargetView
 import com.google.android.gms.ads.AdRequest
@@ -25,7 +25,6 @@ import com.google.android.gms.ads.reward.RewardedVideoAd
 import com.google.android.gms.ads.reward.RewardedVideoAdListener
 import com.google.android.material.button.MaterialButton
 import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.dialog_loading.view.*
 import kotlinx.android.synthetic.main.fragment_stage_three_question.*
 import pl.idappstudio.jakdobrzesieznacie.R
 import pl.idappstudio.jakdobrzesieznacie.activity.GameActivity.Companion.friends
@@ -34,14 +33,15 @@ import pl.idappstudio.jakdobrzesieznacie.activity.GameActivity.Companion.game
 import pl.idappstudio.jakdobrzesieznacie.activity.GameActivity.Companion.questionList
 import pl.idappstudio.jakdobrzesieznacie.activity.GameActivity.Companion.userStats
 import pl.idappstudio.jakdobrzesieznacie.enums.ColorSnackBar
-import pl.idappstudio.jakdobrzesieznacie.interfaces.nextFragment
+import pl.idappstudio.jakdobrzesieznacie.interfaces.NextFragment
 import pl.idappstudio.jakdobrzesieznacie.model.InviteNotificationMessage
 import pl.idappstudio.jakdobrzesieznacie.model.Message
 import pl.idappstudio.jakdobrzesieznacie.model.NotificationType
 import pl.idappstudio.jakdobrzesieznacie.model.UserQuestionData
 import pl.idappstudio.jakdobrzesieznacie.util.*
 
-class StageThreeFragment(private val listener: nextFragment, private val packUrl: String) : androidx.fragment.app.Fragment(), View.OnClickListener {
+class StageThreeFragment(private val listener: NextFragment, private val packUrl: String) :
+    androidx.fragment.app.Fragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
 
@@ -102,6 +102,7 @@ class StageThreeFragment(private val listener: nextFragment, private val packUrl
     private lateinit var alertDialog: AlertDialog
     private lateinit var dialogText: TextView
 
+    @SuppressLint("PrivateResource", "InflateParams")
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView = inflater.inflate(R.layout.fragment_stage_three_question, container, false)
 
@@ -141,13 +142,19 @@ class StageThreeFragment(private val listener: nextFragment, private val packUrl
         }
 
         val dialogBuilder = AlertDialog.Builder(this.context, R.style.Base_Theme_MaterialComponents_Dialog)
-        val inflater = this.layoutInflater
-        val dialogView = inflater.inflate(R.layout.dialog_loading, null)
+        val dialogView = this.layoutInflater.inflate(R.layout.dialog_loading, null)
         dialogText = dialogView.findViewById(R.id.textView3)
         dialogBuilder.setView(dialogView)
 
         alertDialog = dialogBuilder.create()
-        alertDialog.window?.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.colorTranspery)))
+        alertDialog.window?.setBackgroundDrawable(
+            ColorDrawable(
+                ContextCompat.getColor(
+                    this.context!!,
+                    R.color.colorTranspery
+                )
+            )
+        )
         alertDialog.setCanceledOnTouchOutside(false)
         alertDialog.setCancelable(false)
 
@@ -199,8 +206,8 @@ class StageThreeFragment(private val listener: nextFragment, private val packUrl
                 this.activity,
                 TapTarget.forView(
                     reportQuestion,
-                    "Zgłoś pytanie",
-                    "Jeśli w pytaniu coś nie gra lub ma niestosowną treść możesz nam je zgłosić"
+                    resources.getString(R.string.report_question_dialog),
+                    resources.getString(R.string.report_text_info)
                 )
                     .outerCircleColor(R.color.colorPrimaryDark)
                     .outerCircleAlpha(0.96f)
@@ -222,7 +229,7 @@ class StageThreeFragment(private val listener: nextFragment, private val packUrl
 
         changeQuestion.setOnClickListener {
 
-            dialogText.text = "Ładowanie..."
+            dialogText.text = resources.getString(R.string.loading)
             alertDialog.show()
             loadRewardedVideoAd()
 
@@ -257,45 +264,49 @@ class StageThreeFragment(private val listener: nextFragment, private val packUrl
     private fun newQuestion(){
 
         if(!alertDialog.isShowing) {
-            dialogText.text = "Zmieniamy pytanie..."
+            dialogText.text = resources.getString(R.string.change_question)
             alertDialog.show()
         }
 
         GameUtil.getNewQuestionDataStageThree("set/${game.uSet.id}"){
 
-            if(questionNumber == 1){
+            when (questionNumber) {
+                1 -> {
 
-                questionList.question.question = it.question
-                questionList.question.a = it.a
-                questionList.question.b = it.b
-                questionList.question.c = it.c
-                questionList.question.d = it.d
-                questionList.question.questionId = it.questionId
+                    questionList.question.question = it.question
+                    questionList.question.a = it.a
+                    questionList.question.b = it.b
+                    questionList.question.c = it.c
+                    questionList.question.d = it.d
+                    questionList.question.questionId = it.questionId
 
-                setText()
+                    setText()
 
-            } else if(questionNumber == 2){
+                }
+                2 -> {
 
-                questionList.question1.question = it.question
-                questionList.question1.a = it.a
-                questionList.question1.b = it.b
-                questionList.question1.c = it.c
-                questionList.question1.d = it.d
-                questionList.question1.questionId = it.questionId
+                    questionList.question1.question = it.question
+                    questionList.question1.a = it.a
+                    questionList.question1.b = it.b
+                    questionList.question1.c = it.c
+                    questionList.question1.d = it.d
+                    questionList.question1.questionId = it.questionId
 
-                setText()
+                    setText()
 
-            } else if(questionNumber == 3){
+                }
+                3 -> {
 
-                questionList.question2.question = it.question
-                questionList.question2.a = it.a
-                questionList.question2.b = it.b
-                questionList.question2.c = it.c
-                questionList.question2.d = it.d
-                questionList.question2.questionId = it.questionId
+                    questionList.question2.question = it.question
+                    questionList.question2.a = it.a
+                    questionList.question2.b = it.b
+                    questionList.question2.c = it.c
+                    questionList.question2.d = it.d
+                    questionList.question2.questionId = it.questionId
 
-                setText()
+                    setText()
 
+                }
             }
 
             changeQuestion.isEnabled = false
@@ -307,18 +318,18 @@ class StageThreeFragment(private val listener: nextFragment, private val packUrl
 
     private fun resetButton(){
 
-        nextQuestion.text = "Odpowiedz na Pytanie"
+        nextQuestion.text = resources.getString(R.string.answer_the_question)
         nextQuestion.background.setColorFilter(
             ContextCompat.getColor(
                 this.context!!, R.color.colorBadAnswer
             ), android.graphics.PorterDuff.Mode.SRC_IN)
 
-        stageTitle.text = "Odpowiedz na pytania"
+        stageTitle.text = resources.getString(R.string.answer_the_question)
 
-        aAnswerButton.background = resources.getDrawable(R.drawable.card_background_dark)
-        bAnswerButton.background = resources.getDrawable(R.drawable.card_background_dark)
-        cAnswerButton.background = resources.getDrawable(R.drawable.card_background_dark)
-        dAnswerButton.background = resources.getDrawable(R.drawable.card_background_dark)
+        aAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.card_background_dark)
+        bAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.card_background_dark)
+        cAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.card_background_dark)
+        dAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.card_background_dark)
 
         aAnswerUserImage.visibility = View.INVISIBLE
         bAnswerUserImage.visibility = View.INVISIBLE
@@ -338,7 +349,7 @@ class StageThreeFragment(private val listener: nextFragment, private val packUrl
 
         if (questionNumber == 3) {
 
-            nextQuestion.text = "zakończ swoją turę"
+            nextQuestion.text = resources.getString(R.string.finish_your_turn)
             nextQuestion.background.setColorFilter(
                 ContextCompat.getColor(
                     this.context!!, R.color.colorCorrectAnswer
@@ -347,7 +358,7 @@ class StageThreeFragment(private val listener: nextFragment, private val packUrl
 
         } else {
 
-            nextQuestion.text = "następne pytanie"
+            nextQuestion.text = resources.getString(R.string.next_question)
             nextQuestion.background.setColorFilter(
                 ContextCompat.getColor(
                     this.context!!, R.color.colorPrimary
@@ -385,7 +396,14 @@ class StageThreeFragment(private val listener: nextFragment, private val packUrl
 
                     GameUtil.updateGame(userStats.games, UserUtil.user.uid, friends.uid)
 
-                    val msg: Message = InviteNotificationMessage("Twoja kolej!", "${UserUtil.user.name} skończył swoją turę, czas na ciebie!", UserUtil.user.uid, friends.uid, UserUtil.user.name, NotificationType.GAME)
+                    val msg: Message = InviteNotificationMessage(
+                        resources.getString(R.string.notification_finish_turn_title),
+                        resources.getString(R.string.notification_finish_turn, UserUtil.user.name),
+                        UserUtil.user.uid,
+                        friends.uid,
+                        UserUtil.user.name,
+                        NotificationType.GAME
+                    )
                     FirestoreUtil.sendMessage(msg, friends.uid)
 
                     activity?.onBackPressed()
@@ -404,7 +422,7 @@ class StageThreeFragment(private val listener: nextFragment, private val packUrl
 
                 userAnswer.add(aAnswerText.text.toString())
 
-                aAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
+                aAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.number_correct_overlay)
 
                 listener.updateNumber(questionNumber, true)
 
@@ -415,7 +433,7 @@ class StageThreeFragment(private val listener: nextFragment, private val packUrl
 
                 userAnswer.add(bAnswerText.text.toString())
 
-                bAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
+                bAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.number_correct_overlay)
 
                 listener.updateNumber(questionNumber, true)
 
@@ -426,7 +444,7 @@ class StageThreeFragment(private val listener: nextFragment, private val packUrl
 
                 userAnswer.add(cAnswerText.text.toString())
 
-                cAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
+                cAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.number_correct_overlay)
 
                 listener.updateNumber(questionNumber, true)
 
@@ -437,7 +455,7 @@ class StageThreeFragment(private val listener: nextFragment, private val packUrl
 
                 userAnswer.add(dAnswerText.text.toString())
 
-                dAnswerButton.background = resources.getDrawable(R.drawable.number_correct_overlay)
+                dAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.number_correct_overlay)
 
                 listener.updateNumber(questionNumber, true)
 
@@ -473,30 +491,51 @@ class StageThreeFragment(private val listener: nextFragment, private val packUrl
         cAnswerText.text = ""
         dAnswerText.text = ""
 
-        if(questionNumber == 1){
+        when (questionNumber) {
+            1 -> {
 
-            question = questionList.question.question
-            canswer = questionList.question.a
-            banswer = questionList.question.b
-            banswer2 = questionList.question.c
-            banswer3 = questionList.question.d
+                question = questionList.question.question
+                canswer = questionList.question.a
+                banswer = questionList.question.b
+                banswer2 = questionList.question.c
+                banswer3 = questionList.question.d
 
-        } else if(questionNumber == 2){
+            }
+            2 -> {
 
-            question = questionList.question1.question
-            canswer = questionList.question1.a
-            banswer = questionList.question1.b
-            banswer2 = questionList.question1.c
-            banswer3 = questionList.question1.d
+                question = questionList.question1.question
+                canswer = questionList.question1.a
+                banswer = questionList.question1.b
+                banswer2 = questionList.question1.c
+                banswer3 = questionList.question1.d
 
-        } else if(questionNumber == 3){
+            }
+            3 -> {
 
-            question = questionList.question2.question
-            canswer = questionList.question2.a
-            banswer = questionList.question2.b
-            banswer2 = questionList.question2.c
-            banswer3 = questionList.question2.d
+                question = questionList.question2.question
+                canswer = questionList.question2.a
+                banswer = questionList.question2.b
+                banswer2 = questionList.question2.c
+                banswer3 = questionList.question2.d
 
+            }
+
+            //        if(canswer.equals("tak", true) || canswer.equals("nie", true)){
+            //
+            //            aAnswerText.text = "Tak"
+            //
+            //            aAnswerButton.isEnabled = true
+            //            aAnswerButton.visibility = View.VISIBLE
+            //
+            //            bAnswerText.text = "Nie"
+            //
+            //            bAnswerButton.isEnabled = true
+            //            bAnswerButton.visibility = View.VISIBLE
+            //
+            //            array.removeAt(0)
+            //            array.removeAt(0)
+            //
+            //        }
         }
 
         questionText.text = question
@@ -660,7 +699,12 @@ class StageThreeFragment(private val listener: nextFragment, private val packUrl
 
             if(dialogReason.text.trim().length < 5){
 
-                SnackBarUtil.setActivitySnack("Powód jest za krótki", ColorSnackBar.WARING, R.drawable.ic_edit_text, setDialog.window.decorView){
+                SnackBarUtil.setActivitySnack(
+                    resources.getString(R.string.reason_is_to_short),
+                    ColorSnackBar.WARING,
+                    R.drawable.ic_edit_text,
+                    setDialog.window?.decorView!!
+                ) {
 
                     dialogReason.isEnabled = true
                     dialogSend.isEnabled = true
@@ -679,7 +723,12 @@ class StageThreeFragment(private val listener: nextFragment, private val packUrl
             FirebaseFirestore.getInstance().collection("reports").add(data).addOnSuccessListener { it2 ->
 
                 closeDialog()
-                SnackBarUtil.setActivitySnack("Wysłano zgłoszenie o id: ${it2.id}", ColorSnackBar.SUCCES, R.drawable.ic_check_icon, gameStageTitle){
+                SnackBarUtil.setActivitySnack(
+                    resources.getString(R.string.send_report_successful, it2.id),
+                    ColorSnackBar.SUCCES,
+                    R.drawable.ic_check_icon,
+                    gameStageTitle
+                ) {
 
                     resetDialog()
 
@@ -687,7 +736,12 @@ class StageThreeFragment(private val listener: nextFragment, private val packUrl
 
             }.addOnFailureListener {
 
-                SnackBarUtil.setActivitySnack("Nie udało się wysłać zgłoszenia", ColorSnackBar.ERROR, R.drawable.ic_error_, setDialog.window.decorView){
+                SnackBarUtil.setActivitySnack(
+                    resources.getString(R.string.send_report_error),
+                    ColorSnackBar.ERROR,
+                    R.drawable.ic_error_,
+                    setDialog.window?.decorView!!
+                ) {
 
                     dialogReason.isEnabled = true
                     dialogSend.isEnabled = true
@@ -703,7 +757,7 @@ class StageThreeFragment(private val listener: nextFragment, private val packUrl
 
     private fun resetDialog() {
 
-        dialogIdQuestion.text = "ID: ${getQuestionData()?.questionId}"
+        dialogIdQuestion.text = resources.getString(R.string.question_id, getQuestionData()?.questionId)
         dialogReason.text.clear()
 
         dialogReason.isEnabled = true

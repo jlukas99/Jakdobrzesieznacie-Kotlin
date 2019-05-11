@@ -5,21 +5,14 @@ package pl.idappstudio.jakdobrzesieznacie.service
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
-import android.app.PendingIntent
 import android.content.Context
-import android.content.Intent
 import android.graphics.BitmapFactory
-import android.media.RingtoneManager
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.google.firebase.auth.FirebaseAuth
-
 import com.google.firebase.messaging.FirebaseMessagingService
 import com.google.firebase.messaging.RemoteMessage
 import pl.idappstudio.jakdobrzesieznacie.R
-
-import pl.idappstudio.jakdobrzesieznacie.activity.IntroActivity
-import pl.idappstudio.jakdobrzesieznacie.activity.MenuActivity
 import pl.idappstudio.jakdobrzesieznacie.util.FirestoreUtil
 
 class MyFirebaseMessagingService : FirebaseMessagingService() {
@@ -77,15 +70,13 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 //
 //        val notifyPendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
 
-        val bitmapIcon = BitmapFactory.decodeResource(resources, R.mipmap.logo_colored)
+        val bitmapIcon = BitmapFactory.decodeResource(resources, R.mipmap.logo)
 
         val channelId = getString(R.string.default_notification_channel_id)
 
-        val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
-
         if (group == "INVITE") {
 
-            if(title == "Znajomy z Facebook'a"){
+            if (title == resources.getString(R.string.friend_from_facebook)) {
 
                 val notificationBuilder = NotificationCompat.Builder(this)
                     .setSmallIcon(R.mipmap.ic_facebook)

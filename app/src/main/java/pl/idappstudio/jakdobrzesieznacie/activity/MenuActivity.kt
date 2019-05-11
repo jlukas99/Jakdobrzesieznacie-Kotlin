@@ -3,8 +3,8 @@
 package pl.idappstudio.jakdobrzesieznacie.activity
 
 import android.os.Bundle
-import androidx.appcompat.app.AppCompatActivity
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import com.google.android.gms.ads.AdListener
 import com.google.android.gms.ads.InterstitialAd
@@ -14,19 +14,21 @@ import pl.idappstudio.jakdobrzesieznacie.enums.StatusMessage
 import pl.idappstudio.jakdobrzesieznacie.fragments.*
 import pl.idappstudio.jakdobrzesieznacie.util.AdMobUtil
 import pl.idappstudio.jakdobrzesieznacie.util.UserUtil
-
+import java.util.*
+import kotlin.collections.ArrayList
+import kotlin.concurrent.schedule
 
 class MenuActivity : AppCompatActivity() {
 
     companion object {
 
-        val EXTRA_USER_ITEM = "user"
-        val EXTRA_USER_IMAGE_TRANSITION_NAME = "image"
-        val EXTRA_USER_NAME_TRANSITION_NAME = "name"
-        val EXTRA_USER_BTN_CHAT_TRANSITION_NAME = "chat"
-        val EXTRA_USER_BTN_FAVORITE_TRANSITION_NAME = "favorite"
-        val EXTRA_USER_STATUS_GAME_TRANSITION_NAME = "game-status"
-        val EXTRA_USER_IMAGE_GAME_TRANSITION_NAME = "game-image"
+        const val EXTRA_USER_ITEM = "user"
+        const val EXTRA_USER_IMAGE_TRANSITION_NAME = "image"
+        const val EXTRA_USER_NAME_TRANSITION_NAME = "name"
+        const val EXTRA_USER_BTN_CHAT_TRANSITION_NAME = "chat"
+        const val EXTRA_USER_BTN_FAVORITE_TRANSITION_NAME = "favorite"
+        const val EXTRA_USER_STATUS_GAME_TRANSITION_NAME = "game-status"
+        const val EXTRA_USER_IMAGE_GAME_TRANSITION_NAME = "game-image"
 
     }
 
@@ -216,8 +218,10 @@ class MenuActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
+        Timer("status", false).schedule(700) {
+            UserUtil.updateStatus(resources.getString(StatusMessage.inmenu)) {}
+        }
         UserUtil.getUser {}
-        UserUtil.updateStatus(StatusMessage.inmenu)
         hideSystemUI()
     }
 
@@ -257,7 +261,7 @@ class MenuActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         UserUtil.stopListener()
-        UserUtil.updateStatus(StatusMessage.offline)
+        UserUtil.updateStatus(resources.getString(StatusMessage.offline)) {}
     }
 
     internal inner class ViewPagerAdapter(manager: androidx.fragment.app.FragmentManager) : androidx.fragment.app.FragmentPagerAdapter(manager) {

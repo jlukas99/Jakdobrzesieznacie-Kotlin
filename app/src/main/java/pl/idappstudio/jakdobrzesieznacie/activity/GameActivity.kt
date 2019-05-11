@@ -1,30 +1,30 @@
 package pl.idappstudio.jakdobrzesieznacie.activity
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import androidx.core.content.ContextCompat
 import android.view.View
 import android.widget.ImageButton
 import android.widget.TextView
-import com.google.firebase.firestore.FirebaseFirestore
-import kotlinx.android.synthetic.main.activity_friends_profile.*
+import androidx.appcompat.app.AppCompatActivity
+import androidx.core.content.ContextCompat
 import kotlinx.android.synthetic.main.activity_game.*
 import pl.idappstudio.jakdobrzesieznacie.R
 import pl.idappstudio.jakdobrzesieznacie.activity.FriendsProfileActivity.Companion.EXTRA_FRIEND_IMAGE_TRANSITION
 import pl.idappstudio.jakdobrzesieznacie.activity.FriendsProfileActivity.Companion.EXTRA_USER_IMAGE_TRANSITION
 import pl.idappstudio.jakdobrzesieznacie.enums.StatusMessage
-import pl.idappstudio.jakdobrzesieznacie.fragments.*
+import pl.idappstudio.jakdobrzesieznacie.fragments.ClearFragment
 import pl.idappstudio.jakdobrzesieznacie.fragments.stages.StageOneFragment
 import pl.idappstudio.jakdobrzesieznacie.fragments.stages.StageThreeFragment
 import pl.idappstudio.jakdobrzesieznacie.fragments.stages.StageThreeOwnQuestionFragment
 import pl.idappstudio.jakdobrzesieznacie.fragments.stages.StageTwoFragment
-import pl.idappstudio.jakdobrzesieznacie.interfaces.nextFragment
+import pl.idappstudio.jakdobrzesieznacie.interfaces.NextFragment
 import pl.idappstudio.jakdobrzesieznacie.model.*
 import pl.idappstudio.jakdobrzesieznacie.util.GameUtil
 import pl.idappstudio.jakdobrzesieznacie.util.GlideUtil
 import pl.idappstudio.jakdobrzesieznacie.util.UserUtil
+import java.util.*
+import kotlin.concurrent.schedule
 
-class GameActivity : AppCompatActivity(), nextFragment {
+class GameActivity : AppCompatActivity(), NextFragment {
 
     override fun showFragment() {
 
@@ -124,11 +124,11 @@ class GameActivity : AppCompatActivity(), nextFragment {
 
     }
 
-    lateinit var questionOne: TextView
-    lateinit var questionTwo: TextView
-    lateinit var questionThree: TextView
+    private lateinit var questionOne: TextView
+    private lateinit var questionTwo: TextView
+    private lateinit var questionThree: TextView
 
-    lateinit var mContent: androidx.fragment.app.Fragment
+    private lateinit var mContent: androidx.fragment.app.Fragment
 
     private val glide = GlideUtil
 
@@ -139,16 +139,17 @@ class GameActivity : AppCompatActivity(), nextFragment {
         setContentView(R.layout.activity_game)
         supportPostponeEnterTransition()
 
-        val back_btn = linearLayout1.findViewById<ImageButton>(R.id.back_btn)
-        back_btn.setOnClickListener {
+        val backBtn = linearLayout1.findViewById<ImageButton>(R.id.back_btn)
+        backBtn.setOnClickListener {
 
             onBackPressed()
 
         }
 
         val extras = intent.extras
-        val imageUserTransitionName = extras.getString(EXTRA_USER_IMAGE_TRANSITION)
-        val imageFriendTransitionName = extras.getString(EXTRA_FRIEND_IMAGE_TRANSITION)
+
+        val imageUserTransitionName = extras?.getString(EXTRA_USER_IMAGE_TRANSITION)
+        val imageFriendTransitionName = extras?.getString(EXTRA_FRIEND_IMAGE_TRANSITION)
 
         userProfileImage.transitionName = imageUserTransitionName
         friendProfileImage.transitionName = imageFriendTransitionName
@@ -266,7 +267,7 @@ class GameActivity : AppCompatActivity(), nextFragment {
 
                 } else {
 
-                    gameText.text = "Nie udało się załadować pytań\nczy chcesz zrestartować grę?"
+                    gameText.text = resources.getString(R.string.fail_load_question)
 
                 }
 
@@ -293,7 +294,7 @@ class GameActivity : AppCompatActivity(), nextFragment {
 
         } else {
 
-            etapText.text = "${game.uStage} z 3"
+            etapText.text = resources.getString(R.string.stage_of_stage, game.uStage)
 
         }
 
@@ -320,7 +321,7 @@ class GameActivity : AppCompatActivity(), nextFragment {
 
     private fun error(){
 
-        gameText.text = "Nie udało się załadować pytań\nczy chcesz zrestartować grę?"
+        gameText.text = resources.getString(R.string.fail_load_question)
 
     }
 
@@ -406,7 +407,9 @@ class GameActivity : AppCompatActivity(), nextFragment {
 
     override fun onResume() {
         super.onResume()
-        UserUtil.updateStatus(StatusMessage.ingame)
+        Timer("status", false).schedule(700) {
+            UserUtil.updateStatus(resources.getString(StatusMessage.ingame)) {}
+        }
         hideSystemUI()
     }
 
@@ -446,6 +449,7 @@ class GameActivity : AppCompatActivity(), nextFragment {
     override fun onDestroy() {
         super.onDestroy()
         GameUtil.removeListenerStats()
+        UserUtil.updateStatus(resources.getString(StatusMessage.offline)) {}
     }
 
 }

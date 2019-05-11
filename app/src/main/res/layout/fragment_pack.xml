@@ -13,6 +13,7 @@
             android:background="@drawable/background_dark_overlay" android:id="@+id/view7"
             app:layout_constraintTop_toTopOf="parent" app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"/>
+
     <LinearLayout
             android:orientation="horizontal"
             android:layout_height="wrap_content"
@@ -29,7 +30,7 @@
                 app:layout_constraintBottom_toBottomOf="parent" android:background="@color/colorLigth"
                 android:layout_gravity="center" android:layout_weight="1"/>
         <TextView
-                android:text="ZESTAWY"
+                android:text="@string/sets_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:id="@+id/textView"
                 android:textColor="@color/colorWhite" android:textAlignment="center" android:layout_marginEnd="8dp"
@@ -49,10 +50,13 @@
             android:id="@+id/pack_btn_premium"
             android:layout_width="264.09dp"
             android:layout_height="38.66dp"
-            android:text="AKTYWUJ KONTO PREMIUM"
+            android:text="@string/activate_premium"
             app:cornerRadius="100dp"
             app:backgroundTint="@color/colorButtonSecondary"
-            android:insetBottom="0dp" android:insetTop="0dp" android:textSize="11sp" android:textAlignment="center"
+            android:insetBottom="0dp"
+            android:insetTop="0dp"
+            android:textSize="12sp"
+            android:textAlignment="center"
             android:textAllCaps="true" android:typeface="normal" android:fontFamily="@font/varela_round"
             app:icon="@drawable/ic_corn" app:iconPadding="0dp" app:iconTint="@color/colorYellow"
             android:textColor="@color/colorYellow" android:layout_marginStart="32dp"
@@ -64,11 +68,14 @@
             android:id="@+id/pack_btn_add"
             android:layout_width="264.09dp"
             android:layout_height="38.66dp"
-            android:text="STWÓRZ ZESTAW"
+            android:text="@string/create_set"
             app:cornerRadius="100dp"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginEnd="32dp"
             app:backgroundTint="@color/colorPrimary"
-            android:insetBottom="0dp" android:insetTop="0dp" android:textSize="11sp" android:textAlignment="center"
+            android:insetBottom="0dp"
+            android:insetTop="0dp"
+            android:textSize="12sp"
+            android:textAlignment="center"
             android:textAllCaps="true" android:typeface="normal" android:fontFamily="@font/varela_round"
             android:layout_marginStart="32dp" app:layout_constraintStart_toStartOf="parent"
             app:iconPadding="0dp" app:iconTint="@color/colorWhite"
@@ -84,7 +91,9 @@
             app:layout_constraintTop_toBottomOf="@+id/include3" android:layout_marginStart="8dp"
             app:layout_constraintStart_toStartOf="parent" android:layout_marginEnd="8dp"
             app:layout_constraintEnd_toEndOf="parent" android:layout_marginTop="32dp" android:layout_marginBottom="8dp"
-            app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.20999998"/>
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintVertical_bias="0.20999998"
+            tools:ignore="ContentDescription"/>
 
     <androidx.recyclerview.widget.RecyclerView
             android:layout_height="0dp" app:layout_constraintEnd_toEndOf="parent"
@@ -97,7 +106,7 @@
             app:layout_constraintBottom_toBottomOf="parent"/>
 
     <TextView
-            android:text="Pracujemy nad tą zakładką\nmuszisz uzbroić się w cierpliwość"
+            android:text="@string/sets_build_info"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content" android:id="@+id/text_none_pack"
             android:textColor="@color/colorLigth" android:visibility="visible"

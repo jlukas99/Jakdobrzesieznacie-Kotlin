@@ -13,16 +13,14 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.google.android.material.snackbar.Snackbar
 import com.google.firebase.firestore.*
+import com.google.firebase.firestore.EventListener
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Section
 import com.xwray.groupie.kotlinandroidextensions.ViewHolder
 import jp.wasabeef.recyclerview.animators.LandingAnimator
 import jp.wasabeef.recyclerview.animators.SlideInDownAnimator
 import kotlinx.android.synthetic.main.activity_friends_profile.*
-import kotlinx.android.synthetic.main.game_item.*
-import kotlinx.android.synthetic.main.header_title_item.*
 import pl.idappstudio.jakdobrzesieznacie.R
 import pl.idappstudio.jakdobrzesieznacie.activity.MenuActivity.Companion.EXTRA_USER_BTN_CHAT_TRANSITION_NAME
 import pl.idappstudio.jakdobrzesieznacie.activity.MenuActivity.Companion.EXTRA_USER_BTN_FAVORITE_TRANSITION_NAME
@@ -30,7 +28,6 @@ import pl.idappstudio.jakdobrzesieznacie.activity.MenuActivity.Companion.EXTRA_U
 import pl.idappstudio.jakdobrzesieznacie.activity.MenuActivity.Companion.EXTRA_USER_IMAGE_TRANSITION_NAME
 import pl.idappstudio.jakdobrzesieznacie.activity.MenuActivity.Companion.EXTRA_USER_ITEM
 import pl.idappstudio.jakdobrzesieznacie.activity.MenuActivity.Companion.EXTRA_USER_NAME_TRANSITION_NAME
-import pl.idappstudio.jakdobrzesieznacie.activity.MenuActivity.Companion.EXTRA_USER_STATUS_GAME_TRANSITION_NAME
 import pl.idappstudio.jakdobrzesieznacie.adapter.SetAdapater
 import pl.idappstudio.jakdobrzesieznacie.enums.ColorSnackBar
 import pl.idappstudio.jakdobrzesieznacie.enums.StatusMessage
@@ -41,6 +38,9 @@ import pl.idappstudio.jakdobrzesieznacie.util.GameUtil
 import pl.idappstudio.jakdobrzesieznacie.util.GlideUtil
 import pl.idappstudio.jakdobrzesieznacie.util.SnackBarUtil
 import pl.idappstudio.jakdobrzesieznacie.util.UserUtil
+import java.util.*
+import kotlin.collections.HashMap
+import kotlin.concurrent.schedule
 
 class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
@@ -58,7 +58,12 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
         } else {
 
-            SnackBarUtil.setActivitySnack("Żeby korzystać z tego zestawu, musisz posiadać konto premium", ColorSnackBar.WARING, R.drawable.ic_corn, setDialog.findViewById(R.id.head_title_text)){
+            SnackBarUtil.setActivitySnack(
+                resources.getString(R.string.have_premium),
+                ColorSnackBar.WARING,
+                R.drawable.ic_corn,
+                setDialog.findViewById(R.id.head_title_text)
+            ) {
 
             }
 
@@ -68,8 +73,8 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
     companion object {
 
-        val EXTRA_USER_IMAGE_TRANSITION = "image-user"
-        val EXTRA_FRIEND_IMAGE_TRANSITION = "image-friend"
+        const val EXTRA_USER_IMAGE_TRANSITION = "image-user"
+        const val EXTRA_FRIEND_IMAGE_TRANSITION = "image-friend"
 
     }
 
@@ -104,17 +109,17 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
     private val socialItems = HashMap<String, SetAdapater>()
 
     private fun addDefaultItem(id: String, set: SetItem): HashMap<String, SetAdapater> {
-        defaultItems[id] = SetAdapater(set, this, this)
+        defaultItems[id] = SetAdapater(set, this)
         return defaultItems
     }
 
     private fun addYourItem(id: String, set: SetItem): HashMap<String, SetAdapater> {
-        yourItems[id] = SetAdapater(set, this, this)
+        yourItems[id] = SetAdapater(set, this)
         return yourItems
     }
 
     private fun addSocialItem(id: String, set: SetItem): HashMap<String, SetAdapater> {
-        socialItems[id] = SetAdapater(set, this, this)
+        socialItems[id] = SetAdapater(set, this)
         return socialItems
     }
 
@@ -131,17 +136,17 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
             friends_profile_startgame_btn.transitionName = imageGame
         }
 
-        if(extras.getString(EXTRA_USER_STATUS_GAME_TRANSITION_NAME) != null) {
-            val imageStatus = extras.getString(EXTRA_USER_STATUS_GAME_TRANSITION_NAME)
-        }
+//        if(extras.getString(EXTRA_USER_STATUS_GAME_TRANSITION_NAME) != null) {
+//            val imageStatus = extras.getString(EXTRA_USER_STATUS_GAME_TRANSITION_NAME)
+//        }
 
         val imageTransitionName = extras.getString(EXTRA_USER_IMAGE_TRANSITION_NAME)
         val nameTransitionName = extras.getString(EXTRA_USER_NAME_TRANSITION_NAME)
         val btnChatTransitionName = extras.getString(EXTRA_USER_BTN_CHAT_TRANSITION_NAME)
         val btnFavoriteTransitionName = extras.getString(EXTRA_USER_BTN_FAVORITE_TRANSITION_NAME)
 
-        val back_btn = linearLayout4.findViewById<ImageButton>(R.id.back_btn)
-        back_btn.setOnClickListener {
+        val backBtn = linearLayout4.findViewById<ImageButton>(R.id.back_btn)
+        backBtn.setOnClickListener {
 
             onBackPressed()
 
@@ -153,8 +158,13 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
         setInformation()
 
         friends_profile_chat.setOnClickListener {
-
-            SnackBarUtil.setActivitySnack("Pracujemy dopiero nad czatem", ColorSnackBar.WARING, R.drawable.ic_warning_black_24dp, it){ }
+            resources.getString(R.string.chat_in_progress)
+            SnackBarUtil.setActivitySnack(
+                resources.getString(R.string.chat_in_progress),
+                ColorSnackBar.WARING,
+                R.drawable.ic_warning,
+                it
+            ) { }
 
         }
 
@@ -191,9 +201,9 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
         rvSetDefault.adapter = groupAdapter
 
-        defaultPack.setHeader(HeaderItem("PODSTAWOWE"))
-        yourPack.setHeader(HeaderItem("TWOJE"))
-        socialPack.setHeader(HeaderItem("PREMIUM"))
+        defaultPack.setHeader(HeaderItem(resources.getString(R.string.head_pack_default)))
+        yourPack.setHeader(HeaderItem(resources.getString(R.string.header_pack_yours)))
+        socialPack.setHeader(HeaderItem(resources.getString(R.string.premium)))
 
         defaultPack.setHideWhenEmpty(true)
         yourPack.setHideWhenEmpty(true)
@@ -244,7 +254,7 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
     }
 
-    fun blockFunction() {
+    private fun blockFunction() {
 
         friends_profile_favorite.isEnabled = false
         friends_profile_set_btn.isEnabled = false
@@ -253,7 +263,7 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
     }
 
-    fun unlockFunction() {
+    private fun unlockFunction() {
 
         friends_profile_favorite.isEnabled = true
         friends_profile_set_btn.isEnabled = true
@@ -261,7 +271,7 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
     }
 
-    fun closeDialog() {
+    private fun closeDialog() {
 
         if (setDialog.isShowing) {
 
@@ -273,7 +283,7 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
     }
 
-    fun showDialog() {
+    private fun showDialog() {
 
         if (!setDialog.isShowing) {
 
@@ -283,7 +293,7 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
     }
 
-    fun loadSetRecycler() {
+    private fun loadSetRecycler() {
 
         setListener = dbSet.addSnapshotListener(EventListener<QuerySnapshot> { doc, e ->
 
@@ -299,21 +309,25 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
                         rvSetDefault.itemAnimator = LandingAnimator()
 
-                        if (it.document.getBoolean("premium") == true) {
+                        when {
+                            it.document.getBoolean("premium") == true -> {
 
-                            socialItems.remove(it.document.id)
-                            socialPack.update(socialItems.values)
+                                socialItems.remove(it.document.id)
+                                socialPack.update(socialItems.values)
 
-                        } else if(it.document.getString("category") == UserUtil.user.uid) {
+                            }
+                            it.document.getString("category") == UserUtil.user.uid -> {
 
-                            yourItems.remove(it.document.id)
-                            yourPack.update(yourItems.values)
+                                yourItems.remove(it.document.id)
+                                yourPack.update(yourItems.values)
 
-                        } else {
+                            }
+                            else -> {
 
-                            defaultItems.remove(it.document.id)
-                            defaultPack.update(defaultItems.values)
+                                defaultItems.remove(it.document.id)
+                                defaultPack.update(defaultItems.values)
 
+                            }
                         }
 
                     }
@@ -322,21 +336,25 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
                         rvSetDefault.itemAnimator = LandingAnimator()
 
-                        if (it.document.getBoolean("premium") == true) {
+                        when {
+                            it.document.getBoolean("premium") == true -> {
 
-                            addSocialItem(it.document.id, it.document.toObject(SetItem::class.java))
-                            defaultPack.update(defaultItems.values)
+                                addSocialItem(it.document.id, it.document.toObject(SetItem::class.java))
+                                defaultPack.update(defaultItems.values)
 
-                        } else if(it.document.getString("category") == UserUtil.user.uid){
+                            }
+                            it.document.getString("category") == UserUtil.user.uid -> {
 
-                            addYourItem(it.document.id, it.document.toObject(SetItem::class.java))
-                            yourPack.update(yourItems.values)
+                                addYourItem(it.document.id, it.document.toObject(SetItem::class.java))
+                                yourPack.update(yourItems.values)
 
-                        } else {
+                            }
+                            else -> {
 
-                            addDefaultItem(it.document.id, it.document.toObject(SetItem::class.java))
-                            defaultPack.update(defaultItems.values)
+                                addDefaultItem(it.document.id, it.document.toObject(SetItem::class.java))
+                                defaultPack.update(defaultItems.values)
 
+                            }
                         }
 
                     }
@@ -375,13 +393,13 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
     }
 
-    fun setDialog() {
+    private fun setDialog() {
 
         setDialog = Dialog(this, android.R.style.Theme_Translucent_NoTitleBar_Fullscreen)
         setDialog.setCancelable(true)
         setDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         setDialog.setContentView(R.layout.dialog_choose_set)
-        setDialog.window.setBackgroundDrawableResource(R.color.colorDarkDialog)
+        setDialog.window?.setBackgroundDrawableResource(R.color.colorDarkDialog)
 
         rvSetDefault = setDialog.findViewById(R.id.rvSetDefault)
 
@@ -389,7 +407,7 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
     }
 
-    fun statsUser() {
+    private fun statsUser() {
 
         userStatsListener =
             db.document(UserUtil.user.uid).collection("friends").document(friend.uid).addSnapshotListener(
@@ -441,7 +459,8 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
                                     doc.getLong("games")!!.toInt()
                                 )
                             )
-                            user_profile_stats_precent.text = "$precent%"
+
+                            user_profile_stats_precent.text = String.format("$precent%s", "%")
 
                         }
 
@@ -451,7 +470,7 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
     }
 
-    fun statsFriend() {
+    private fun statsFriend() {
 
         friendStatsListener =
             db.document(friend.uid).collection("friends").document(UserUtil.user.uid).addSnapshotListener(
@@ -475,7 +494,7 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
                                     doc.getLong("games")!!.toInt()
                                 )
                             )
-                            friends_profile_stats_precent.text = "$precent%"
+                            friends_profile_stats_precent.text = String.format("$precent%s", "%")
 
                         }
 
@@ -485,7 +504,7 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
     }
 
-    fun setInformation() {
+    private fun setInformation() {
 
         UserUtil.getIdGame(friend.uid) {
 
@@ -536,7 +555,7 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
     }
 
-    fun userSets() {
+    private fun userSets() {
 
         userSetListener = dbSet.document(games.yset).addSnapshotListener(EventListener<DocumentSnapshot> { doc, e ->
 
@@ -552,11 +571,11 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
                     if(userSet.category == UserUtil.user.uid){
 
-                        friends_profile_set_btn.text = GameUtil.getSetName(userSet.name)
+                        friends_profile_set_btn.text = GameUtil.getSetName(userSet.name, resources)
 
                     } else {
 
-                        friends_profile_set_btn.text = GameUtil.getSetName(userSet.category)
+                        friends_profile_set_btn.text = GameUtil.getSetName(userSet.category, resources)
 
                     }
 
@@ -568,7 +587,7 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
     }
 
-    fun friendSets() {
+    private fun friendSets() {
 
         friendSetListener = dbSet.document(games.fset).addSnapshotListener(EventListener<DocumentSnapshot> { doc, e ->
 
@@ -590,7 +609,7 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
     }
 
-    fun updateInofrmation() {
+    private fun updateInofrmation() {
 
         userSets()
         friendSets()
@@ -601,7 +620,7 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
             friends_profile_startgame_btn.isEnabled = true
 
-            friends_profile_startgame_btn.text = "GRAJ"
+            friends_profile_startgame_btn.text = resources.getString(R.string.play)
             friends_profile_startgame_btn.background.setColorFilter(
                 ContextCompat.getColor(
                     this, R.color.colorPrimary
@@ -612,7 +631,7 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
             friends_profile_startgame_btn.isEnabled = true
 
-            friends_profile_startgame_btn.text = "GRAJ"
+            friends_profile_startgame_btn.text = resources.getString(R.string.play)
             friends_profile_startgame_btn.background.setColorFilter(
                 ContextCompat.getColor(
                     this, R.color.colorAccent
@@ -623,7 +642,7 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
             friends_profile_startgame_btn.isEnabled = false
 
-            friends_profile_startgame_btn.text = "kolej znajomego"
+            friends_profile_startgame_btn.text = resources.getString(R.string.friend_turn)
             friends_profile_startgame_btn.background.setColorFilter(
                 ContextCompat.getColor(
                     this, R.color.colorRed
@@ -632,12 +651,15 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
         }
 
-        friends_profile_gamemode_btn.text = GameUtil.getGamemodeName(games.gamemode)
+        friends_profile_gamemode_btn.text = GameUtil.getGamemodeName(games.gamemode, resources)
 
     }
 
     override fun onResume() {
         super.onResume()
+        Timer("status", false).schedule(700) {
+            UserUtil.updateStatus(resources.getString(StatusMessage.infriendsprofile)) {}
+        }
         unlockFunction()
         hideSystemUI()
     }
@@ -684,6 +706,7 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
         friendSetListener?.remove()
         userStatsListener?.remove()
         userSetListener?.remove()
+        UserUtil.updateStatus(resources.getString(StatusMessage.offline)) {}
     }
 
 }

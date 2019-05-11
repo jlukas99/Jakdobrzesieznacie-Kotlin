@@ -2,7 +2,10 @@ package pl.idappstudio.jakdobrzesieznacie.util
 
 import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
-import pl.idappstudio.jakdobrzesieznacie.model.*
+import pl.idappstudio.jakdobrzesieznacie.model.InviteNotificationMessage
+import pl.idappstudio.jakdobrzesieznacie.model.Message
+import pl.idappstudio.jakdobrzesieznacie.model.NotificationType
+import pl.idappstudio.jakdobrzesieznacie.model.UserData
 
 object UserUtil {
 
@@ -279,7 +282,7 @@ object UserUtil {
 
     }
 
-    fun checkInvite(uid: String, onComplete: (Boolean) -> Unit){
+    private fun checkInvite(uid: String, onComplete: (Boolean) -> Unit) {
 
         dbCurrentUser.collection("invites").document(uid).get().addOnSuccessListener {
 
@@ -343,7 +346,9 @@ object UserUtil {
         }
     }
 
-    fun updateStatus(msg: String){ dbCurrentUser.update("status", msg) }
+    fun updateStatus(msg: String, onComplete: () -> Unit) {
+        dbCurrentUser.update("status", msg).addOnCompleteListener { onComplete() }
+    }
 
     fun getFacebookFriend(uid: String, onComplete: (UserData, Boolean) -> Unit){
 

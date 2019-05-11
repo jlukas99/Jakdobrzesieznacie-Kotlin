@@ -1,11 +1,10 @@
 package pl.idappstudio.jakdobrzesieznacie.util
 
-import android.graphics.Typeface
 import android.view.View
-import pl.idappstudio.jakdobrzesieznacie.R
 import android.widget.TextView
+import androidx.core.content.ContextCompat
 import com.androidadvance.topsnackbar.TSnackbar
-
+import pl.idappstudio.jakdobrzesieznacie.R
 
 object SnackBarUtil {
 
@@ -16,11 +15,10 @@ object SnackBarUtil {
             snackbar.setIconPadding(16)
 
             val snackbarView = snackbar.view
-            snackbarView.setBackgroundColor(view.resources.getColor(color))
+        snackbarView.setBackgroundColor(ContextCompat.getColor(view.context, color))
 
             val textView = snackbarView.findViewById(com.androidadvance.topsnackbar.R.id.snackbar_text) as TextView
-            textView.setTextColor(view.resources.getColor(R.color.colorWhite))
-//            textView.setTypeface(textView.typeface, Typeface.NORMAL)
+        textView.setTextColor(ContextCompat.getColor(view.context, R.color.colorWhite))
 
             snackbar.show()
 

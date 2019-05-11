@@ -13,7 +13,6 @@ import pl.idappstudio.jakdobrzesieznacie.R
 import pl.idappstudio.jakdobrzesieznacie.interfaces.ClickInviteListener
 import pl.idappstudio.jakdobrzesieznacie.model.FriendItem
 import pl.idappstudio.jakdobrzesieznacie.model.UserData
-import pl.idappstudio.jakdobrzesieznacie.util.FirestoreUtil
 import pl.idappstudio.jakdobrzesieznacie.util.GlideUtil
 import pl.idappstudio.jakdobrzesieznacie.util.UserUtil
 
@@ -39,7 +38,7 @@ class SearchAdapater(private val user: FriendItem, private val context: Context,
 
         } else {
 
-            holder.btn_send.setImageResource(R.drawable.ic_iconfinder_arrow_forward_216442)
+            holder.btn_send.setImageResource(R.drawable.ic_forward)
             holder.btn_send.setColorFilter(
                 ContextCompat.getColor(
                     holder.itemView.context, R.color.colorPrimary
@@ -67,7 +66,7 @@ class SearchAdapater(private val user: FriendItem, private val context: Context,
                             listener.onClickSendInvite(user2!!, true)
 
                             holder.addLoading.visibility = View.GONE
-                            holder.btn_send.setImageResource(R.drawable.ic_iconfinder_arrow_forward_216442)
+                            holder.btn_send.setImageResource(R.drawable.ic_forward)
                             holder.btn_send.setColorFilter(
                                 ContextCompat.getColor(
                                     holder.itemView.context, R.color.colorPrimary

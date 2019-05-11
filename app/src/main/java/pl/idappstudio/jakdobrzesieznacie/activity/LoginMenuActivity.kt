@@ -9,12 +9,9 @@ import android.content.Intent
 import android.graphics.drawable.ColorDrawable
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
-import android.os.Looper
-import com.google.android.material.snackbar.Snackbar
-import android.util.Log
 import android.view.View
 import com.facebook.*
+import com.facebook.AccessToken
 import com.facebook.appevents.AppEventsLogger
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
@@ -28,17 +25,12 @@ import org.jetbrains.anko.clearTask
 import org.jetbrains.anko.intentFor
 import org.jetbrains.anko.newTask
 import org.jetbrains.anko.startActivity
-import pl.idappstudio.jakdobrzesieznacie.R
-import pl.idappstudio.jakdobrzesieznacie.service.MyFirebaseMessagingService
-import com.facebook.GraphRequest
-import com.facebook.AccessToken
-import org.json.JSONArray
 import org.json.JSONException
-import org.json.JSONObject
+import pl.idappstudio.jakdobrzesieznacie.R
 import pl.idappstudio.jakdobrzesieznacie.enums.ColorSnackBar
+import pl.idappstudio.jakdobrzesieznacie.service.MyFirebaseMessagingService
 import pl.idappstudio.jakdobrzesieznacie.util.*
 import java.util.*
-import kotlin.concurrent.schedule
 
 class LoginMenuActivity : Activity() {
 
@@ -97,6 +89,7 @@ class LoginMenuActivity : Activity() {
 
     }
 
+    @SuppressLint("PrivateResource", "InflateParams")
     fun initialize(){
 
         callbackManager = CallbackManager.Factory.create()
@@ -170,7 +163,12 @@ class LoginMenuActivity : Activity() {
 
                     alertDialog.dismiss()
 
-                    SnackBarUtil.setActivitySnack("Anulowano logowanie za pomocą FB", ColorSnackBar.ERROR, R.drawable.ic_error_, view) { }
+                    SnackBarUtil.setActivitySnack(
+                        resources.getString(R.string.cancel_login_facebook),
+                        ColorSnackBar.ERROR,
+                        R.drawable.ic_error_,
+                        view
+                    ) { }
                 }
 
                 override fun onError(error: FacebookException) {
@@ -179,7 +177,12 @@ class LoginMenuActivity : Activity() {
                         if (AccessToken.getCurrentAccessToken() != null) {
                             LoginManager.getInstance().logOut()
 
-                            SnackBarUtil.setActivitySnack("Wylogowano z poprzedniego konta, spróbuj zalogować się ponownie", ColorSnackBar.WARING, R.drawable.ic_error_, view) { }
+                            SnackBarUtil.setActivitySnack(
+                                resources.getString(R.string.logout_facebook),
+                                ColorSnackBar.WARING,
+                                R.drawable.ic_warning,
+                                view
+                            ) { }
 
                             return
                         }
@@ -187,7 +190,12 @@ class LoginMenuActivity : Activity() {
 
                     alertDialog.dismiss()
 
-                    SnackBarUtil.setActivitySnack("Nie udało się zalogować", ColorSnackBar.ERROR, R.drawable.ic_error_, view) { }
+                    SnackBarUtil.setActivitySnack(
+                        resources.getString(R.string.error_facebook_login),
+                        ColorSnackBar.ERROR,
+                        R.drawable.ic_error_,
+                        view
+                    ) { }
 
                 }
             })
@@ -200,7 +208,7 @@ class LoginMenuActivity : Activity() {
 
         var gender = ""
 
-        val request = GraphRequest.newMeRequest(token) { a, response ->
+        val request = GraphRequest.newMeRequest(token) { a, _ ->
 
             try {
                gender = a.getString("gender")
@@ -256,9 +264,16 @@ class LoginMenuActivity : Activity() {
 
                                     alertDialog.dismiss()
 
-                                    SnackBarUtil.setActivitySnack("Zalogowano za pomocą Facebook'a", ColorSnackBar.FACEBOOK, R.drawable.fui_ic_facebook_white_22dp, view) { }
+                                    SnackBarUtil.setActivitySnack(
+                                        resources.getString(R.string.login_successful_facebook),
+                                        ColorSnackBar.FACEBOOK,
+                                        R.drawable.com_facebook_button_login_logo,
+                                        view
+                                    ) {
 
-                                    startActivity(intentFor<MenuActivity>().newTask().clearTask())
+                                        startActivity(intentFor<MenuActivity>().newTask().clearTask())
+
+                                    }
 
                                 }
 
@@ -270,9 +285,16 @@ class LoginMenuActivity : Activity() {
 
                                 alertDialog.dismiss()
 
-                                SnackBarUtil.setActivitySnack("Zalogowano za pomocą Facebook'a", ColorSnackBar.FACEBOOK, R.drawable.fui_ic_facebook_white_22dp, view) { }
+                                SnackBarUtil.setActivitySnack(
+                                    resources.getString(R.string.login_successful_facebook),
+                                    ColorSnackBar.FACEBOOK,
+                                    R.drawable.com_facebook_button_login_logo,
+                                    view
+                                ) {
 
-                                startActivity(intentFor<MenuActivity>().newTask().clearTask())
+                                    startActivity(intentFor<MenuActivity>().newTask().clearTask())
+
+                                }
 
                             }
 
@@ -284,7 +306,12 @@ class LoginMenuActivity : Activity() {
 
                     alertDialog.dismiss()
 
-                    SnackBarUtil.setActivitySnack("Nie udało się zalogować", ColorSnackBar.ERROR, R.drawable.ic_error_, view) { }
+                    SnackBarUtil.setActivitySnack(
+                        resources.getString(R.string.error_facebook_login),
+                        ColorSnackBar.ERROR,
+                        R.drawable.ic_error_,
+                        view
+                    ) { }
 
                 }
 

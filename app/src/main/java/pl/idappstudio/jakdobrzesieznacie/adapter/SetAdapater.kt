@@ -1,6 +1,5 @@
 package pl.idappstudio.jakdobrzesieznacie.adapter
 
-import android.content.Context
 import androidx.core.content.ContextCompat
 import com.xwray.groupie.kotlinandroidextensions.Item
 import com.xwray.groupie.kotlinandroidextensions.ViewHolder
@@ -10,7 +9,10 @@ import pl.idappstudio.jakdobrzesieznacie.R
 import pl.idappstudio.jakdobrzesieznacie.interfaces.ClickSetListener
 import pl.idappstudio.jakdobrzesieznacie.model.SetItem
 
-class SetAdapater(private val set: SetItem, private val context: Context, private val listener: ClickSetListener) : Item() {
+class SetAdapater(
+    private val set: SetItem,
+    private val listener: ClickSetListener
+) : Item() {
 
     override fun bind(holder: ViewHolder, position: Int) {
 

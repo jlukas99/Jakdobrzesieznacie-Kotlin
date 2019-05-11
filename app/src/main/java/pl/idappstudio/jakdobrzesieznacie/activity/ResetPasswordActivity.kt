@@ -1,5 +1,3 @@
-@file:Suppress("DEPRECATION")
-
 package pl.idappstudio.jakdobrzesieznacie.activity
 
 import android.annotation.SuppressLint
@@ -7,10 +5,10 @@ import android.app.Activity
 import android.app.AlertDialog
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import com.google.android.material.snackbar.Snackbar
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
+import androidx.core.content.ContextCompat
 import com.google.firebase.auth.FirebaseAuth
 import kotlinx.android.synthetic.main.activity_reset_password.*
 import pl.idappstudio.jakdobrzesieznacie.R
@@ -39,7 +37,7 @@ class ResetPasswordActivity : Activity() {
         dialogBuilder.setView(dialogView)
 
         alertDialog = dialogBuilder.create()
-        alertDialog.window?.setBackgroundDrawable(ColorDrawable(resources.getColor(R.color.colorTranspery)))
+        alertDialog.window?.setBackgroundDrawable(ColorDrawable(ContextCompat.getColor(this, R.color.colorTranspery)))
         alertDialog.setCanceledOnTouchOutside(false)
         alertDialog.setCancelable(false)
 
@@ -69,7 +67,12 @@ class ResetPasswordActivity : Activity() {
                 emailInput.setBackgroundResource(R.drawable.input_overlay_error)
                 emailImage.setBackgroundResource(R.drawable.input_overlay_icon_error)
 
-                SnackBarUtil.setActivitySnack("Niepoprawny adres email", ColorSnackBar.ERROR, R.mipmap.email_icon, it2){ }
+                SnackBarUtil.setActivitySnack(
+                    resources.getString(R.string.incoreect_mail),
+                    ColorSnackBar.ERROR,
+                    R.mipmap.email_icon,
+                    it2
+                ) { }
 
                 return@setOnClickListener
 
@@ -81,7 +84,12 @@ class ResetPasswordActivity : Activity() {
 
                 alertDialog.dismiss()
 
-                SnackBarUtil.setActivitySnack("Wysłano wiadomość, sprawdź mail'a", ColorSnackBar.SUCCES, R.drawable.ic_check_icon, it2){ }
+                SnackBarUtil.setActivitySnack(
+                    resources.getString(R.string.send_mail_successful),
+                    ColorSnackBar.SUCCES,
+                    R.drawable.ic_check_icon,
+                    it2
+                ) { }
 
                 Timer("startIntent", false).schedule(700) {
 
@@ -93,13 +101,23 @@ class ResetPasswordActivity : Activity() {
 
                 alertDialog.dismiss()
 
-                SnackBarUtil.setActivitySnack("Anulowano przywracanie hasła", ColorSnackBar.ERROR, R.drawable.ic_error_, it2){ }
+                SnackBarUtil.setActivitySnack(
+                    resources.getString(R.string.send_mail_canceled),
+                    ColorSnackBar.ERROR,
+                    R.drawable.ic_error_,
+                    it2
+                ) { }
 
             }.addOnFailureListener {
 
                 alertDialog.dismiss()
 
-                SnackBarUtil.setActivitySnack("Nie udało się wysłać mail'a", ColorSnackBar.ERROR, R.drawable.ic_error_, it2){ }
+                SnackBarUtil.setActivitySnack(
+                    resources.getString(R.string.send_mail_error),
+                    ColorSnackBar.ERROR,
+                    R.drawable.ic_error_,
+                    it2
+                ) { }
 
                 emailInput.setBackgroundResource(R.drawable.input_overlay_error)
                 emailImage.setBackgroundResource(R.drawable.input_overlay_icon_error)

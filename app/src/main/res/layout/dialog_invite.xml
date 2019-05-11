@@ -2,9 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools" android:layout_width="wrap_content"
-        android:layout_height="wrap_content" android:background="@color/colorTranspery"
->
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:background="@color/colorTranspery">
 
     <View
             android:layout_width="wrap_content"
@@ -15,6 +15,7 @@
             android:visibility="visible"
             app:layout_constraintHorizontal_bias="0.0" app:layout_constraintVertical_bias="0.0"
             android:background="@color/colorButtonSecondary"/>
+
     <LinearLayout
             android:orientation="horizontal"
             android:layout_height="wrap_content"
@@ -32,7 +33,7 @@
                 android:layout_gravity="center" android:layout_weight="1"/>
 
         <TextView
-                android:text="prośba o dodanie"
+                android:text="@string/invite_dialog_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content" android:id="@+id/textView"
                 android:textColor="@color/colorCorrectAnswer" android:textAlignment="center"
@@ -60,11 +61,12 @@
             app:civ_border_color="@color/colorAccent"
             android:src="@mipmap/logo_colored" app:layout_constraintEnd_toEndOf="@+id/linearLayout"
             android:layout_marginTop="16dp"/>
+
     <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content" android:id="@+id/profile_name2"
             android:singleLine="false"
-            android:text="Czy chcesz dodać tę osobę\ndo znajomych?"
+            android:text="@string/invite_dialog_text"
             android:textAlignment="center"
             android:textColor="@color/colorWhite"
             android:textSize="18sp"
@@ -73,25 +75,28 @@
             app:layout_constraintStart_toStartOf="@+id/deleteFriends"
             app:layout_constraintEnd_toEndOf="@+id/deleteFriends" android:layout_marginEnd="16dp"
             android:layout_marginStart="16dp"/>
+
     <TextView
             android:layout_width="0dp"
             android:layout_height="wrap_content" android:id="@+id/profile_name3"
             android:singleLine="false"
-            android:text="Janek"
+            android:text="@string/blank"
             android:textAlignment="center"
             android:textColor="@color/colorWhite"
             android:textSize="18sp"
             android:layout_marginTop="8dp" app:layout_constraintTop_toBottomOf="@+id/friends_profile2"
             app:layout_constraintStart_toStartOf="@+id/profile_name2"
             app:layout_constraintEnd_toEndOf="@+id/profile_name2"/>
+
     <com.google.android.material.button.MaterialButton
             android:id="@+id/deleteFriends"
             android:layout_width="0dp"
             android:layout_height="38.66dp"
-            android:text="ODRZUĆ"
+            android:text="@string/discard"
             app:cornerRadius="100dp"
             app:layout_constraintEnd_toEndOf="parent"
-            android:textSize="11sp" android:textAlignment="center"
+            android:textSize="12sp"
+            android:textAlignment="center"
             android:textAllCaps="true" android:typeface="normal" android:fontFamily="@font/varela_round"
             app:layout_constraintStart_toStartOf="parent"
             android:textColor="@color/colorWhite"
@@ -103,16 +108,19 @@
             app:rippleColor="@color/colorButtonSecondary" android:layout_marginTop="8dp"
             app:layout_constraintTop_toBottomOf="@+id/addFriends" app:layout_constraintBottom_toBottomOf="parent"
             android:layout_marginBottom="32dp" app:iconTint="@color/colorWhite"
-            app:backgroundTint="@color/colorBadAnswer" app:icon="@drawable/ic_6a8d83618b"/>
+            app:backgroundTint="@color/colorBadAnswer"
+            app:icon="@drawable/ic_trash"/>
+
     <com.google.android.material.button.MaterialButton
             android:id="@+id/addFriends"
             android:layout_width="0dp"
             android:layout_height="38.66dp"
-            android:text="DODAJ"
+            android:text="@string/add"
             app:cornerRadius="100dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:backgroundTint="@color/colorAccent"
-            android:textSize="11sp" android:textAlignment="center"
+            android:textSize="12sp"
+            android:textAlignment="center"
             android:textAllCaps="true" android:typeface="normal" android:fontFamily="@font/varela_round"
             app:layout_constraintStart_toStartOf="parent"
             app:iconTint="@color/colorWhite"

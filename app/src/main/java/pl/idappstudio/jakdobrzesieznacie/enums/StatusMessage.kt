@@ -1,14 +1,16 @@
 package pl.idappstudio.jakdobrzesieznacie.enums
 
- class StatusMessage {
+import pl.idappstudio.jakdobrzesieznacie.R
+
+class StatusMessage {
 
      companion object {
 
-         val ingame get() = "W grze"
-         val inmenu get() = "W menu głównym"
-         val insettings get() = "Majstruje coś w ustawieniach"
-         val infriendsprofile get() = "Przegląda profil znajomego"
-         val offline get() = "offline"
+         val ingame get() = R.string.in_game
+         val inmenu get() = R.string.in_menu
+         val insettings get() = R.string.in_settings
+         val infriendsprofile get() = R.string.in_profile
+         val offline get() = R.string.offline
 
      }
 

@@ -35,10 +35,10 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
     private lateinit var share: Button
     private lateinit var premium: Button
 
-    private lateinit var friends_profile_stats_canswer: TextView
-    private lateinit var friends_profile_stats_banswer: TextView
-    private lateinit var friends_profile_stats_games: TextView
-    private lateinit var profile_stats_friend_precent: TextView
+    private lateinit var friendsProfileStatsCanswer: TextView
+    private lateinit var friendsProfileStatsBanswer: TextView
+    private lateinit var friendsProfileStatsGames: TextView
+    private lateinit var friendsProfileStatsPrecent: TextView
 
     private val glide = GlideUtil
 
@@ -56,10 +56,10 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
         share = rootView.findViewById(R.id.profile_share_button)
         premium = rootView.findViewById(R.id.friends_profile_set_btn)
 
-        friends_profile_stats_canswer = rootView.findViewById(R.id.friends_profile_stats_canswer)
-        friends_profile_stats_banswer = rootView.findViewById(R.id.friends_profile_stats_banswer)
-        friends_profile_stats_games = rootView.findViewById(R.id.friends_profile_stats_games)
-        profile_stats_friend_precent = rootView.findViewById(R.id.profile_stats_friend_precent)
+        friendsProfileStatsCanswer = rootView.findViewById(R.id.friends_profile_stats_canswer)
+        friendsProfileStatsBanswer = rootView.findViewById(R.id.friends_profile_stats_banswer)
+        friendsProfileStatsGames = rootView.findViewById(R.id.friends_profile_stats_games)
+        friendsProfileStatsPrecent = rootView.findViewById(R.id.profile_stats_friend_precent)
         logout.setOnClickListener {
 
             FirebaseAuth.getInstance().signOut()
@@ -69,7 +69,12 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
 
         premium.setOnClickListener {
 
-            SnackBarUtil.setActivitySnack("Opcja na czas testów, została wyłączona", ColorSnackBar.WARING, R.drawable.ic_corn, it){ }
+            SnackBarUtil.setActivitySnack(
+                resources.getString(R.string.premium_disabled),
+                ColorSnackBar.WARING,
+                R.drawable.ic_corn,
+                it
+            ) { }
 
         }
 
@@ -80,8 +85,19 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
         }
 
         share.setOnClickListener {
+            SnackBarUtil.setActivitySnack(
+                resources.getString(R.string.statistics_disabled),
+                ColorSnackBar.WARING,
+                R.drawable.ic_share,
+                it
+            ) { }
 
-            SnackBarUtil.setActivitySnack("Pracujemy nad udostępnianiem statystyk profilu", ColorSnackBar.WARING, R.drawable.ic_share_black_24dp, it){ }
+            SnackBarUtil.setActivitySnack(
+                "Pracujemy nad udostępnianiem statystyk profilu",
+                ColorSnackBar.WARING,
+                R.drawable.ic_share,
+                it
+            ) { }
 
 //            val shareHashTag = ShareHashtag.Builder().setHashtag("#Jakdobrzesieznacie").setHashtag("#iDappStudio").build()
 //            val shareLinkContent = ShareLinkContent.Builder()
@@ -97,7 +113,7 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
         return rootView
     }
 
-    fun setInformation(){
+    private fun setInformation() {
 
         glide.setActivityImage(UserUtil.user.fb, UserUtil.user.image, this.context!!, image) {}
 
@@ -108,11 +124,12 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
             val a: Float = i1.toFloat()
             val b: Float = i2.toFloat()
             val c: Int = i3
-
-            friends_profile_stats_canswer.text = a.toInt().toString()
-            friends_profile_stats_banswer.text = b.toInt().toString()
-            friends_profile_stats_games.text = c.toString()
-            profile_stats_friend_precent.text = "${GameUtil.getPrecent(StatsData(i1, i2, i3))}%"
+            val precent = GameUtil.getPrecent(StatsData(i1, i2, i3))
+            resources.getString(R.string.percent)
+            friendsProfileStatsCanswer.text = a.toInt().toString()
+            friendsProfileStatsBanswer.text = b.toInt().toString()
+            friendsProfileStatsGames.text = c.toString()
+            friendsProfileStatsPrecent.text = String.format("$precent%s", "%")
 
         }
 
@@ -126,10 +143,6 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
     override fun onDestroy() {
         super.onDestroy()
         UserUtil.stopListener()
-    }
-
-    companion object {
-        fun newInstance(): ProfileFragment = ProfileFragment()
     }
 
 }

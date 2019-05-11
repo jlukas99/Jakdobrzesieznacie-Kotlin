@@ -1,7 +1,7 @@
 package pl.idappstudio.jakdobrzesieznacie.adapter
 
 import android.content.Context
-import android.view.View
+import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.EventListener
@@ -37,13 +37,13 @@ class GamesAdapater(private val user: FriendItem, private val context: Context, 
         if(user.favorite){
 
             holder.imageView2.setImageResource(R.drawable.input_overlay)
-            holder.friends_profile.borderColor = context.resources.getColor(R.color.colorCorrectAnswer)
+            holder.friends_profile.borderColor = ContextCompat.getColor(context, R.color.colorCorrectAnswer)
             holder.imageView5.setImageResource(R.drawable.input_overlay_icon)
 
         } else {
 
             holder.imageView2.setImageResource(R.drawable.input_overlay_error)
-            holder.friends_profile.borderColor = context.resources.getColor(R.color.colorRed)
+            holder.friends_profile.borderColor = ContextCompat.getColor(context, R.color.colorRed)
             holder.imageView5.setImageResource(R.drawable.input_overlay_icon_error)
 
         }

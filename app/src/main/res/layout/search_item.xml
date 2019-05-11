@@ -15,11 +15,12 @@
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintVertical_bias="0.0"
             android:background="@drawable/card_background_dark" app:layout_constraintHorizontal_bias="0.0"
-            android:id="@+id/imageView"/>
+            android:id="@+id/imageView"
+            tools:ignore="ContentDescription"/>
 
 
     <TextView
-            android:text="....."
+            android:text="@string/blank"
             android:layout_width="0dp"
             android:layout_height="wrap_content" android:id="@+id/invite_name"
             app:layout_constraintStart_toEndOf="@+id/invite_profile"
@@ -45,7 +46,8 @@
             android:layout_marginTop="16dp" android:layout_marginEnd="16dp" android:layout_marginBottom="16dp"
             android:tint="@color/colorAccent"
             android:background="@android:color/transparent" style="@android:style/Widget.Material.ImageButton"
-            android:paddingTop="1dp"/>
+            android:paddingTop="1dp"
+            tools:ignore="ContentDescription"/>
 
     <com.github.ybq.android.spinkit.SpinKitView android:layout_width="24dp"
                                                 android:layout_height="24dp"

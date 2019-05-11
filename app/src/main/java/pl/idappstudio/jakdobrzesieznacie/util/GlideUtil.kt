@@ -14,7 +14,7 @@ import androidx.core.content.ContextCompat
 object GlideUtil {
 
     private val options = RequestOptions()
-        .error(R.mipmap.logo_colored)
+        .error(R.mipmap.placeholder_profile)
         .diskCacheStrategy(DiskCacheStrategy.DATA)
         .priority(Priority.HIGH)
 
@@ -42,32 +42,43 @@ object GlideUtil {
 
             if (target.isAttachedToWindow) {
 
-                if (image == "logo") {
+                when (image) {
+                    "male" -> {
 
-                    target.setImageResource(R.mipmap.annonymous)
-
-                    onComplete()
-
-                } else {
-
-                    val storageReference =
-                        FirebaseStorage.getInstance().reference.child("profile_image").child(image + "-image")
-                            .downloadUrl
-
-                    storageReference.addOnSuccessListener { Uri ->
-
-                        Glide.with(ctx).asBitmap().load(Uri.toString())
-                            .apply(options)
-                            .placeholder(placeholder)
-                            .into(target)
+                        target.setImageResource(R.mipmap.male)
 
                         onComplete()
 
-                    }.addOnFailureListener {
+                    }
+                    "female" -> {
 
-                        target.setImageResource(R.mipmap.annonymous)
+                        target.setImageResource(R.mipmap.female)
 
                         onComplete()
+
+                    }
+                    else -> {
+
+                        val storageReference =
+                            FirebaseStorage.getInstance().reference.child("profile_image").child(image + "-image")
+                                .downloadUrl
+
+                        storageReference.addOnSuccessListener { Uri ->
+
+                            Glide.with(ctx).asBitmap().load(Uri.toString())
+                                .apply(options)
+                                .placeholder(placeholder)
+                                .into(target)
+
+                            onComplete()
+
+                        }.addOnFailureListener {
+
+                            target.setImageResource(R.mipmap.annonymous)
+
+                            onComplete()
+
+                        }
 
                     }
 
@@ -76,16 +87,13 @@ object GlideUtil {
             }
 
         }
-
     }
 
-    fun setImage(b: Boolean, image: String, ctx: Context, target: ImageView, onComplete: () -> Unit) {
+        fun setImage(b: Boolean, image: String, ctx: Context, target: ImageView, onComplete: () -> Unit) {
 
-        placeholder = ContextCompat.getDrawable(ctx, R.mipmap.annonymous)
+            placeholder = ContextCompat.getDrawable(ctx, R.mipmap.annonymous)
 
-        if (b) {
-
-//            if (target.isAttachedToWindow) {
+            if (b) {
 
                 Glide.with(ctx).asBitmap().load("http://graph.facebook.com/${image}/picture?type=large")
                     .apply(options)
@@ -94,47 +102,50 @@ object GlideUtil {
 
                 onComplete()
 
-//            }
+            } else {
 
-        } else {
+                when (image) {
+                    "male" -> {
 
-//            if (target.isAttachedToWindow) {
-
-                if (image == "logo") {
-
-                    target.setImageResource(R.mipmap.annonymous)
-
-                    onComplete()
-
-                } else {
-
-                    val storageReference =
-                        FirebaseStorage.getInstance().reference.child("profile_image").child(image + "-image")
-                            .downloadUrl
-
-                    storageReference.addOnSuccessListener { Uri ->
-
-                        Glide.with(ctx).asBitmap().load(Uri.toString())
-                            .apply(options)
-                            .placeholder(placeholder)
-                            .into(target)
-
-                        onComplete()
-
-                    }.addOnFailureListener {
-
-                        target.setImageResource(R.mipmap.annonymous)
+                        target.setImageResource(R.mipmap.male)
 
                         onComplete()
 
                     }
+                    "female" -> {
 
+                        target.setImageResource(R.mipmap.female)
+
+                        onComplete()
+
+                    }
+                    else -> {
+
+                        val storageReference =
+                            FirebaseStorage.getInstance().reference.child("profile_image").child(image + "-image")
+                                .downloadUrl
+
+                        storageReference.addOnSuccessListener { Uri ->
+
+                            Glide.with(ctx).asBitmap().load(Uri.toString())
+                                .apply(options)
+                                .placeholder(placeholder)
+                                .into(target)
+
+                            onComplete()
+
+                        }.addOnFailureListener {
+
+                            target.setImageResource(R.mipmap.annonymous)
+
+                            onComplete()
+
+                        }
+
+                    }
                 }
 
-//            }
-
-        }
-
+            }
     }
 
 }

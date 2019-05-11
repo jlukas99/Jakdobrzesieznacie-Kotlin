@@ -187,7 +187,17 @@ class RegisterActivity : Activity() {
                         val emailNum = email.indexOf("@")
                         email = email.substring(0, emailNum)
 
-                        val image = if(fileUri != null) uid else "logo"
+                        val image: String
+
+                        image = if(fileUri != null) {
+
+                            uid
+
+                        } else {
+
+                            if(genderSpinner.selectedItemPosition == 0) "male" else "female"
+
+                        }
 
                         FirestoreUtil.registerCurrentUser(uid, email, image, false, gender, "free", "") {
 

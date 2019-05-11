@@ -1,6 +1,8 @@
 package pl.idappstudio.jakdobrzesieznacie.fragments.stages
 
 import android.app.AlertDialog
+import android.app.Dialog
+import android.content.pm.PackageManager
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -8,14 +10,16 @@ import androidx.core.content.ContextCompat
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageView
-import android.widget.TextView
+import android.view.Window
+import android.widget.*
 import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.MobileAds
 import com.google.android.gms.ads.reward.RewardItem
 import com.google.android.gms.ads.reward.RewardedVideoAd
 import com.google.android.gms.ads.reward.RewardedVideoAdListener
+import com.google.android.material.button.MaterialButton
+import com.google.firebase.firestore.FirebaseFirestore
+import kotlinx.android.synthetic.main.fragment_stage_one.*
 
 import pl.idappstudio.jakdobrzesieznacie.R
 import pl.idappstudio.jakdobrzesieznacie.activity.GameActivity
@@ -23,9 +27,12 @@ import pl.idappstudio.jakdobrzesieznacie.activity.GameActivity.Companion.friends
 import pl.idappstudio.jakdobrzesieznacie.activity.GameActivity.Companion.game
 import pl.idappstudio.jakdobrzesieznacie.activity.GameActivity.Companion.questionList
 import pl.idappstudio.jakdobrzesieznacie.activity.GameActivity.Companion.userStats
+import pl.idappstudio.jakdobrzesieznacie.enums.ColorSnackBar
 import pl.idappstudio.jakdobrzesieznacie.interfaces.nextFragment
+import pl.idappstudio.jakdobrzesieznacie.model.UserQuestionData
 import pl.idappstudio.jakdobrzesieznacie.util.GameUtil
 import pl.idappstudio.jakdobrzesieznacie.util.GlideUtil
+import pl.idappstudio.jakdobrzesieznacie.util.SnackBarUtil
 import pl.idappstudio.jakdobrzesieznacie.util.UserUtil
 
 class StageOneFragment(private val listener: nextFragment) : androidx.fragment.app.Fragment(), View.OnClickListener {
@@ -66,7 +73,14 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
     private lateinit var cAnswerButton: ConstraintLayout
     private lateinit var dAnswerButton: ConstraintLayout
 
+    private lateinit var setDialog: Dialog
+    private lateinit var dialogReason: EditText
+    private lateinit var dialogSend: MaterialButton
+    private lateinit var dialogCancel: MaterialButton
+    private lateinit var dialogIdQuestion: TextView
+
     private lateinit var nextQuestion: Button
+    private lateinit var reportQuestion: ImageView
     private lateinit var rejectBadAnswer: Button
 
     private lateinit var rewardedVideoAd: RewardedVideoAd
@@ -124,6 +138,41 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
 
         nextQuestion = rootView.findViewById(R.id.nextQuestionBtn)
         rejectBadAnswer = rootView.findViewById(R.id.loadingAds)
+
+        reportQuestion = rootView.findViewById(R.id.btnReport)
+
+//        if(userStats.games == 0) {
+//
+//            TapTargetView.showFor(
+//                this.activity,
+//                TapTarget.forView(
+//                    reportQuestion,
+//                    "Zgłoś pytanie",
+//                    "Jeśli w pytaniu coś nie gra lub ma niestosowną treść możesz nam je zgłosić"
+//                )
+//                    .outerCircleColor(R.color.colorPrimaryDark)
+//                    .outerCircleAlpha(0.96f)
+//                    .targetCircleColor(R.color.colorWhite)
+//                    .titleTextSize(20)
+//                    .titleTextColor(R.color.colorWhite)
+//                    .descriptionTextSize(12)
+//                    .descriptionTextColor(R.color.colorWhite)
+//                    .textColor(R.color.colorWhite)
+//                    .dimColor(R.color.colorButtonSecondary)
+//                    .drawShadow(true)
+//                    .cancelable(true)
+//                    .tintTarget(true)
+//                    .transparentTarget(false)
+//                    .targetRadius(60)
+//            )
+//
+//        }
+
+        setDialog()
+
+        reportQuestion.setOnClickListener {
+            showDialog()
+        }
 
         rejectBadAnswer.setOnClickListener {
 
@@ -253,6 +302,7 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
 
     private fun setText(){
 
+        resetDialog()
         resetButton()
 
         aAnswerText.text = ""
@@ -549,6 +599,128 @@ class StageOneFragment(private val listener: nextFragment) : androidx.fragment.a
         glide.setImage(friends.fb, friends.image, this.requireContext(), bAnswerFriendImage) {}
         glide.setImage(friends.fb, friends.image, this.requireContext(), cAnswerFriendImage) {}
         glide.setImage(friends.fb, friends.image, this.requireContext(), dAnswerFriendImage) {}
+
+    }
+
+    private fun setDialog() {
+
+        setDialog = Dialog(context!!)
+        setDialog.setCancelable(true)
+        setDialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
+        setDialog.setContentView(R.layout.dialog_report_question)
+        setDialog.window?.setBackgroundDrawableResource(R.drawable.dialog_invite_overlay)
+
+        dialogSend = setDialog.findViewById(R.id.addFriends)
+        dialogCancel = setDialog.findViewById(R.id.deleteFriends)
+        dialogReason = setDialog.findViewById(R.id.profile_name2)
+        dialogIdQuestion = setDialog.findViewById(R.id.profile_name4)
+
+        dialogCancel.setOnClickListener {
+            closeDialog()
+        }
+
+        dialogSend.setOnClickListener {
+
+            dialogReason.isEnabled = false
+            dialogSend.isEnabled = false
+            dialogCancel.isEnabled = false
+
+            if(dialogReason.text.trim().length < 5){
+
+                SnackBarUtil.setActivitySnack("Powód jest za krótki", ColorSnackBar.WARING, R.drawable.ic_edit_text, setDialog.window.decorView){
+
+                    dialogReason.isEnabled = true
+                    dialogSend.isEnabled = true
+                    dialogCancel.isEnabled = true
+
+                }
+
+                return@setOnClickListener
+            }
+
+            val data = HashMap<String, String>()
+            data["questionId"] = getQuestionData()?.questionId.toString()
+            data["reason"] = dialogReason.text.toString()
+            data["appVersion"] = getVersion()
+
+            FirebaseFirestore.getInstance().collection("reports").add(data).addOnSuccessListener {it2 ->
+
+                closeDialog()
+                SnackBarUtil.setActivitySnack("Wysłano zgłoszenie o id: ${it2.id}", ColorSnackBar.SUCCES, R.drawable.ic_check_icon, gameStageTitle){
+
+                    resetDialog()
+
+                }
+
+            }.addOnFailureListener {
+
+                SnackBarUtil.setActivitySnack("Nie udało się wysłać zgłoszenia", ColorSnackBar.ERROR, R.drawable.ic_error_, setDialog.window.decorView){
+
+                    dialogReason.isEnabled = true
+                    dialogSend.isEnabled = true
+                    dialogCancel.isEnabled = true
+
+                }
+
+            }
+
+        }
+
+    }
+
+    private fun resetDialog() {
+
+        dialogIdQuestion.text = "ID: ${getQuestionData()?.questionId}"
+        dialogReason.text.clear()
+
+        dialogReason.isEnabled = true
+        dialogSend.isEnabled = true
+        dialogCancel.isEnabled = true
+
+    }
+
+    private fun getVersion() : String{
+
+        return try {
+            val pInfo = context?.packageManager?.getPackageInfo(context?.packageName, 0)
+            pInfo?.versionName!!
+        } catch (e: PackageManager.NameNotFoundException) {
+            e.printStackTrace()
+            "error"
+        }
+
+    }
+
+    private fun getQuestionData() : UserQuestionData?{
+
+        return when(questionNumber) {
+
+            1 -> questionList.question
+            2 -> questionList.question1
+            3 -> questionList.question2
+            else -> null
+
+        }
+
+    }
+
+    private fun closeDialog() {
+
+        if (setDialog.isShowing) {
+
+            setDialog.dismiss()
+
+        }
+
+    }
+
+    private fun showDialog() {
+
+        if (!setDialog.isShowing) {
+
+            setDialog.show()
+
+        }
 
     }
 

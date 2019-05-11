@@ -81,6 +81,8 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
 
         share.setOnClickListener {
 
+            SnackBarUtil.setActivitySnack("Pracujemy nad udostępnianiem statystyk profilu", ColorSnackBar.WARING, R.drawable.ic_share_black_24dp, it){ }
+
 //            val shareHashTag = ShareHashtag.Builder().setHashtag("#Jakdobrzesieznacie").setHashtag("#iDappStudio").build()
 //            val shareLinkContent = ShareLinkContent.Builder()
 //                .setShareHashtag(shareHashTag)

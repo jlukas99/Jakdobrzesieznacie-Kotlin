@@ -8,15 +8,22 @@ import com.google.firebase.firestore.FirebaseFirestore
 import com.xwray.groupie.kotlinandroidextensions.Item
 import com.xwray.groupie.kotlinandroidextensions.ViewHolder
 import kotlinx.android.synthetic.main.friends_item.*
+import kotlinx.android.synthetic.main.friends_item.btn_chat
+import kotlinx.android.synthetic.main.friends_item.btn_favorite
+import kotlinx.android.synthetic.main.friends_item.friends_profile
+import kotlinx.android.synthetic.main.friends_item.profile_name
+import kotlinx.android.synthetic.main.game_item.*
 import pl.idappstudio.jakdobrzesieznacie.R
 import pl.idappstudio.jakdobrzesieznacie.activity.MenuActivity.Companion.EXTRA_USER_BTN_CHAT_TRANSITION_NAME
 import pl.idappstudio.jakdobrzesieznacie.activity.MenuActivity.Companion.EXTRA_USER_BTN_FAVORITE_TRANSITION_NAME
 import pl.idappstudio.jakdobrzesieznacie.activity.MenuActivity.Companion.EXTRA_USER_IMAGE_TRANSITION_NAME
 import pl.idappstudio.jakdobrzesieznacie.activity.MenuActivity.Companion.EXTRA_USER_NAME_TRANSITION_NAME
+import pl.idappstudio.jakdobrzesieznacie.enums.ColorSnackBar
 import pl.idappstudio.jakdobrzesieznacie.interfaces.ClickListener
 import pl.idappstudio.jakdobrzesieznacie.model.FriendItem
 import pl.idappstudio.jakdobrzesieznacie.model.UserData
 import pl.idappstudio.jakdobrzesieznacie.util.GlideUtil
+import pl.idappstudio.jakdobrzesieznacie.util.SnackBarUtil
 import pl.idappstudio.jakdobrzesieznacie.util.UserUtil
 
 class FriendsAdapater(private val user: FriendItem, private val context: Context, private val listener: ClickListener) : Item() {
@@ -30,6 +37,12 @@ class FriendsAdapater(private val user: FriendItem, private val context: Context
         ViewCompat.setTransitionName(holder.profile_name, EXTRA_USER_NAME_TRANSITION_NAME)
         ViewCompat.setTransitionName(holder.btn_chat, EXTRA_USER_BTN_CHAT_TRANSITION_NAME)
         ViewCompat.setTransitionName(holder.btn_favorite, EXTRA_USER_BTN_FAVORITE_TRANSITION_NAME)
+
+        holder.btn_chat.setOnClickListener {
+
+            SnackBarUtil.setActivitySnack("Pracujemy dopiero nad czatem", ColorSnackBar.WARING, R.drawable.ic_warning_black_24dp, it){ }
+
+        }
 
         if(user.favorite){
 

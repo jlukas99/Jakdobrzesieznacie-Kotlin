@@ -73,8 +73,6 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
     }
 
-    private lateinit var snackbar: Snackbar
-
     private lateinit var setDialog: Dialog
 
     private lateinit var friend: UserData
@@ -153,6 +151,12 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
         statsUser()
 
         setInformation()
+
+        friends_profile_chat.setOnClickListener {
+
+            SnackBarUtil.setActivitySnack("Pracujemy dopiero nad czatem", ColorSnackBar.WARING, R.drawable.ic_warning_black_24dp, it){ }
+
+        }
 
         friends_profile_image.transitionName = imageTransitionName
         friends_profile_name.transitionName = nameTransitionName

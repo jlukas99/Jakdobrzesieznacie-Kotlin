@@ -110,12 +110,14 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
 
         }
 
+        setInformation()
+
         return rootView
     }
 
     private fun setInformation() {
 
-        glide.setActivityImage(UserUtil.user.fb, UserUtil.user.image, this.context!!, image) {}
+        glide.setImage(UserUtil.user.fb, UserUtil.user.image, this.context!!, image) {}
 
         name.text = UserUtil.user.name
 
@@ -133,11 +135,6 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
 
         }
 
-    }
-
-    override fun onStart() {
-        super.onStart()
-        setInformation()
     }
 
     override fun onDestroy() {

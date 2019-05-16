@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.pm.PackageManager
+import android.graphics.drawable.AnimationDrawable
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -43,6 +44,8 @@ class StageOneFragment(private val listener: NextFragment) : androidx.fragment.a
     override fun onClick(v: View?) {
 
         if(v != null){
+
+            rocketAnimation.start()
 
             lockButton()
 
@@ -102,6 +105,8 @@ class StageOneFragment(private val listener: NextFragment) : androidx.fragment.a
     private var d = ""
 
     private var enable = true
+
+    private lateinit var rocketAnimation: AnimationDrawable
 
     private lateinit var alertDialog: AlertDialog
 
@@ -247,10 +252,20 @@ class StageOneFragment(private val listener: NextFragment) : androidx.fragment.a
 
         stageTitle.text = resources.getString(R.string.guess_answer_title)
 
-        aAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.card_background_dark)
+//        aAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.card_background_dark)
+////        bAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.card_background_dark)
+////        cAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.card_background_dark)
+////        dAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.card_background_dark)
+
+        aAnswerButton.apply {
+            background = ContextCompat.getDrawable(this.context!!, R.drawable.background_animation)
+            rocketAnimation = background as AnimationDrawable
+        }
+
         bAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.card_background_dark)
         cAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.card_background_dark)
         dAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.card_background_dark)
+        aAnswerButton.background = ContextCompat.getDrawable(this.context!!, R.drawable.card_background_dark)
 
         aAnswerFriendImage.visibility = View.INVISIBLE
         bAnswerFriendImage.visibility = View.INVISIBLE

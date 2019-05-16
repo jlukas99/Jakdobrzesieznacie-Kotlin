@@ -8,7 +8,7 @@ import pl.idappstudio.jakdobrzesieznacie.R
 
 object SnackBarUtil {
 
-    fun setActivitySnack(message: String, color: Int, image: Int,view: View, onComplete: () -> Unit) {
+    fun setActivitySnack(message: String, color: Int, image: Int, view: View, onComplete: () -> Unit) {
 
             val snackbar = TSnackbar.make(view, message, TSnackbar.LENGTH_LONG)
             snackbar.setIconLeft(image, 24F)

@@ -219,10 +219,15 @@ class MenuActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         Timer("status", false).schedule(700) {
-            UserUtil.updateStatus(resources.getString(StatusMessage.inmenu)) {}
+            UserUtil.updateStatus(resources.getString(StatusMessage.online)) {}
         }
         UserUtil.getUser {}
         hideSystemUI()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        UserUtil.updateStatus(resources.getString(StatusMessage.offline)) {}
     }
 
     override fun onUserInteraction() {
@@ -261,7 +266,6 @@ class MenuActivity : AppCompatActivity() {
     override fun onDestroy() {
         super.onDestroy()
         UserUtil.stopListener()
-        UserUtil.updateStatus(resources.getString(StatusMessage.offline)) {}
     }
 
     internal inner class ViewPagerAdapter(manager: androidx.fragment.app.FragmentManager) : androidx.fragment.app.FragmentPagerAdapter(manager) {

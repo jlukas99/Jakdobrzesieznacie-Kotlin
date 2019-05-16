@@ -408,9 +408,14 @@ class GameActivity : AppCompatActivity(), NextFragment {
     override fun onResume() {
         super.onResume()
         Timer("status", false).schedule(700) {
-            UserUtil.updateStatus(resources.getString(StatusMessage.ingame)) {}
+            UserUtil.updateStatus(resources.getString(StatusMessage.online)) {}
         }
         hideSystemUI()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        UserUtil.updateStatus(resources.getString(StatusMessage.offline)) {}
     }
 
     override fun onUserInteraction() {
@@ -449,7 +454,6 @@ class GameActivity : AppCompatActivity(), NextFragment {
     override fun onDestroy() {
         super.onDestroy()
         GameUtil.removeListenerStats()
-        UserUtil.updateStatus(resources.getString(StatusMessage.offline)) {}
     }
 
 }

@@ -250,6 +250,7 @@
     <string name="in_menu">Błąka się po menu</string>
     <string name="in_settings">Majstruje coś w ustawieniach</string>
     <string name="in_profile">Przegląda profil znajomego</string>
-    <string name="offline" translatable="false">offline</string>
+    <string name="offline" translatable="false">Offline</string>
+    <string name="online" translatable="false">Online</string>
 
 </resources>

@@ -487,7 +487,7 @@ class SettingsActivity : AppCompatActivity() {
     override fun onResume() {
         super.onResume()
         Timer("status", false).schedule(700) {
-            UserUtil.updateStatus(resources.getString(StatusMessage.insettings)) {}
+            UserUtil.updateStatus(resources.getString(StatusMessage.online)) {}
         }
         hideSystemUI()
     }
@@ -502,15 +502,15 @@ class SettingsActivity : AppCompatActivity() {
         hideSystemUI()
     }
 
+    override fun onPause() {
+        super.onPause()
+        UserUtil.updateStatus(resources.getString(StatusMessage.offline)) {}
+    }
+
     override fun onBackPressed() {
         hideSystemUI()
         exit_settings.callOnClick()
         super.onBackPressed()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-        UserUtil.updateStatus(resources.getString(StatusMessage.offline)) {}
     }
 
     private fun hideSystemUI(){

@@ -658,10 +658,15 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
     override fun onResume() {
         super.onResume()
         Timer("status", false).schedule(700) {
-            UserUtil.updateStatus(resources.getString(StatusMessage.infriendsprofile)) {}
+            UserUtil.updateStatus(resources.getString(StatusMessage.online)) {}
         }
         unlockFunction()
         hideSystemUI()
+    }
+
+    override fun onPause() {
+        super.onPause()
+        UserUtil.updateStatus(resources.getString(StatusMessage.offline)) {}
     }
 
     override fun onUserInteraction() {
@@ -706,7 +711,6 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
         friendSetListener?.remove()
         userStatsListener?.remove()
         userSetListener?.remove()
-        UserUtil.updateStatus(resources.getString(StatusMessage.offline)) {}
     }
 
 }

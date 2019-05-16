@@ -20,6 +20,7 @@ object FacebookUtil {
 
                 for (i in 0 until array.length()) {
 
+
                     UserUtil.getFacebookFriend(array.getJSONObject(i).getString("id")){it2, b ->
 
                         if(b) {
@@ -27,8 +28,6 @@ object FacebookUtil {
                             if (it2.uid != "") {
 
                                 if (!it.contains(it2.uid)) {
-
-                                    if (it2.public) {
 
                                         UserUtil.addFriend(it2.uid, true) {
 
@@ -43,11 +42,7 @@ object FacebookUtil {
 
                                             FirestoreUtil.sendMessage(msg, it2.uid)
 
-                                            onComplete()
-
                                         }
-
-                                    }
 
                                 }
 
@@ -57,7 +52,7 @@ object FacebookUtil {
 
                     }
 
-                    if (i == array.length()) {
+                    if (i == array.length() - 1) {
                         onComplete()
                     }
 

@@ -25,7 +25,7 @@ android {
         minSdkVersion 22
         targetSdkVersion 28
         versionCode 6
-        versionName "v1.4-Alpha"
+        versionName "v1.5-Alpha"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -39,6 +39,7 @@ android {
         sourceCompatibility = '1.8'
         targetCompatibility = '1.8'
     }
+
     buildToolsVersion = '28.0.3'
 
 }

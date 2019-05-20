@@ -6,7 +6,6 @@ import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.content.Context
-import android.graphics.BitmapFactory
 import android.os.Build
 import androidx.core.app.NotificationCompat
 import com.google.firebase.auth.FirebaseAuth
@@ -66,29 +65,20 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         val notificationId: Int = buildNotificationId(messageBody)
 
-//        val intent = Intent(this, IntroActivity::class.java).addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
-//
-//        val notifyPendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
-
-        val bitmapIcon = BitmapFactory.decodeResource(resources, R.mipmap.logo)
-
         val channelId = getString(R.string.default_notification_channel_id)
 
         if (group == "INVITE") {
 
             if (title == resources.getString(R.string.friend_from_facebook)) {
 
-                val notificationBuilder = NotificationCompat.Builder(this)
-                    .setSmallIcon(R.mipmap.ic_facebook)
+                val notificationBuilder = NotificationCompat.Builder(this, channelId)
+                    .setSmallIcon(R.drawable.ic_add_friends_icon)
                     .setBadgeIconType(NotificationCompat.BADGE_ICON_SMALL)
-                    .setLargeIcon(bitmapIcon)
-                    .setShowWhen(true)
                     .setContentTitle(title)
                     .setColor(resources.getColor(R.color.colorFacebook))
                     .setContentText(messageBody)
                     .setAutoCancel(true)
-                    .setCategory("INVITE_FB")
-                    .setGroupSummary(true)
+                    .setGroup("pl.idappstudio.jakdobrzesieznacie.INVITE_FB")
                     .setDefaults(Notification.DEFAULT_SOUND or Notification.DEFAULT_LIGHTS or Notification.DEFAULT_VIBRATE)
                     .build()
 
@@ -106,17 +96,14 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
             } else {
 
-                val notificationBuilder = NotificationCompat.Builder(this)
+                val notificationBuilder = NotificationCompat.Builder(this, channelId)
                     .setSmallIcon(R.drawable.ic_add_friends_icon)
                     .setBadgeIconType(NotificationCompat.BADGE_ICON_SMALL)
-                    .setLargeIcon(bitmapIcon)
-                    .setShowWhen(true)
                     .setContentTitle(title)
                     .setColor(resources.getColor(R.color.colorAccent))
                     .setContentText(messageBody)
                     .setAutoCancel(true)
-                    .setCategory("INVITE")
-                    .setGroupSummary(true)
+                    .setGroup("pl.idappstudio.jakdobrzesieznacie.INVITE")
                     .setDefaults(Notification.DEFAULT_SOUND or Notification.DEFAULT_LIGHTS or Notification.DEFAULT_VIBRATE)
                     .build()
 
@@ -136,20 +123,16 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         } else {
 
-            val notificationBuilder = NotificationCompat.Builder(this)
+            val notificationBuilder = NotificationCompat.Builder(this, channelId)
                 .setSmallIcon(R.mipmap.games_icon)
                 .setBadgeIconType(NotificationCompat.BADGE_ICON_SMALL)
-                .setLargeIcon(bitmapIcon)
-                .setShowWhen(true)
                 .setContentTitle(title)
                 .setColor(resources.getColor(R.color.colorRed))
                 .setContentText(messageBody)
                 .setAutoCancel(true)
-                .setCategory("GAMES")
-                .setGroupSummary(true)
+                .setGroup("pl.idappstudio.jakdobrzesieznacie.GAMES")
                 .setDefaults(Notification.DEFAULT_SOUND or Notification.DEFAULT_LIGHTS or Notification.DEFAULT_VIBRATE)
                 .build()
-
 
             val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 

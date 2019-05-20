@@ -2,6 +2,7 @@ package pl.idappstudio.jakdobrzesieznacie.fragments
 
 import android.app.Dialog
 import android.os.Bundle
+import android.os.Handler
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.LayoutInflater
@@ -16,7 +17,11 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.button.MaterialButton
-import com.google.firebase.firestore.*
+import com.google.firebase.firestore.DocumentChange
+import com.google.firebase.firestore.EventListener
+import com.google.firebase.firestore.FirebaseFirestore
+import com.google.firebase.firestore.ListenerRegistration
+import com.google.firebase.firestore.QuerySnapshot
 import com.xwray.groupie.GroupAdapter
 import com.xwray.groupie.Section
 import com.xwray.groupie.kotlinandroidextensions.ViewHolder
@@ -179,6 +184,11 @@ class InvitesFragment : androidx.fragment.app.Fragment(), ClickInviteListener {
     private lateinit var recyclerInvite: RecyclerView
     private lateinit var recyclerSearch: RecyclerView
 
+    val mHandler = Handler()
+    val searchRunnable = Runnable {
+        getSearchResult()
+    }
+
     private val inviteSection = Section()
     private val searchSection = Section()
 
@@ -237,7 +247,8 @@ class InvitesFragment : androidx.fragment.app.Fragment(), ClickInviteListener {
         searchInput.addTextChangedListener(object : TextWatcher {
             override fun afterTextChanged(s: Editable) {
 
-                getSearchResult()
+                mHandler.removeCallbacks(searchRunnable)
+                mHandler.postDelayed(searchRunnable, 800)
 
             }
 

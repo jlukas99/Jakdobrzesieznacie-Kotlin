@@ -7,12 +7,12 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager.widget.ViewPager
 import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
 import kotlinx.android.synthetic.main.activity_menu.*
 import pl.idappstudio.jakdobrzesieznacie.R
 import pl.idappstudio.jakdobrzesieznacie.enums.StatusMessage
 import pl.idappstudio.jakdobrzesieznacie.fragments.*
-import pl.idappstudio.jakdobrzesieznacie.util.AdMobUtil
 import pl.idappstudio.jakdobrzesieznacie.util.UserUtil
 import java.util.*
 import kotlin.collections.ArrayList
@@ -35,13 +35,14 @@ class MenuActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val adManager = AdMobUtil(this@MenuActivity, resources.getString(R.string.adMob_menu_ad_id))
-        val ad:InterstitialAd = adManager.getAd()
+        val mInterstitialAd = InterstitialAd(this)
+        mInterstitialAd.adUnitId = resources.getString(R.string.adMob_menu_ad_id)
+        mInterstitialAd.loadAd(AdRequest.Builder().build())
 
-        ad.adListener = object: AdListener() {
+        mInterstitialAd.adListener = object : AdListener() {
             override fun onAdLoaded() {
 
-                ad.show()
+                mInterstitialAd.show()
 
                 setContentView(R.layout.activity_menu)
 
@@ -52,8 +53,6 @@ class MenuActivity : AppCompatActivity() {
             override fun onAdFailedToLoad(errorCode: Int) {
 
                 setContentView(R.layout.activity_menu)
-
-                adManager.createAd(this@MenuActivity, resources.getString(R.string.adMob_menu_ad_id))
 
                 setupViewPager(viewPager)
 
@@ -72,8 +71,6 @@ class MenuActivity : AppCompatActivity() {
             }
 
             override fun onAdClosed() {
-
-                adManager.createAd(this@MenuActivity, resources.getString(R.string.adMob_menu_ad_id))
 
             }
         }

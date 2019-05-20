@@ -16,6 +16,7 @@ import com.facebook.appevents.AppEventsLogger
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.android.gms.ads.AdListener
+import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
 import com.google.firebase.auth.FacebookAuthProvider
 import com.google.firebase.auth.FirebaseAuth
@@ -29,7 +30,10 @@ import org.json.JSONException
 import pl.idappstudio.jakdobrzesieznacie.R
 import pl.idappstudio.jakdobrzesieznacie.enums.ColorSnackBar
 import pl.idappstudio.jakdobrzesieznacie.service.MyFirebaseMessagingService
-import pl.idappstudio.jakdobrzesieznacie.util.*
+import pl.idappstudio.jakdobrzesieznacie.util.FacebookUtil
+import pl.idappstudio.jakdobrzesieznacie.util.FirestoreUtil
+import pl.idappstudio.jakdobrzesieznacie.util.SnackBarUtil
+import pl.idappstudio.jakdobrzesieznacie.util.UserUtil
 import java.util.*
 
 class LoginMenuActivity : Activity() {
@@ -44,13 +48,14 @@ class LoginMenuActivity : Activity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        val adManager = AdMobUtil(this@LoginMenuActivity, resources.getString(R.string.adMob_login_ad_id))
-        val ad: InterstitialAd = adManager.getAd()
+        val mInterstitialAd = InterstitialAd(this)
+        mInterstitialAd.adUnitId = resources.getString(R.string.adMob_login_ad_id)
+        mInterstitialAd.loadAd(AdRequest.Builder().build())
 
-        ad.adListener = object: AdListener() {
+        mInterstitialAd.adListener = object : AdListener() {
             override fun onAdLoaded() {
 
-                ad.show()
+                mInterstitialAd.show()
 
                 setContentView(R.layout.activity_login_menu)
 
@@ -59,8 +64,6 @@ class LoginMenuActivity : Activity() {
             }
 
             override fun onAdFailedToLoad(errorCode: Int) {
-
-                adManager.createAd(this@LoginMenuActivity, resources.getString(R.string.adMob_login_ad_id))
 
                 setContentView(R.layout.activity_login_menu)
 
@@ -81,8 +84,6 @@ class LoginMenuActivity : Activity() {
             }
 
             override fun onAdClosed() {
-
-                adManager.createAd(this@LoginMenuActivity, resources.getString(R.string.adMob_login_ad_id))
 
             }
         }

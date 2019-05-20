@@ -37,7 +37,12 @@ class InviteAdapater(private val user: FriendItem, private val context: Context,
 
                     holder.profile_name.text = doc.getString("name")
 
-                    GlideUtil.setImage(doc.getBoolean("fb")!!, doc.getString("image").toString(), context, holder.friends_profile) { }
+                    GlideUtil.setActivityImage(
+                        doc.getBoolean("fb")!!,
+                        doc.getString("image").toString(),
+                        context,
+                        holder.friends_profile
+                    ) { }
 
                     val user = doc.toObject(UserData::class.java)
 

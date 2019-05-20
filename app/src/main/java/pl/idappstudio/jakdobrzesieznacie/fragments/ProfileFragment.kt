@@ -17,6 +17,7 @@ import pl.idappstudio.jakdobrzesieznacie.R
 import pl.idappstudio.jakdobrzesieznacie.activity.LoginMenuActivity
 import pl.idappstudio.jakdobrzesieznacie.activity.SettingsActivity
 import pl.idappstudio.jakdobrzesieznacie.enums.ColorSnackBar
+import pl.idappstudio.jakdobrzesieznacie.enums.StatusMessage
 import pl.idappstudio.jakdobrzesieznacie.model.StatsData
 import pl.idappstudio.jakdobrzesieznacie.util.GameUtil
 import pl.idappstudio.jakdobrzesieznacie.util.GlideUtil
@@ -62,6 +63,7 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
         friendsProfileStatsPrecent = rootView.findViewById(R.id.profile_stats_friend_precent)
         logout.setOnClickListener {
 
+            UserUtil.updateStatus(resources.getString(StatusMessage.offline)) {}
             FirebaseAuth.getInstance().signOut()
             startActivity(intentFor<LoginMenuActivity>().newTask().clearTask())
 
@@ -98,15 +100,6 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
                 R.drawable.ic_share,
                 it
             ) { }
-
-//            val shareHashTag = ShareHashtag.Builder().setHashtag("#Jakdobrzesieznacie").setHashtag("#iDappStudio").build()
-//            val shareLinkContent = ShareLinkContent.Builder()
-//                .setShareHashtag(shareHashTag)
-//                .setQuote("Moje statystyki :D")
-//                .setContentUrl(Uri.parse("https://www.facebook.com/plugins/post.php?href=https%3A%2F%2Fwww.facebook.com%2FJakdobrzesieznacie%2Fphotos%2Fa.562584780804838%2F612757935787522%2F%3Ftype%3D3&width=500"))
-//                .build()
-//
-//            ShareDialog.show(this,shareLinkContent)
 
         }
 

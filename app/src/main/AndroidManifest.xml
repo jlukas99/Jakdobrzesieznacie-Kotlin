@@ -21,10 +21,6 @@
             tools:ignore="AllowBackup"
             tools:replace="android:theme">
 
-        <!--<meta-data-->
-                <!--android:name="android.max_aspect"-->
-                <!--android:value="2.1"/>-->
-
         <meta-data
                 android:name="com.google.android.gms.ads.APPLICATION_ID"
                 android:value="@string/adMob_id"/>

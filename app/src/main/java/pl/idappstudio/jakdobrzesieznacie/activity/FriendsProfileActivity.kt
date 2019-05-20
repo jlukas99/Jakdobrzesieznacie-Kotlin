@@ -4,6 +4,7 @@ import android.app.ActivityOptions
 import android.app.Dialog
 import android.content.Intent
 import android.os.Bundle
+import android.os.Handler
 import android.util.Pair
 import android.view.View
 import android.view.Window
@@ -42,6 +43,7 @@ import java.util.*
 import kotlin.collections.HashMap
 import kotlin.concurrent.schedule
 
+
 class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
     override fun click(setItem: SetItem) {
@@ -75,6 +77,7 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
         const val EXTRA_USER_IMAGE_TRANSITION = "image-user"
         const val EXTRA_FRIEND_IMAGE_TRANSITION = "image-friend"
+
 
     }
 
@@ -243,10 +246,11 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
                 startActivity(intent, options.toBundle())
 
-                friends_profile_favorite.isEnabled = true
-                friends_profile_set_btn.isEnabled = true
-                friends_profile_startgame_btn.isEnabled = true
-                friends_profile_gamemode_btn.isEnabled = true
+                val r = Runnable {
+                    unlockAll()
+                }
+
+                Handler().postDelayed(r, 1200)
 
             }
 
@@ -268,6 +272,15 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
         friends_profile_favorite.isEnabled = true
         friends_profile_set_btn.isEnabled = true
         friends_profile_gamemode_btn.isEnabled = true
+
+    }
+
+    private fun unlockAll() {
+
+        friends_profile_favorite.isEnabled = true
+        friends_profile_set_btn.isEnabled = true
+        friends_profile_gamemode_btn.isEnabled = true
+        friends_profile_startgame_btn.isEnabled = true
 
     }
 
@@ -657,10 +670,11 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
     override fun onResume() {
         super.onResume()
+
         Timer("status", false).schedule(700) {
             UserUtil.updateStatus(resources.getString(StatusMessage.online)) {}
         }
-        unlockFunction()
+
         hideSystemUI()
     }
 

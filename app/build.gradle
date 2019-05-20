@@ -14,17 +14,13 @@ android {
         experimental = true
     }
 
-//    lintOptions {
-//        checkReleaseBuilds false
-//    }
-
     compileSdkVersion 28
 
     defaultConfig {
         applicationId "pl.idappstudio.jakdobrzesieznacie"
         minSdkVersion 22
         targetSdkVersion 28
-        versionCode 6
+        versionCode 7
         versionName "v1.5-Alpha"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -95,19 +91,7 @@ dependencies {
     implementation 'com.google.firebase:firebase-firestore:19.0.0'
     implementation 'com.google.firebase:firebase-auth:17.0.0'
     implementation 'com.google.firebase:firebase-messaging:18.0.0'
-//    implementation 'com.google.firebase:firebase-inappmessaging-display:17.1.1'
-//    implementation 'com.google.firebase:firebase-dynamic-links:17.0.0'
     implementation 'com.google.firebase:firebase-ads:17.2.0'
     implementation 'com.crashlytics.sdk.android:crashlytics:2.10.0'
-
-    //firebaseUI
-//    implementation 'com.firebaseui:firebase-ui-firestore:4.3.1'
-//    implementation 'com.firebaseui:firebase-ui-auth:4.3.1'
-//    implementation 'com.firebaseui:firebase-ui-storage:4.3.1'
-
-    //google
-    implementation 'com.google.android.gms:play-services-ads:17.2.0'
-    implementation 'com.google.android.gms:play-services-auth:16.0.1'
-//    implementation 'com.google.android.gms:play-services-wallet:16.0.1'
 
 }

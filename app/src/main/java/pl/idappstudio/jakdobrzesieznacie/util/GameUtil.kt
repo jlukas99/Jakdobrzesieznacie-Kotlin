@@ -1,6 +1,7 @@
 package pl.idappstudio.jakdobrzesieznacie.util
 
 import android.content.res.Resources
+import android.util.Log
 import com.google.firebase.firestore.*
 import pl.idappstudio.jakdobrzesieznacie.R
 import pl.idappstudio.jakdobrzesieznacie.model.*
@@ -651,153 +652,150 @@ object GameUtil {
 
         db.document(s).get().addOnSuccessListener { it2 ->
 
+            Log.d("DB", "Debug 1")
+
             val answerItem = it2.toObject(AnswerData::class.java)!!
 
             db.document(s2).get().addOnSuccessListener {
 
-                    val yourAnswerItem = it.toObject(AnswerData::class.java)!!
+                Log.d("DB", "Debug 2")
 
-                    if(it.getString("id1") != null){
+                val yourAnswerItem = it.toObject(AnswerData::class.java)!!
 
-                        getQuestionDataStageTwo2(s2){ id, a, b ->
+                if(it.getString("id1") != null){
 
-                            var question1 = UserQuestionData("", "", "", "", "", "")
-                            var question2 = UserQuestionData("", "", "", "", "", "")
-                            var question3 = UserQuestionData("", "", "", "", "", "")
+                    Log.d("DB", "Debug 3")
 
-                            val id1 = id.answer1.substring(id.answer1.lastIndexOf("/") + 1)
-                            val id2 = id.answer2.substring(id.answer2.lastIndexOf("/") + 1)
-                            val id3 = id.answer3.substring(id.answer3.lastIndexOf("/") + 1)
+                    getQuestionDataStageTwo2(s2){ id, a, b ->
 
-                            val array2 = ArrayList<UserQuestionData>()
+                        var question1 = UserQuestionData("", "", "", "", "", "")
+                        var question2 = UserQuestionData("", "", "", "", "", "")
+                        var question3 = UserQuestionData("", "", "", "", "", "")
 
-                            array2.add(b.question)
-                            array2.add(b.question1)
-                            array2.add(b.question2)
+                        val id1 = id.answer1.substring(id.answer1.lastIndexOf("/") + 1)
+                        val id2 = id.answer2.substring(id.answer2.lastIndexOf("/") + 1)
+                        val id3 = id.answer3.substring(id.answer3.lastIndexOf("/") + 1)
 
-                            for(i in array2){
+                        val array2 = ArrayList<UserQuestionData>()
 
-                                if(i.questionId == id1){
+                        array2.add(b.question)
+                        array2.add(b.question1)
+                        array2.add(b.question2)
 
-                                    if(a.answer1.trim() == i.a.trim()){
+                        for(i in array2){
 
-                                        question1 = UserQuestionData(i.question, i.a, i.b, i.c, i.d, id1)
+                            if(i.questionId == id1){
 
-                                    }
+                                if(a.answer1.trim() == i.a.trim()){
 
-                                    if(a.answer1.trim() == i.b.trim()){
-
-                                        question1 = UserQuestionData(i.question, i.b, i.a, i.c, i.d, id1)
-
-                                    }
-
-                                    if(a.answer1.trim() == i.c.trim()){
-
-                                        question1 = UserQuestionData(i.question, i.c, i.b, i.a, i.d, id1)
-
-                                    }
-
-                                    if(a.answer1.trim() == i.d.trim()){
-
-                                        question1 = UserQuestionData(i.question, i.d, i.b, i.c, i.a, id1)
-
-                                    }
+                                    question1 = UserQuestionData(i.question, i.a, i.b, i.c, i.d, id1)
 
                                 }
 
-                                if(i.questionId == id2){
+                                if(a.answer1.trim() == i.b.trim()){
 
-                                    if(a.answer2.trim() == i.a.trim()){
-
-                                        question2 = UserQuestionData(i.question, i.a, i.b, i.c, i.d, id2)
-
-                                    }
-
-                                    if(a.answer2.trim() == i.b.trim()){
-
-                                        question2 = UserQuestionData(i.question, i.b, i.a, i.c, i.d, id2)
-
-                                    }
-
-                                    if(a.answer2.trim() == i.c.trim()){
-
-                                        question2 = UserQuestionData(i.question, i.c, i.b, i.a, i.d, id2)
-
-                                    }
-
-                                    if(a.answer2.trim() == i.d.trim()){
-
-                                        question2 = UserQuestionData(i.question, i.d, i.b, i.c, i.a, id2)
-
-                                    }
+                                    question1 = UserQuestionData(i.question, i.b, i.a, i.c, i.d, id1)
 
                                 }
 
-                                if(i.questionId == id3){
+                                if(a.answer1.trim() == i.c.trim()){
 
-                                    if(a.answer3.trim() == i.a.trim()){
-
-                                        question3 = UserQuestionData(i.question, i.a, i.b, i.c, i.d, id3)
-
-                                    }
-
-                                    if(a.answer3.trim() == i.b.trim()){
-
-                                        question3 = UserQuestionData(i.question, i.b, i.a, i.c, i.d, id3)
-
-                                    }
-
-                                    if(a.answer3.trim() == i.c.trim()){
-
-                                        question3 = UserQuestionData(i.question, i.c, i.b, i.a, i.d, id3)
-
-                                    }
-
-                                    if(a.answer3.trim() == i.d.trim()){
-
-                                        question3 = UserQuestionData(i.question, i.d, i.b, i.c, i.a, id3)
-
-                                    }
+                                    question1 = UserQuestionData(i.question, i.c, i.b, i.a, i.d, id1)
 
                                 }
 
-                                if(question1.questionId != "" && question2.questionId != "" && question3.questionId != ""){
+                                if(a.answer1.trim() == i.d.trim()){
 
-                                    onComplete(answerItem, QuestionData(question1, question2, question3), yourAnswerItem)
-                                    break
+                                    question1 = UserQuestionData(i.question, i.d, i.b, i.c, i.a, id1)
 
                                 }
 
                             }
 
+                            if(i.questionId == id2){
+
+                                if(a.answer2.trim() == i.a.trim()){
+
+                                    question2 = UserQuestionData(i.question, i.a, i.b, i.c, i.d, id2)
+
+                                }
+
+                                if(a.answer2.trim() == i.b.trim()){
+
+                                    question2 = UserQuestionData(i.question, i.b, i.a, i.c, i.d, id2)
+
+                                }
+
+                                if(a.answer2.trim() == i.c.trim()){
+
+                                    question2 = UserQuestionData(i.question, i.c, i.b, i.a, i.d, id2)
+
+                                }
+
+                                if(a.answer2.trim() == i.d.trim()){
+
+                                    question2 = UserQuestionData(i.question, i.d, i.b, i.c, i.a, id2)
+
+                                }
+
+                            }
+
+                            if(i.questionId == id3){
+
+                                if(a.answer3.trim() == i.a.trim()){
+
+                                    question3 = UserQuestionData(i.question, i.a, i.b, i.c, i.d, id3)
+
+                                }
+
+                                if(a.answer3.trim() == i.b.trim()){
+
+                                    question3 = UserQuestionData(i.question, i.b, i.a, i.c, i.d, id3)
+
+                                }
+
+                                if(a.answer3.trim() == i.c.trim()){
+
+                                    question3 = UserQuestionData(i.question, i.c, i.b, i.a, i.d, id3)
+
+                                }
+
+                                if(a.answer3.trim() == i.d.trim()){
+
+                                    question3 = UserQuestionData(i.question, i.d, i.b, i.c, i.a, id3)
+
+                                }
+
+                            }
+
+                            if(question1.questionId != "" && question2.questionId != "" && question3.questionId != ""){
+
+                                onComplete(answerItem, QuestionData(question1, question2, question3), yourAnswerItem)
+                                break
+
+                            }
+
                         }
 
-                    } else {
-
-                        val questionItem2 = it.toObject(QuestionData::class.java)!!
-
-                        onComplete(answerItem, questionItem2, yourAnswerItem)
-
                     }
+
+                } else {
+
+                    Log.d("DB", "Debug 4")
+
+                    val questionItem2 = it.toObject(QuestionData::class.java)!!
+
+                    Log.d("DB", "Debug 5 " + questionItem2.question.toString())
+                    Log.d("DB", "Debug 5.1 " + answerItem.toString())
+                    Log.d("DB", "Debug 5.2 " + yourAnswerItem.toString())
+
+                    onComplete(answerItem, questionItem2, yourAnswerItem)
+
+                }
 
             }
 
         }
-
-//        db.document(s).get().addOnSuccessListener {
-//
-//            val answerItem = it.toObject(AnswerData::class.java)!!
-//
-//            db.document(s2).get().addOnSuccessListener { it ->
-//
-//                val questionItem2 = it.toObject(QuestionData::class.java)!!
-//                val yourAnswerItem = it.toObject(AnswerData::class.java)!!
-//
-//                onComplete(answerItem, questionItem2, yourAnswerItem)
-//
-//            }
-//
-//        }
 
     }
 
@@ -879,11 +877,23 @@ object GameUtil {
 
     }
 
-    fun sendOwnQuestion(questionData: ArrayList<UserQuestionData>, game: GameData, userData: UserData, friendData: UserData, onComplete: () -> Unit) {
+    fun sendOwnQuestion(
+        questionData: ArrayList<UserQuestionData>,
+        game: GameData,
+        userData: UserData,
+        friendData: UserData,
+        a1: String,
+        a2: String,
+        a3: String,
+        onComplete: () -> Unit
+    ) {
 
         db.firestoreSettings = settings
 
-        val user = HashMap<String, UserQuestionData>()
+        val user = HashMap<String, Any>()
+        user["answer1"] = a1
+        user["answer2"] = a2
+        user["answer3"] = a3
         user["question"] = questionData[0]
         user["question1"] = questionData[1]
         user["question2"] = questionData[2]

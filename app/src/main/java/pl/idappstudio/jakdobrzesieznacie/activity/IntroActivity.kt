@@ -11,11 +11,9 @@ import com.google.android.gms.ads.MobileAds
 import com.google.firebase.auth.FirebaseAuth
 import org.jetbrains.anko.startActivity
 import pl.idappstudio.jakdobrzesieznacie.R
-import pl.idappstudio.jakdobrzesieznacie.util.AdMobUtil
 import pl.idappstudio.jakdobrzesieznacie.util.UserUtil
 import java.util.*
 import kotlin.concurrent.schedule
-
 
 class IntroActivity : Activity() {
 
@@ -23,12 +21,9 @@ class IntroActivity : Activity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_intro)
 
-        FacebookSdk.sdkInitialize(applicationContext)
+        FacebookSdk.sdkInitialize(this)
         AppEventsLogger.activateApp(this)
-
         MobileAds.initialize(this, resources.getString(R.string.adMob_id))
-
-        AdMobUtil(this@IntroActivity, resources.getString(R.string.adMob_login_ad_id))
 
         if (FirebaseAuth.getInstance().currentUser == null) {
 

@@ -105,7 +105,12 @@ class SearchAdapater(private val user: FriendItem, private val context: Context,
 
                     holder.invite_name.text = doc.getString("name")
 
-                    GlideUtil.setImage(doc.getBoolean("fb")!!, doc.getString("image").toString(), context, holder.invite_profile) { }
+                    GlideUtil.setActivityImage(
+                        doc.getBoolean("fb")!!,
+                        doc.getString("image").toString(),
+                        context,
+                        holder.invite_profile
+                    ) { }
 
                     user2 = doc.toObject(UserData::class.java)
 

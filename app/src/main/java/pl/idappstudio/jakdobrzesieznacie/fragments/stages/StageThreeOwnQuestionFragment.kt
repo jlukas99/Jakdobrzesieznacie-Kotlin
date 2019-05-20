@@ -59,6 +59,8 @@ class StageThreeOwnQuestionFragment(private val listener: NextFragment) : androi
 
     private lateinit var nextQuestion: Button
 
+    private var userAnswer: ArrayList<String> = arrayListOf("", "", "")
+
     private var questionList: ArrayList<UserQuestionData> = ArrayList()
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -305,6 +307,12 @@ class StageThreeOwnQuestionFragment(private val listener: NextFragment) : androi
             cAnswerCheck.setImageResource(R.drawable.ic_check_icon)
             dAnswerCheck.setImageResource(R.drawable.ic_check_icon)
 
+            when {
+                questionList.size == 0 -> userAnswer[0] = aAnswerText.text.toString()
+                questionList.size == 1 -> userAnswer[1] = aAnswerText.text.toString()
+                questionList.size == 2 -> userAnswer[2] = aAnswerText.text.toString()
+            }
+
         }
 
         bAnswerCheck.setOnClickListener {
@@ -318,6 +326,12 @@ class StageThreeOwnQuestionFragment(private val listener: NextFragment) : androi
             bAnswerCheck.setImageResource(R.drawable.ic_mtrl_chip_checked_circle)
             cAnswerCheck.setImageResource(R.drawable.ic_check_icon)
             dAnswerCheck.setImageResource(R.drawable.ic_check_icon)
+
+            when {
+                questionList.size == 0 -> userAnswer[0] = bAnswerText.text.toString()
+                questionList.size == 1 -> userAnswer[1] = bAnswerText.text.toString()
+                questionList.size == 2 -> userAnswer[2] = bAnswerText.text.toString()
+            }
 
         }
 
@@ -333,6 +347,12 @@ class StageThreeOwnQuestionFragment(private val listener: NextFragment) : androi
             cAnswerCheck.setImageResource(R.drawable.ic_mtrl_chip_checked_circle)
             dAnswerCheck.setImageResource(R.drawable.ic_check_icon)
 
+            when {
+                questionList.size == 0 -> userAnswer[0] = cAnswerText.text.toString()
+                questionList.size == 1 -> userAnswer[1] = cAnswerText.text.toString()
+                questionList.size == 2 -> userAnswer[2] = cAnswerText.text.toString()
+            }
+
         }
 
         dAnswerCheck.setOnClickListener {
@@ -346,6 +366,12 @@ class StageThreeOwnQuestionFragment(private val listener: NextFragment) : androi
             bAnswerCheck.setImageResource(R.drawable.ic_check_icon)
             cAnswerCheck.setImageResource(R.drawable.ic_check_icon)
             dAnswerCheck.setImageResource(R.drawable.ic_mtrl_chip_checked_circle)
+
+            when {
+                questionList.size == 0 -> userAnswer[0] = dAnswerText.text.toString()
+                questionList.size == 1 -> userAnswer[1] = dAnswerText.text.toString()
+                questionList.size == 2 -> userAnswer[2] = dAnswerText.text.toString()
+            }
 
         }
 
@@ -406,7 +432,15 @@ class StageThreeOwnQuestionFragment(private val listener: NextFragment) : androi
 
                 listener.updateNumber(3, true)
 
-                GameUtil.sendOwnQuestion(questionList, game, UserUtil.user, friends) {
+                GameUtil.sendOwnQuestion(
+                    questionList,
+                    game,
+                    UserUtil.user,
+                    friends,
+                    userAnswer[0],
+                    userAnswer[1],
+                    userAnswer[2]
+                ) {
 
                     if (userStats.games == 0 && friendsStats.games == 1) {
 

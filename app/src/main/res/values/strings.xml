@@ -252,5 +252,6 @@
     <string name="in_profile">Przegląda profil znajomego</string>
     <string name="offline" translatable="false">Offline</string>
     <string name="online" translatable="false">Online</string>
+    <string name="load_ad_failed">Nie udało się załadować reklamy</string>
 
 </resources>

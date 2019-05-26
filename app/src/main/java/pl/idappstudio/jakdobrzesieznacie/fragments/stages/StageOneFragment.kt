@@ -184,6 +184,13 @@ class StageOneFragment(private val listener: NextFragment) : androidx.fragment.a
                     alertDialog.dismiss()
                 }
 
+                SnackBarUtil.setActivitySnack(
+                    resources.getString(R.string.load_ad_failed),
+                    ColorSnackBar.ERROR,
+                    R.drawable.ic_error_,
+                    setDialog.window?.decorView!!
+                ) {}
+
             }
 
             override fun onRewardedVideoAdLoaded() { showAd() }

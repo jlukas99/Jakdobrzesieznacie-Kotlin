@@ -20,7 +20,6 @@ object GlideUtil {
 
     private var placeholder: Drawable? = null
 
-
     fun setActivityImage(b: Boolean, image: String, ctx: Context, target: ImageView, onComplete: () -> Unit) {
 
         placeholder = ContextCompat.getDrawable(ctx, R.mipmap.placeholder_profile)
@@ -89,8 +88,7 @@ object GlideUtil {
         }
     }
 
-        fun setImage(b: Boolean, image: String, ctx: Context, target: ImageView, onComplete: () -> Unit) {
-
+    fun setImage(b: Boolean, image: String, ctx: Context, target: ImageView, onComplete: () -> Unit) {
             placeholder = ContextCompat.getDrawable(ctx, R.mipmap.placeholder_profile)
 
             if (b) {

@@ -8,12 +8,28 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:741628354397:android:789c41c1608e7ddd",
+        "mobilesdk_app_id": "1:741628354397:android:c30c9c93b27786cb",
         "android_client_info": {
-          "package_name": "pl.idappstudio.howwelldoyouknoweachother"
+          "package_name": "pl.idappstudio.jakdobrzesieznacie"
         }
       },
       "oauth_client": [
+        {
+          "client_id": "741628354397-q86bhueuo77j8b5d3ddbivvrhvvv11ll.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pl.idappstudio.jakdobrzesieznacie",
+            "certificate_hash": "dbb478b56dd10ba197ee7cb12fcd08aa081de5c6"
+          }
+        },
+        {
+          "client_id": "741628354397-gmnatc0ppba3demldeh8hj1ckmuf2vke.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "pl.idappstudio.jakdobrzesieznacie",
+            "certificate_hash": "0e6cd491d32d0f8236e69e88484c9ecba09921f5"
+          }
+        },
         {
           "client_id": "741628354397-rvf9qj0nmraafijgjh37ilce9husqpad.apps.googleusercontent.com",
           "client_type": 3
@@ -35,35 +51,6 @@
         }
       },
       "admob_app_id": "ca-app-pub-9811848924200939~9857440152"
-    },
-    {
-      "client_info": {
-        "mobilesdk_app_id": "1:741628354397:android:c30c9c93b27786cb",
-        "android_client_info": {
-          "package_name": "pl.idappstudio.jakdobrzesieznacie"
-        }
-      },
-      "oauth_client": [
-        {
-          "client_id": "741628354397-rvf9qj0nmraafijgjh37ilce9husqpad.apps.googleusercontent.com",
-          "client_type": 3
-        }
-      ],
-      "api_key": [
-        {
-          "current_key": "AIzaSyClF3cpM7FENL-g7j2yq8zN1yMqgBD9WKk"
-        }
-      ],
-      "services": {
-        "appinvite_service": {
-          "other_platform_oauth_client": [
-            {
-              "client_id": "741628354397-rvf9qj0nmraafijgjh37ilce9husqpad.apps.googleusercontent.com",
-              "client_type": 3
-            }
-          ]
-        }
-      }
     }
   ],
   "configuration_version": "1"

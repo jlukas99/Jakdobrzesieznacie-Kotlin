@@ -681,6 +681,13 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
     override fun onPause() {
         super.onPause()
         UserUtil.updateStatus(resources.getString(StatusMessage.offline)) {}
+        setListener?.remove()
+        gamesListener?.remove()
+        friendStatsListener?.remove()
+        friendDataListener?.remove()
+        friendSetListener?.remove()
+        userStatsListener?.remove()
+        userSetListener?.remove()
     }
 
     override fun onUserInteraction() {

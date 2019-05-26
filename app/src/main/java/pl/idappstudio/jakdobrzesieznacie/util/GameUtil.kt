@@ -158,63 +158,106 @@ object GameUtil {
 
     }
 
-    private fun getQuestionDataStageThreeOwnPack(s: String, onComplete: (QuestionData) -> Unit) {
+//    private fun getQuestionDataStageThreeOwnPack(s: String, onComplete: (QuestionData) -> Unit) {
+//
+//        db.firestoreSettings = settings
+//
+//        db.collection(s).get().addOnSuccessListener {
+//
+//            val questionList = ArrayList<UserQuestionData>()
+//
+//            for(doc in it.documents){
+//
+//                val question = doc.getString("question")!!
+//
+//                val a = doc.getString("a")!!
+//                val b = doc.getString("b")!!
+//
+//                if(doc.getString("c") != null){
+//
+//                    val c = doc.getString("c")!!
+//
+//                    if(doc.getString("d") != null){
+//
+//                        val d = doc.getString("d")!!
+//                        questionList.add(UserQuestionData(question, a, b ,c , d, doc.id))
+//
+//                    } else {
+//
+//                        questionList.add(UserQuestionData(question, a, b ,c , "", doc.id))
+//
+//                    }
+//
+//                } else {
+//
+//                    questionList.add(UserQuestionData(question, a, b ,"" , "", doc.id))
+//
+//                }
+//
+//                if(it.size() == questionList.size){
+//
+//                    questionList.shuffle()
+//
+//                    val questionData = ArrayList<UserQuestionData>()
+//
+//                    for(i in 0..2){
+//
+//                        questionData.add(questionList[i])
+//
+//                        if(questionData.size == 3){
+//
+//                            val questionItem = QuestionData(questionData[0], questionData[1], questionData[2])
+//
+//                            onComplete(questionItem)
+//
+//                        }
+//
+//                    }
+//
+//                }
+//
+//            }
+//
+//        }
+//
+//    }
+
+    fun getNewQuestionDataStageThree(s: String, onComplete: (UserQuestionData) -> Unit) {
 
         db.firestoreSettings = settings
 
-        db.collection(s).get().addOnSuccessListener {
+        val number = if (UserUtil.user.gender == "female") {
+            227
+        } else {
+            224
+        }
+        val x = ThreadLocalRandom.current().nextInt(0, number)
 
-            val questionList = ArrayList<UserQuestionData>()
+        db.document("$s/${UserUtil.user.gender}/$x").get().addOnSuccessListener {
 
-            for(doc in it.documents){
+            val question = it.getString("question")!!
 
-                val question = doc.getString("question")!!
+            val a = it.getString("a")!!
+            val b = it.getString("b")!!
 
-                val a = doc.getString("a")!!
-                val b = doc.getString("b")!!
+            if (it.getString("c") != null) {
 
-                if(doc.getString("c") != null){
+                val c = it.getString("c")!!
 
-                    val c = doc.getString("c")!!
+                if (it.getString("d") != null) {
 
-                    if(doc.getString("d") != null){
-
-                        val d = doc.getString("d")!!
-                        questionList.add(UserQuestionData(question, a, b ,c , d, doc.id))
-
-                    } else {
-
-                        questionList.add(UserQuestionData(question, a, b ,c , "", doc.id))
-
-                    }
+                    val d = it.getString("d")!!
+                    onComplete(UserQuestionData(question, a, b, c, d, it.id))
 
                 } else {
 
-                    questionList.add(UserQuestionData(question, a, b ,"" , "", doc.id))
+                    onComplete(UserQuestionData(question, a, b, c, "", it.id))
 
                 }
 
-                if(it.size() == questionList.size){
+            } else {
 
-                    questionList.shuffle()
-
-                    val questionData = ArrayList<UserQuestionData>()
-
-                    for(i in 0..2){
-
-                        questionData.add(questionList[i])
-
-                        if(questionData.size == 3){
-
-                            val questionItem = QuestionData(questionData[0], questionData[1], questionData[2])
-
-                            onComplete(questionItem)
-
-                        }
-
-                    }
-
-                }
+                onComplete(UserQuestionData(question, a, b, "", "", it.id))
 
             }
 
@@ -222,57 +265,21 @@ object GameUtil {
 
     }
 
-    fun getNewQuestionDataStageThree(s: String, onComplete: (UserQuestionData) -> Unit) {
+    private fun getRandomNumber(i: Int, onComplete: (ArrayList<String>) -> Unit) {
 
-        db.firestoreSettings = settings
+        val list = ArrayList<String>()
 
-        db.collection("$s/${UserUtil.user.gender}").get().addOnSuccessListener { it2 ->
+        while (list.size != 3) {
 
-                val documents = ArrayList<String>()
+            val x1 = ThreadLocalRandom.current().nextInt(0, i)
 
-            for (doc in it2.documents) {
+            if (!list.contains(x1.toString())) {
+                list.add(x1.toString())
+            }
 
-                    documents.add(doc.id)
-
-                if (it2.size() == documents.size) {
-
-                        documents.shuffle()
-
-                        val x = ThreadLocalRandom.current().nextInt(0, documents.size)
-
-                    db.document("$s/${UserUtil.user.gender}/${documents[x]}").get().addOnSuccessListener {
-
-                            val question = it.getString("question")!!
-
-                            val a = it.getString("a")!!
-                            val b = it.getString("b")!!
-
-                            if(it.getString("c") != null){
-
-                                val c = it.getString("c")!!
-
-                                if(it.getString("d") != null){
-
-                                    val d = it.getString("d")!!
-                                    onComplete(UserQuestionData(question, a, b ,c , d, it.id))
-
-                                } else {
-
-                                    onComplete(UserQuestionData(question, a, b ,c , "", it.id))
-
-                                }
-
-                            } else {
-
-                                onComplete(UserQuestionData(question, a, b ,"" , "", it.id))
-
-                            }
-
-                        }
-
-                    }
-
-                }
+            if (list.size == 3) {
+                onComplete(list)
+            }
 
         }
 
@@ -282,72 +289,74 @@ object GameUtil {
 
         db.firestoreSettings = settings
 
-        db.collection("$s/${UserUtil.user.gender}").get().addOnSuccessListener { it3 ->
-
-            if (it3.isEmpty) {
-
-                getQuestionDataStageThreeOwnPack("$s/questions"){it2 ->
-
-                    onComplete(it2, "$s/questions")
-
-                }
-
-            } else {
+//        db.collection("$s/${UserUtil.user.gender}").get().addOnSuccessListener { it3 ->
+//
+//            if (it3.isEmpty) {
+//
+//                getQuestionDataStageThreeOwnPack("$s/questions"){it2 ->
+//
+//                    onComplete(it2, "$s/questions")
+//
+//                }
+//
+//            } else {
 
                 val questionList = ArrayList<UserQuestionData>()
-                val documents = ArrayList<String>()
+        val number = if (UserUtil.user.gender == "female") {
+            227
+        } else {
+            224
+        }
+        getRandomNumber(number) { it4 ->
 
-                for (doc in it3.documents) {
+            if (it4.size == 3) {
 
-                    documents.add(doc.id)
+                it4.shuffle()
 
-                    if (it3.size() == documents.size) {
+                for (x in 0..2) {
 
-                        documents.shuffle()
-
-                        for(rand in 0..2){
-
-                            db.document("$s/${UserUtil.user.gender}/${documents[rand]}").get().addOnSuccessListener {
+                    db.document("$s/${UserUtil.user.gender}/${it4[x]}").get().addOnSuccessListener {
 
                                 val question = it.getString("question")!!
 
                                 val a = it.getString("a")!!
                                 val b = it.getString("b")!!
 
-                                if(it.getString("c") != null){
+                        if (it.getString("c") != null) {
 
                                     val c = it.getString("c")!!
 
-                                    if(it.getString("d") != null){
+                            if (it.getString("d") != null) {
 
                                         val d = it.getString("d")!!
-                                        questionList.add(UserQuestionData(question, a, b ,c , d, it.id))
+                                questionList.add(UserQuestionData(question, a, b, c, d, it.id))
 
                                     } else {
 
-                                        questionList.add(UserQuestionData(question, a, b ,c , "", it.id))
+                                questionList.add(UserQuestionData(question, a, b, c, "", it.id))
 
                                     }
 
                                 } else {
 
-                                    questionList.add(UserQuestionData(question, a, b ,"" , "", it.id))
+                            questionList.add(UserQuestionData(question, a, b, "", "", it.id))
 
                                 }
 
-                                if(questionList.size == 3){
+                        if (questionList.size == 3) {
 
                                     questionList.shuffle()
 
                                     val questionData = ArrayList<UserQuestionData>()
 
-                                    for(i in 0..2){
+                            for (c in 0..2) {
 
-                                        questionData.add(questionList[i])
+                                questionData.add(questionList[c])
 
-                                        if(questionData.size == 3){
+                                if (questionData.size == 3) {
 
-                                            val questionItem = QuestionData(questionData[0], questionData[1], questionData[2])
+                                    val questionItem =
+                                        QuestionData(questionData[0], questionData[1], questionData[2])
 
                                             onComplete(questionItem, "$s/${UserUtil.user.gender}")
 
@@ -360,14 +369,13 @@ object GameUtil {
                             }
 
                         }
-
                     }
 
                 }
 
-            }
-
-        }
+//            }
+//
+//        }
 
     }
 
@@ -784,10 +792,6 @@ object GameUtil {
                     Log.d("DB", "Debug 4")
 
                     val questionItem2 = it.toObject(QuestionData::class.java)!!
-
-                    Log.d("DB", "Debug 5 " + questionItem2.question.toString())
-                    Log.d("DB", "Debug 5.1 " + answerItem.toString())
-                    Log.d("DB", "Debug 5.2 " + yourAnswerItem.toString())
 
                     onComplete(answerItem, questionItem2, yourAnswerItem)
 

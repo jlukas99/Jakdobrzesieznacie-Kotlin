@@ -41,8 +41,6 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
     private lateinit var friendsProfileStatsGames: TextView
     private lateinit var friendsProfileStatsPrecent: TextView
 
-    private val glide = GlideUtil
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val rootView:View = inflater.inflate(R.layout.fragment_profile, container, false)
@@ -110,21 +108,25 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
 
     private fun setInformation() {
 
-        glide.setImage(UserUtil.user.fb, UserUtil.user.image, this.context!!, image) {}
+        if (isAdded) {
 
-        name.text = UserUtil.user.name
+            GlideUtil.setImage(UserUtil.user.fb, UserUtil.user.image, this.context!!, image) {}
 
-        UserUtil.getProfileUserStats { i1, i2, i3 ->
+            name.text = UserUtil.user.name
 
-            val a: Float = i1.toFloat()
-            val b: Float = i2.toFloat()
-            val c: Int = i3
-            val precent = GameUtil.getPrecent(StatsData(i1, i2, i3))
-            resources.getString(R.string.percent)
-            friendsProfileStatsCanswer.text = a.toInt().toString()
-            friendsProfileStatsBanswer.text = b.toInt().toString()
-            friendsProfileStatsGames.text = c.toString()
-            friendsProfileStatsPrecent.text = String.format("$precent%s", "%")
+            UserUtil.getProfileUserStats { i1, i2, i3 ->
+
+                val a: Float = i1.toFloat()
+                val b: Float = i2.toFloat()
+                val c: Int = i3
+                val precent = GameUtil.getPrecent(StatsData(i1, i2, i3))
+                resources.getString(R.string.percent)
+                friendsProfileStatsCanswer.text = a.toInt().toString()
+                friendsProfileStatsBanswer.text = b.toInt().toString()
+                friendsProfileStatsGames.text = c.toString()
+                friendsProfileStatsPrecent.text = String.format("$precent%s", "%")
+
+            }
 
         }
 

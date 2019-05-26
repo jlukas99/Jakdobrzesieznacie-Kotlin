@@ -1,1 +1,19 @@
-[{"outputType":{"type":"APK"},"apkData":{"type":"MAIN","splits":[],"versionCode":4,"versionName":"2.9.5-DEV","enabled":true,"outputFile":"app-debug.apk","fullName":"debug","baseName":"debug"},"path":"app-debug.apk","properties":{}}]
+[
+  {
+    "outputType": {
+      "type": "APK"
+    },
+    "apkData": {
+      "type": "MAIN",
+      "splits": [],
+      "versionCode": 3,
+      "versionName": "v1.0-Debug",
+      "enabled": true,
+      "outputFile": "app-debug.apk",
+      "fullName": "debug",
+      "baseName": "debug"
+    },
+    "path": "app-debug.apk",
+    "properties": {}
+  }
+]

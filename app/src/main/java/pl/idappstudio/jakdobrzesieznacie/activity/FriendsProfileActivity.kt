@@ -682,7 +682,6 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
         super.onPause()
         UserUtil.updateStatus(resources.getString(StatusMessage.offline)) {}
         setListener?.remove()
-        gamesListener?.remove()
         friendStatsListener?.remove()
         friendDataListener?.remove()
         friendSetListener?.remove()

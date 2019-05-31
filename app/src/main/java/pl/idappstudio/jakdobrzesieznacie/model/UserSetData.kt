@@ -1,7 +1,7 @@
 package pl.idappstudio.jakdobrzesieznacie.model
 
-data class UserSetData(val name: String, val image: Int, val premium: Boolean, val category: String, val lang: String, val id: String){
+data class UserSetData(val name: String, val premium: Boolean, val category: String, val id: String) {
 
-    constructor() : this("", 0, false, "", "", "")
+    constructor() : this("", false, "", "")
 
 }

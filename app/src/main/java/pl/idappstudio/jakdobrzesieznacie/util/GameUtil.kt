@@ -233,7 +233,7 @@ object GameUtil {
         }
         val x = ThreadLocalRandom.current().nextInt(0, number)
 
-        db.document("$s/${UserUtil.user.gender}/$x").get().addOnSuccessListener {
+        db.document("$s/${UserUtil.user.gender}-pl/$x").get().addOnSuccessListener {
 
             val question = it.getString("question")!!
 
@@ -289,7 +289,7 @@ object GameUtil {
 
         db.firestoreSettings = settings
 
-//        db.collection("$s/${UserUtil.user.gender}").get().addOnSuccessListener { it3 ->
+//        db.collection("$s/${UserUtil.user.gender}-pl").get().addOnSuccessListener { it3 ->
 //
 //            if (it3.isEmpty) {
 //
@@ -315,7 +315,7 @@ object GameUtil {
 
                 for (x in 0..2) {
 
-                    db.document("$s/${UserUtil.user.gender}/${it4[x]}").get().addOnSuccessListener {
+                    db.document("$s/${UserUtil.user.gender}-pl/${it4[x]}").get().addOnSuccessListener {
 
                                 val question = it.getString("question")!!
 
@@ -358,7 +358,7 @@ object GameUtil {
                                     val questionItem =
                                         QuestionData(questionData[0], questionData[1], questionData[2])
 
-                                            onComplete(questionItem, "$s/${UserUtil.user.gender}")
+                                    onComplete(questionItem, "$s/${UserUtil.user.gender}-pl")
 
                                         }
 
@@ -383,7 +383,7 @@ object GameUtil {
 //
 //        db.firestoreSettings = settings
 //
-//        db.collection("$s/${UserUtil.user.gender}").get().addOnSuccessListener {
+//        db.collection("$s/${UserUtil.user.gender}-pl").get().addOnSuccessListener {
 //
 //            if(it.isEmpty){
 //
@@ -439,7 +439,7 @@ object GameUtil {
 //
 //                                val questionItem = QuestionData(questionData[0], questionData[1], questionData[2])
 //
-//                                onComplete(questionItem, "$s/${UserUtil.user.gender}")
+//                                onComplete(questionItem, "$s/${UserUtil.user.gender}-pl")
 //
 //                            }
 //

@@ -12,7 +12,6 @@ import android.os.Bundle
 import android.view.View
 import com.facebook.*
 import com.facebook.AccessToken
-import com.facebook.appevents.AppEventsLogger
 import com.facebook.login.LoginManager
 import com.facebook.login.LoginResult
 import com.google.android.gms.ads.AdListener
@@ -98,7 +97,6 @@ class LoginMenuActivity : Activity() {
         auth = FirebaseAuth.getInstance()
 
         FacebookSdk.sdkInitialize(applicationContext)
-        AppEventsLogger.activateApp(this@LoginMenuActivity)
 
         val dialogBuilder = AlertDialog.Builder(this@LoginMenuActivity,
             R.style.Base_Theme_MaterialComponents_Dialog

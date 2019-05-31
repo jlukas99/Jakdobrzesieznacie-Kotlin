@@ -20,8 +20,8 @@ android {
         applicationId "pl.idappstudio.jakdobrzesieznacie"
         minSdkVersion 22
         targetSdkVersion 28
-        versionCode 9
-        versionName "v1.6-Alpha"
+        versionCode 11
+        versionName "v1.0-Beta"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
 
@@ -78,7 +78,7 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.9.0'
 
     //facebook
-    implementation 'com.facebook.android:facebook-android-sdk:4.39.0'
+    implementation 'com.facebook.android:facebook-android-sdk:5.0.1'
 
     //anko
     implementation "org.jetbrains.anko:anko:$anko_version"
@@ -88,10 +88,10 @@ dependencies {
     //firebase
     implementation 'com.google.firebase:firebase-core:16.0.9'
     implementation 'com.google.firebase:firebase-storage:17.0.0'
-    implementation 'com.google.firebase:firebase-firestore:19.0.0'
+    implementation 'com.google.firebase:firebase-firestore:19.0.1'
     implementation 'com.google.firebase:firebase-auth:17.0.0'
     implementation 'com.google.firebase:firebase-messaging:18.0.0'
-    implementation 'com.google.firebase:firebase-ads:17.2.0'
-    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.0'
+    implementation 'com.google.firebase:firebase-ads:17.2.1'
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.10.1'
 
 }

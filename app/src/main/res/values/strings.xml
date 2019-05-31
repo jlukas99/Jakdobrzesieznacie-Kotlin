@@ -9,17 +9,17 @@
     <string name="default_notification_channel_id" translatable="false">13</string>
 
     <!--AdMob-->
-    <string name="adMob_id" translatable="false">ca-app-pub-5933766487026976~1827002359</string>
-    <!--<string name="adMob_menu_ad_id" translatable="false">ca-app-pub-5933766487026976/7241667482</string>-->
-    <!--<string name="adMob_login_ad_id" translatable="false">ca-app-pub-5933766487026976/4807075833</string>-->
-    <!--<string name="adMob_reward_ad_id" translatable="false">ca-app-pub-5933766487026976/8017840338</string>-->
-    <!--<string name="adMob_reward2_ad_id" translatable="false">ca-app-pub-5933766487026976/3340228729</string>-->
+    <string name="adMob_id" translatable="false">ca-app-pub-3838745147591198~2049748657</string>
+    <string name="adMob_menu_ad_id" translatable="false">ca-app-pub-3838745147591198/7616225514</string>
+    <string name="adMob_login_ad_id" translatable="false">ca-app-pub-3838745147591198/3585481169</string>
+    <string name="adMob_reward_ad_id" translatable="false">ca-app-pub-3838745147591198/4997623428</string>
+    <string name="adMob_reward2_ad_id" translatable="false">ca-app-pub-3838745147591198/1143861092</string>
 
     <!--Test AdMob-->
-    <string name="adMob_menu_ad_id" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
-    <string name="adMob_login_ad_id" translatable="false">ca-app-pub-3940256099942544/1033173712</string>
-    <string name="adMob_reward_ad_id" translatable="false">ca-app-pub-3940256099942544/5224354917</string>
-    <string name="adMob_reward2_ad_id" translatable="false">ca-app-pub-3940256099942544/5224354917</string>
+    <!--<string name="adMob_menu_ad_id" translatable="false">ca-app-pub-3940256099942544/1033173712</string>-->
+    <!--<string name="adMob_login_ad_id" translatable="false">ca-app-pub-3940256099942544/1033173712</string>-->
+    <!--<string name="adMob_reward_ad_id" translatable="false">ca-app-pub-3940256099942544/5224354917</string>-->
+    <!--<string name="adMob_reward2_ad_id" translatable="false">ca-app-pub-3940256099942544/5224354917</string>-->
 
     <!--Login & Register-->
     <string name="select_gender">Wybierz swoją płeć</string>

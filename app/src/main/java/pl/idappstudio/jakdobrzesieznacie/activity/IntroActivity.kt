@@ -6,7 +6,6 @@ import android.app.Activity
 import android.os.Bundle
 import android.view.View
 import com.facebook.FacebookSdk
-import com.facebook.appevents.AppEventsLogger
 import com.google.android.gms.ads.MobileAds
 import com.google.firebase.auth.FirebaseAuth
 import org.jetbrains.anko.startActivity
@@ -22,7 +21,6 @@ class IntroActivity : Activity() {
         setContentView(R.layout.activity_intro)
 
         FacebookSdk.sdkInitialize(this)
-        AppEventsLogger.activateApp(this)
         MobileAds.initialize(this, resources.getString(R.string.adMob_id))
 
         if (FirebaseAuth.getInstance().currentUser == null) {

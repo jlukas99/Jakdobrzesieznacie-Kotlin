@@ -1,29 +1,29 @@
 {
   "project_info": {
-    "project_number": "741628354397",
-    "firebase_url": "https://jak-dobrze-sie-znacie.firebaseio.com",
-    "project_id": "jak-dobrze-sie-znacie",
-    "storage_bucket": "jak-dobrze-sie-znacie.appspot.com"
+    "project_number": "737508679828",
+    "firebase_url": "https://idapp-jak-dobrze-sie-znacie.firebaseio.com",
+    "project_id": "idapp-jak-dobrze-sie-znacie",
+    "storage_bucket": "idapp-jak-dobrze-sie-znacie.appspot.com"
   },
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:741628354397:android:c30c9c93b27786cb",
+        "mobilesdk_app_id": "1:737508679828:android:c30c9c93b27786cb",
         "android_client_info": {
           "package_name": "pl.idappstudio.jakdobrzesieznacie"
         }
       },
       "oauth_client": [
         {
-          "client_id": "741628354397-q86bhueuo77j8b5d3ddbivvrhvvv11ll.apps.googleusercontent.com",
+          "client_id": "737508679828-q9flu83orhib7143elqvpsc8phrdovcj.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "pl.idappstudio.jakdobrzesieznacie",
-            "certificate_hash": "dbb478b56dd10ba197ee7cb12fcd08aa081de5c6"
+            "certificate_hash": "69383177b814b45d7da4f2a04c2e2106dd96547b"
           }
         },
         {
-          "client_id": "741628354397-gmnatc0ppba3demldeh8hj1ckmuf2vke.apps.googleusercontent.com",
+          "client_id": "737508679828-8277jevm09dutmdm5jsr20j1nofvegh7.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "pl.idappstudio.jakdobrzesieznacie",
@@ -31,26 +31,26 @@
           }
         },
         {
-          "client_id": "741628354397-rvf9qj0nmraafijgjh37ilce9husqpad.apps.googleusercontent.com",
+          "client_id": "737508679828-m9j5gbllh8k4kjqbjksirfv7bvlp3m7l.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
       "api_key": [
         {
-          "current_key": "AIzaSyClF3cpM7FENL-g7j2yq8zN1yMqgBD9WKk"
+          "current_key": "AIzaSyD2wC7yCO7WuA4nJpMfGjBAgLq-dvON0A4"
         }
       ],
       "services": {
         "appinvite_service": {
           "other_platform_oauth_client": [
             {
-              "client_id": "741628354397-rvf9qj0nmraafijgjh37ilce9husqpad.apps.googleusercontent.com",
+              "client_id": "737508679828-m9j5gbllh8k4kjqbjksirfv7bvlp3m7l.apps.googleusercontent.com",
               "client_type": 3
             }
           ]
         }
       },
-      "admob_app_id": "ca-app-pub-9811848924200939~9857440152"
+      "admob_app_id": "ca-app-pub-3838745147591198~2049748657"
     }
   ],
   "configuration_version": "1"

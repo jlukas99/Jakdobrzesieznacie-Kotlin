@@ -2,6 +2,8 @@ package pl.idappstudio.jakdobrzesieznacie.util
 
 import android.content.res.Resources
 import android.util.Log
+import com.crashlytics.android.Crashlytics
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 import pl.idappstudio.jakdobrzesieznacie.R
 import pl.idappstudio.jakdobrzesieznacie.model.*
@@ -121,12 +123,34 @@ object GameUtil {
 
             if(game.newGame){
 
-                FirestoreUtil.updateGameSettings(true, false, 3, 1, game.uSet.id, game.fSet.id, game.gamemode, game.gameID, userData.uid, friendData.uid)
+                FirestoreUtil.updateGameSettings(
+                        yourTurn = true,
+                        friendTurn = false,
+                        yourStage = 3,
+                        friendStage = 1,
+                        yourSet = game.uSet.id,
+                        friendSet = game.fSet.id,
+                        gamemode = game.gamemode,
+                        gameID = game.gameID,
+                        yourID = userData.uid,
+                        friendID = friendData.uid
+                )
                 onComplete()
 
             } else {
 
-                FirestoreUtil.updateGameSettings(true, false, 2, 1, game.uSet.id, game.fSet.id, game.gamemode, game.gameID, userData.uid, friendData.uid)
+                FirestoreUtil.updateGameSettings(
+                        yourTurn = true,
+                        friendTurn = false,
+                        yourStage = 2,
+                        friendStage = 1,
+                        yourSet = game.uSet.id,
+                        friendSet = game.fSet.id,
+                        gamemode = game.gamemode,
+                        gameID = game.gameID,
+                        yourID = userData.uid,
+                        friendID = friendData.uid
+                )
                 onComplete()
 
             }
@@ -150,77 +174,24 @@ object GameUtil {
 
         db.collection("games").document(game.gameID).collection(userData.uid).document("3").set(user).addOnSuccessListener {
 
-            FirestoreUtil.updateGameSettings(false, true, 3, 1, game.uSet.id, game.fSet.id, game.gamemode, game.gameID, userData.uid, friendData.uid)
+            FirestoreUtil.updateGameSettings(
+                    yourTurn = false,
+                    friendTurn = true,
+                    yourStage = 3,
+                    friendStage = 1,
+                    yourSet = game.uSet.id,
+                    friendSet = game.fSet.id,
+                    gamemode = game.gamemode,
+                    gameID = game.gameID,
+                    yourID = userData.uid,
+                    friendID = friendData.uid
+            )
             onComplete()
 
 
         }
 
     }
-
-//    private fun getQuestionDataStageThreeOwnPack(s: String, onComplete: (QuestionData) -> Unit) {
-//
-//        db.firestoreSettings = settings
-//
-//        db.collection(s).get().addOnSuccessListener {
-//
-//            val questionList = ArrayList<UserQuestionData>()
-//
-//            for(doc in it.documents){
-//
-//                val question = doc.getString("question")!!
-//
-//                val a = doc.getString("a")!!
-//                val b = doc.getString("b")!!
-//
-//                if(doc.getString("c") != null){
-//
-//                    val c = doc.getString("c")!!
-//
-//                    if(doc.getString("d") != null){
-//
-//                        val d = doc.getString("d")!!
-//                        questionList.add(UserQuestionData(question, a, b ,c , d, doc.id))
-//
-//                    } else {
-//
-//                        questionList.add(UserQuestionData(question, a, b ,c , "", doc.id))
-//
-//                    }
-//
-//                } else {
-//
-//                    questionList.add(UserQuestionData(question, a, b ,"" , "", doc.id))
-//
-//                }
-//
-//                if(it.size() == questionList.size){
-//
-//                    questionList.shuffle()
-//
-//                    val questionData = ArrayList<UserQuestionData>()
-//
-//                    for(i in 0..2){
-//
-//                        questionData.add(questionList[i])
-//
-//                        if(questionData.size == 3){
-//
-//                            val questionItem = QuestionData(questionData[0], questionData[1], questionData[2])
-//
-//                            onComplete(questionItem)
-//
-//                        }
-//
-//                    }
-//
-//                }
-//
-//            }
-//
-//        }
-//
-//    }
 
     fun getNewQuestionDataStageThree(s: String, onComplete: (UserQuestionData) -> Unit) {
 
@@ -231,6 +202,7 @@ object GameUtil {
         } else {
             224
         }
+
         val x = ThreadLocalRandom.current().nextInt(0, number)
 
         db.document("$s/${UserUtil.user.gender}-pl/$x").get().addOnSuccessListener {
@@ -289,24 +261,18 @@ object GameUtil {
 
         db.firestoreSettings = settings
 
-//        db.collection("$s/${UserUtil.user.gender}-pl").get().addOnSuccessListener { it3 ->
-//
-//            if (it3.isEmpty) {
-//
-//                getQuestionDataStageThreeOwnPack("$s/questions"){it2 ->
-//
-//                    onComplete(it2, "$s/questions")
-//
-//                }
-//
-//            } else {
+        val questionList = ArrayList<UserQuestionData>()
 
-                val questionList = ArrayList<UserQuestionData>()
         val number = if (UserUtil.user.gender == "female") {
+
             227
+
         } else {
+
             224
+
         }
+
         getRandomNumber(number) { it4 ->
 
             if (it4.size == 3) {
@@ -317,10 +283,18 @@ object GameUtil {
 
                     db.document("$s/${UserUtil.user.gender}-pl/${it4[x]}").get().addOnSuccessListener {
 
-                                val question = it.getString("question")!!
+                        if (!it.exists()) {
 
-                                val a = it.getString("a")!!
-                                val b = it.getString("b")!!
+                            return@addOnSuccessListener
+
+                        }
+
+                        Crashlytics.log("Erro -> $s/${UserUtil.user.gender}-pl/${it4[x]} | ${FirebaseAuth.getInstance().currentUser?.uid!!}")
+
+                        val question = it.getString("question")!!
+
+                        val a = it.getString("a")!!
+                        val b = it.getString("b")!!
 
                         if (it.getString("c") != null) {
 
@@ -355,8 +329,7 @@ object GameUtil {
 
                                 if (questionData.size == 3) {
 
-                                    val questionItem =
-                                        QuestionData(questionData[0], questionData[1], questionData[2])
+                                    val questionItem = QuestionData(questionData[0], questionData[1], questionData[2])
 
                                     onComplete(questionItem, "$s/${UserUtil.user.gender}-pl")
 
@@ -373,87 +346,7 @@ object GameUtil {
 
                 }
 
-//            }
-//
-//        }
-
     }
-
-//    fun getQuestionDataStageThree(s: String, onComplete: (QuestionData, String) -> Unit) {
-//
-//        db.firestoreSettings = settings
-//
-//        db.collection("$s/${UserUtil.user.gender}-pl").get().addOnSuccessListener {
-//
-//            if(it.isEmpty){
-//
-//                getQuestionDataStageThreeOwnPack("$s/questions"){it2 ->
-//
-//                    onComplete(it2, "$s/questions")
-//
-//                }
-//
-//            } else {
-//
-//                val questionList = ArrayList<UserQuestionData>()
-//
-//                for(doc in it.documents){
-//
-//                    val question = doc.getString("question")!!
-//
-//                    val a = doc.getString("a")!!
-//                    val b = doc.getString("b")!!
-//
-//                    if(doc.getString("c") != null){
-//
-//                        val c = doc.getString("c")!!
-//
-//                        if(doc.getString("d") != null){
-//
-//                            val d = doc.getString("d")!!
-//                            questionList.add(UserQuestionData(question, a, b ,c , d, doc.id))
-//
-//                        } else {
-//
-//                            questionList.add(UserQuestionData(question, a, b ,c , "", doc.id))
-//
-//                        }
-//
-//                    } else {
-//
-//                        questionList.add(UserQuestionData(question, a, b ,"" , "", doc.id))
-//
-//                    }
-//
-//                    if(it.size() == questionList.size){
-//
-//                        questionList.shuffle()
-//
-//                        val questionData = ArrayList<UserQuestionData>()
-//
-//                        for(i in 0..2){
-//
-//                            questionData.add(questionList[i])
-//
-//                            if(questionData.size == 3){
-//
-//                                val questionItem = QuestionData(questionData[0], questionData[1], questionData[2])
-//
-//                                onComplete(questionItem, "$s/${UserUtil.user.gender}-pl")
-//
-//                            }
-//
-//                        }
-//
-//                    }
-//
-//                }
-//
-//            }
-//
-//            }
-//
-//    }
 
     private fun getQuestionData2(s: String, onComplete: (AnswerData, AnswerData, QuestionData) -> Unit) {
 
@@ -904,7 +797,18 @@ object GameUtil {
 
         db.collection("games").document(game.gameID).collection(userData.uid).document("3").set(user).addOnSuccessListener {
 
-            FirestoreUtil.updateGameSettings(false, true, 3, 1, game.uSet.id, game.fSet.id, game.gamemode, game.gameID, userData.uid, friendData.uid)
+            FirestoreUtil.updateGameSettings(
+                    yourTurn = false,
+                    friendTurn = true,
+                    yourStage = 3,
+                    friendStage = 1,
+                    yourSet = game.uSet.id,
+                    friendSet = game.fSet.id,
+                    gamemode = game.gamemode,
+                    gameID = game.gameID,
+                    yourID = userData.uid,
+                    friendID = friendData.uid
+            )
             onComplete()
 
         }

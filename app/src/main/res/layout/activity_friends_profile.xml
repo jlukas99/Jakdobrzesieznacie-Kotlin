@@ -8,150 +8,100 @@
     android:background="@drawable/background_main"
     tools:context=".activity.FriendsProfileActivity">
 
-    <View
+    <LinearLayout
+        android:id="@+id/linearLayout12"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/background_dark_overlay" android:id="@+id/view7"
-        app:layout_constraintEnd_toEndOf="parent" app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent" app:layout_constraintTop_toTopOf="parent"/>
-
-    <androidx.constraintlayout.widget.ConstraintLayout
             android:orientation="horizontal"
-            android:layout_height="wrap_content"
-            app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:gravity="center_horizontal"
-            android:layout_marginEnd="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <ImageButton
+            android:id="@+id/back"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
             android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:layout_weight="1"
+            android:background="@drawable/input_overlay_white"
+            android:scaleType="center"
+            android:src="@drawable/ic_back_arrow"
+            tools:ignore="ContentDescription" />
+
+        <ImageButton
+            android:id="@+id/back2"
+            android:layout_width="32dp"
+            android:layout_height="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginEnd="16dp"
+            android:layout_weight="1"
+            android:background="@color/colorTranspery"
+            android:scaleType="center"
+            tools:ignore="ContentDescription" />
+
+        <LinearLayout
             android:id="@+id/linearLayout4"
-            android:layout_width="0dp"
-            app:layout_constraintTop_toTopOf="parent"
-            android:layout_marginTop="16dp">
-
-        <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintStart_toStartOf="parent"
-                android:id="@+id/linearLayout6"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent">
-
-            <ImageButton
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
-                    android:id="@+id/back_btn"
-                    android:background="@drawable/ic_back_arrow"
-                    android:layout_gravity="center_horizontal|center_vertical"
-                    android:contentDescription="@string/back_btn"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="0dp"
-                android:layout_height="match_parent"
-                app:layout_constraintStart_toEndOf="@+id/linearLayout6"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:id="@+id/linearLayout8"
-                app:layout_constraintEnd_toStartOf="@+id/linearLayout7"
-                >
-
-            <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-                    android:id="@+id/view"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:background="@color/colorLigth"
-                    android:layout_gravity="center"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                app:layout_constraintTop_toTopOf="parent"
-                android:id="@+id/linearLayout7"
-                app:layout_constraintBottom_toBottomOf="parent"
-                android:layout_marginStart="8dp"
-                app:layout_constraintStart_toEndOf="@+id/linearLayout8"
-                app:layout_constraintEnd_toStartOf="@+id/linearLayout9"
-                >
+            android:layout_width="match_parent"
+            android:layout_height="32dp"
+            android:layout_marginTop="16dp"
+            android:layout_weight="1000"
+            android:gravity="center_horizontal"
+            android:orientation="horizontal">
 
             <TextView
-                    android:id="@+id/friends_profile_title"
+                android:id="@+id/textView"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                android:layout_gravity="center"
                     android:layout_marginStart="8dp"
                     android:layout_marginEnd="8dp"
                     android:fontFamily="@font/varela_round"
                     android:text="@string/profile_friend"
                     android:textAlignment="center"
+                android:textAllCaps="true"
                     android:textColor="@color/colorWhite"
                     android:textSize="20sp"
-                    android:transitionName="anim_name_profile"
-                    android:typeface="normal"
-                    android:textAllCaps="true"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-                android:orientation="horizontal"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintStart_toEndOf="@+id/linearLayout7"
-                app:layout_constraintEnd_toStartOf="@+id/linearLayout10"
-                android:id="@+id/linearLayout9">
+                android:typeface="normal" />
 
             <View
-                    android:layout_height="2dp"
-                    android:id="@+id/view2"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:background="@color/colorLigth"
-                    android:layout_gravity="center"
-                    android:layout_width="match_parent"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-                android:orientation="horizontal"
+                android:id="@+id/view"
                 android:layout_width="wrap_content"
                 android:layout_height="2dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="@color/colorLigth"
                 app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                android:id="@+id/linearLayout10"
-                app:layout_constraintEnd_toEndOf="parent">
+                tools:ignore="NestedWeights" />
 
             <View
-                    android:layout_width="32dp"
-                    android:layout_height="32dp"
+                    android:id="@+id/view2"
+                android:layout_width="wrap_content"
+                android:layout_height="2dp"
+                android:layout_gravity="center"
+                android:layout_weight="1"
+                android:background="@color/colorLigth"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    android:background="@color/colorLigth"
-                    android:layout_gravity="center"/>
+                app:layout_constraintTop_toTopOf="parent" />
 
         </LinearLayout>
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:layout_constraintStart_toStartOf="parent" app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent" app:layout_constraintTop_toBottomOf="@+id/linearLayout4"
-        android:foregroundGravity="center_vertical|center_horizontal">
+    <View
+        android:id="@+id/view7"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:background="@drawable/background_dark_overlay"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
         <TextView
                 android:id="@+id/friends_profile_name"
@@ -267,19 +217,24 @@
                 app:layout_constraintTop_toBottomOf="@+id/friends_profile_stats_games"
                 app:layout_constraintEnd_toEndOf="@+id/linearLayout5"/>
 
-        <de.hdodenhof.circleimageview.CircleImageView
+    <de.hdodenhof.circleimageview.CircleImageView
             android:id="@+id/friends_profile_image"
             android:layout_width="105dp"
             android:layout_height="105dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
+        android:background="@drawable/input_overlay_white"
+        android:scaleType="centerCrop"
             android:transitionName="anim_image_profile"
+        app:civ_border_color="@color/colorWhite"
+        app:civ_border_width="1dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.502"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            android:scaleType="centerCrop"
-            app:civ_border_color="@color/colorWhite" app:civ_border_width="1dp" android:layout_marginStart="8dp"
-            android:layout_marginEnd="8dp" app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.502" android:background="@drawable/input_overlay_white"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintVertical_bias="0.0" android:layout_marginTop="32dp"/>
+        app:layout_constraintTop_toBottomOf="@+id/linearLayout12"
+        app:layout_constraintVertical_bias="0.0" />
 
         <TextView
                 android:text="@string/zero"
@@ -548,6 +503,5 @@
                 android:layout_gravity="center" android:layout_weight="1" android:layout_width="wrap_content"/>
 
         </LinearLayout>
-    </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

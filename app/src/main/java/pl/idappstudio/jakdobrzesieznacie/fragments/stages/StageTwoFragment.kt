@@ -30,6 +30,7 @@ import pl.idappstudio.jakdobrzesieznacie.util.GlideUtil
 import pl.idappstudio.jakdobrzesieznacie.util.SnackBarUtil
 import pl.idappstudio.jakdobrzesieznacie.util.UserUtil
 
+@Suppress("DEPRECATION")
 class StageTwoFragment(private val listener: NextFragment) : androidx.fragment.app.Fragment() {
 
     private lateinit var stageTitle: TextView
@@ -120,7 +121,18 @@ class StageTwoFragment(private val listener: NextFragment) : androidx.fragment.a
 
         skipStage.setOnClickListener {
 
-            FirestoreUtil.updateGameSettings(true, false, 3, 1, game.uSet.id, game.fSet.id, game.gamemode, game.gameID, UserUtil.user.uid, friends.uid)
+            FirestoreUtil.updateGameSettings(
+                    yourTurn = true,
+                    friendTurn = false,
+                    yourStage = 3,
+                    friendStage = 1,
+                    yourSet = game.uSet.id,
+                    friendSet = game.fSet.id,
+                    gamemode = game.gamemode,
+                    gameID = game.gameID,
+                    yourID = UserUtil.user.uid,
+                    friendID = friends.uid
+            )
 
             listener.next()
 
@@ -139,9 +151,9 @@ class StageTwoFragment(private val listener: NextFragment) : androidx.fragment.a
 
         nextQuestion.text = resources.getString(R.string.next_answer)
         nextQuestion.background.setColorFilter(
-            ContextCompat.getColor(
-                this.context!!, R.color.colorPrimary
-            ), android.graphics.PorterDuff.Mode.SRC_IN)
+                ContextCompat.getColor(
+                        this.context!!, R.color.colorPrimary
+                ), android.graphics.PorterDuff.Mode.SRC_IN)
 
         stageTitle.text = resources.getString(R.string.friend_answer)
 
@@ -253,79 +265,79 @@ class StageTwoFragment(private val listener: NextFragment) : androidx.fragment.a
 
         if(aAnswerText.text == ""){
 
-                for(a in array){
+            for (a in array) {
 
-                    if(a != ""){
+                if (a != "") {
 
-                        aAnswerText.text = a
-                        array.remove(a)
+                    aAnswerText.text = a
+                    array.remove(a)
 
-                        aAnswerButton.visibility = View.VISIBLE
+                    aAnswerButton.visibility = View.VISIBLE
 
-                        break
-
-                    }
+                    break
 
                 }
 
             }
+
+        }
 
         if(bAnswerText.text == ""){
 
-                for(a in array){
+            for (a in array) {
 
-                    if(a != ""){
+                if (a != "") {
 
-                        bAnswerText.text = a
-                        array.remove(a)
+                    bAnswerText.text = a
+                    array.remove(a)
 
-                        bAnswerButton.visibility = View.VISIBLE
+                    bAnswerButton.visibility = View.VISIBLE
 
-                        break
-
-                    }
+                    break
 
                 }
 
             }
+
+        }
 
         if(cAnswerText.text == ""){
 
-                for(a in array){
+            for (a in array) {
 
-                    if(a != ""){
+                if (a != "") {
 
-                        cAnswerText.text = a
-                        array.remove(a)
+                    cAnswerText.text = a
+                    array.remove(a)
 
-                        cAnswerButton.visibility = View.VISIBLE
+                    cAnswerButton.visibility = View.VISIBLE
 
-                        break
-
-                    }
+                    break
 
                 }
 
             }
+
+        }
 
         if(dAnswerText.text == ""){
 
-                for(a in array){
+            for (a in array) {
 
-                    if(a != ""){
+                if (a != "") {
 
-                        dAnswerText.text = a
-                        array.remove(a)
+                    dAnswerText.text = a
+                    array.remove(a)
 
-                        dAnswerButton.visibility = View.VISIBLE
+                    dAnswerButton.visibility = View.VISIBLE
 
-                        break
-
-                    }
+                    break
 
                 }
 
             }
+
+        }
 
         checkAnswer()
 
@@ -339,9 +351,9 @@ class StageTwoFragment(private val listener: NextFragment) : androidx.fragment.a
 
             nextQuestion.text = resources.getString(R.string.next_stage)
             nextQuestion.background.setColorFilter(
-                ContextCompat.getColor(
-                    this.context!!, R.color.colorCorrectAnswer
-                ), android.graphics.PorterDuff.Mode.SRC_IN
+                    ContextCompat.getColor(
+                            this.context!!, R.color.colorCorrectAnswer
+                    ), android.graphics.PorterDuff.Mode.SRC_IN
             )
 
             skipStage.visibility = View.GONE
@@ -360,7 +372,18 @@ class StageTwoFragment(private val listener: NextFragment) : androidx.fragment.a
 
             } else {
 
-                FirestoreUtil.updateGameSettings(true, false, 3, 1, game.uSet.id, game.fSet.id, game.gamemode, game.gameID, UserUtil.user.uid, friends.uid)
+                FirestoreUtil.updateGameSettings(
+                        yourTurn = true,
+                        friendTurn = false,
+                        yourStage = 3,
+                        friendStage = 1,
+                        yourSet = game.uSet.id,
+                        friendSet = game.fSet.id,
+                        gamemode = game.gamemode,
+                        gameID = game.gameID,
+                        yourID = UserUtil.user.uid,
+                        friendID = friends.uid
+                )
 
                 listener.next()
 
@@ -553,10 +576,10 @@ class StageTwoFragment(private val listener: NextFragment) : androidx.fragment.a
             if(dialogReason.text.trim().length < 5){
 
                 SnackBarUtil.setActivitySnack(
-                    resources.getString(R.string.reason_is_to_short),
-                    ColorSnackBar.WARING,
-                    R.drawable.ic_edit_text,
-                    setDialog.window?.decorView!!
+                        resources.getString(R.string.reason_is_to_short),
+                        ColorSnackBar.WARING,
+                        R.drawable.ic_edit_text,
+                        setDialog.window?.decorView!!
                 ) {
 
                     dialogReason.isEnabled = true
@@ -577,10 +600,10 @@ class StageTwoFragment(private val listener: NextFragment) : androidx.fragment.a
 
                 closeDialog()
                 SnackBarUtil.setActivitySnack(
-                    resources.getString(R.string.send_report_successful, it2.id),
-                    ColorSnackBar.SUCCES,
-                    R.drawable.ic_check_icon,
-                    gameStageTitle
+                        resources.getString(R.string.send_report_successful, it2.id),
+                        ColorSnackBar.SUCCES,
+                        R.drawable.ic_check_icon,
+                        gameStageTitle
                 ) {
 
                     resetDialog()
@@ -590,10 +613,10 @@ class StageTwoFragment(private val listener: NextFragment) : androidx.fragment.a
             }.addOnFailureListener {
 
                 SnackBarUtil.setActivitySnack(
-                    resources.getString(R.string.send_report_error),
-                    ColorSnackBar.ERROR,
-                    R.drawable.ic_error_,
-                    setDialog.window?.decorView!!
+                        resources.getString(R.string.send_report_error),
+                        ColorSnackBar.ERROR,
+                        R.drawable.ic_error_,
+                        setDialog.window?.decorView!!
                 ) {
 
                     dialogReason.isEnabled = true
@@ -622,7 +645,7 @@ class StageTwoFragment(private val listener: NextFragment) : androidx.fragment.a
     private fun getVersion() : String{
 
         return try {
-            val pInfo = context?.packageManager?.getPackageInfo(context?.packageName, 0)
+            val pInfo = context?.packageManager?.getPackageInfo(context?.packageName!!, 0)
             pInfo?.versionName!!
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()

@@ -40,15 +40,13 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     }
 
-    override fun onNewToken(s: String?) {
-        super.onNewToken(s)
-        addTokenToFirestore(s)
+    override fun onNewToken(p0: String) {
+        super.onNewToken(p0)
+        addTokenToFirestore(p0)
     }
 
-    override fun onMessageReceived(remoteMessage: RemoteMessage?) {
+    override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
-
-        if (remoteMessage != null) {
 
             data = remoteMessage.data
 
@@ -58,7 +56,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
             sendNotification(messageBody, messageTitle, messageType)
 
-        }
     }
 
     private fun sendNotification(messageBody: String?, title: String?, group: String?) {

@@ -346,10 +346,6 @@ object UserUtil {
         }
     }
 
-    fun updateStatus(msg: String, onComplete: () -> Unit) {
-        dbCurrentUser.update("status", msg).addOnCompleteListener { onComplete() }
-    }
-
     fun getFacebookFriend(uid: String, onComplete: (UserData, Boolean) -> Unit){
 
         dbUsers.whereEqualTo("image", uid).get().addOnSuccessListener {

@@ -11,12 +11,9 @@ import com.google.android.gms.ads.AdRequest
 import com.google.android.gms.ads.InterstitialAd
 import kotlinx.android.synthetic.main.activity_menu.*
 import pl.idappstudio.jakdobrzesieznacie.R
-import pl.idappstudio.jakdobrzesieznacie.enums.StatusMessage
 import pl.idappstudio.jakdobrzesieznacie.fragments.*
 import pl.idappstudio.jakdobrzesieznacie.util.UserUtil
-import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.concurrent.schedule
 
 class MenuActivity : AppCompatActivity() {
 
@@ -29,6 +26,8 @@ class MenuActivity : AppCompatActivity() {
         const val EXTRA_USER_BTN_FAVORITE_TRANSITION_NAME = "favorite"
         const val EXTRA_USER_STATUS_GAME_TRANSITION_NAME = "game-status"
         const val EXTRA_USER_IMAGE_GAME_TRANSITION_NAME = "game-image"
+
+        lateinit var viewPager2: ViewPager
 
     }
 
@@ -79,152 +78,30 @@ class MenuActivity : AppCompatActivity() {
 
     private fun setupViewPager(viewPager: ViewPager) {
 
-        fab.setOnClickListener {
-
-            if(!navigation.menu.getItem(2).isChecked || !navigation2.menu.getItem(2).isChecked) {
-
-                viewPager.currentItem = 2
-                navigation.menu.getItem(2).isChecked = true
-                navigation2.menu.getItem(2).isChecked = true
-
-            }
-
-        }
-
-        navigation.menu.getItem(2).isVisible = false
-        navigation2.menu.getItem(2).isVisible = false
-
-        navigation2.setOnNavigationItemSelectedListener {
-
-            when (it.itemId) {
-
-                R.id.navigation_add_friends -> {
-
-                    viewPager.currentItem = 3
-                    navigation.menu.getItem(2).isChecked = true
-
-                    true
-                }
-
-                R.id.navigation_profile -> {
-
-                    viewPager.currentItem = 4
-                    navigation.menu.getItem(2).isChecked = true
-
-                    true
-                }
-                else -> false
-            }
-        }
-
-        navigation.setOnNavigationItemSelectedListener {
-
-            when (it.itemId) {
-
-                R.id.navigation_pack -> {
-
-                    viewPager.currentItem = 0
-                    navigation2.menu.getItem(2).isChecked = true
-
-                    true
-                }
-
-                R.id.navigation_states -> {
-
-                    viewPager.currentItem = 1
-                    navigation2.menu.getItem(2).isChecked = true
-
-                    true
-                }
-
-                else -> false
-            }
-        }
-
-        navigation.menu.getItem(2).isEnabled = false
-        navigation2.menu.getItem(2).isEnabled = false
-
         val adapter = ViewPagerAdapter(supportFragmentManager)
 
-        val packFragment = PackFragment()
-        val achivmentsFragment = AchivmentsFragment()
+        val inviteFragment = InvitesFragment()
         val friendsFragment = FriendsFragment()
-        val invitesFragment = InvitesFragment()
         val profileFragment = ProfileFragment()
 
-        adapter.addFragment(packFragment, "pack")
-        adapter.addFragment(achivmentsFragment, "achivment")
+        adapter.addFragment(inviteFragment, "invite")
         adapter.addFragment(friendsFragment, "friends")
-        adapter.addFragment(invitesFragment, "invites")
         adapter.addFragment(profileFragment, "profile")
 
-        viewPager.offscreenPageLimit = 4
-
-        viewPager.addOnPageChangeListener(object : ViewPager.OnPageChangeListener {
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {
-
-            }
-
-            override fun onPageSelected(position: Int) {
-
-                when(position) {
-
-                    0 -> {
-                        navigation.menu.getItem(0).isChecked = true
-                        navigation2.menu.getItem(2).isChecked = true
-
-                    }
-
-                    1 -> {
-                        navigation.menu.getItem(1).isChecked = true
-                        navigation2.menu.getItem(2).isChecked = true
-
-                    }
-
-                    2 -> {
-                        navigation.menu.getItem(2).isChecked = true
-                        navigation2.menu.getItem(2).isChecked = true
-                    }
-
-                    3 -> {
-                        navigation.menu.getItem(2).isChecked = true
-                        navigation2.menu.getItem(0).isChecked = true
-
-                    }
-
-                    4 ->  {
-                        navigation.menu.getItem(2).isChecked = true
-                        navigation2.menu.getItem(1).isChecked = true
-
-                    }
-
-                }
-
-            }
-
-            override fun onPageScrollStateChanged(state: Int) {
-
-            }
-        })
+        viewPager.offscreenPageLimit = 2
 
         viewPager.adapter = adapter
 
-        viewPager.currentItem = 2
+        viewPager.currentItem = 1
+
+        viewPager2 = viewPager
 
     }
 
     override fun onResume() {
         super.onResume()
-        Timer("status", false).schedule(700) {
-            UserUtil.updateStatus(resources.getString(StatusMessage.online)) {}
-        }
         UserUtil.getUser {}
         hideSystemUI()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        UserUtil.updateStatus(resources.getString(StatusMessage.offline)) {}
     }
 
     override fun onUserInteraction() {

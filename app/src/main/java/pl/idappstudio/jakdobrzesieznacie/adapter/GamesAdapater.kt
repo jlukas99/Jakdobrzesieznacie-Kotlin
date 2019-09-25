@@ -1,25 +1,29 @@
 package pl.idappstudio.jakdobrzesieznacie.adapter
 
 import android.content.Context
-import androidx.core.content.ContextCompat
+import android.view.View
 import androidx.core.view.ViewCompat
 import com.google.firebase.firestore.DocumentSnapshot
 import com.google.firebase.firestore.EventListener
 import com.google.firebase.firestore.FirebaseFirestore
 import com.xwray.groupie.kotlinandroidextensions.Item
 import com.xwray.groupie.kotlinandroidextensions.ViewHolder
-import kotlinx.android.synthetic.main.game_item.*
+import kotlinx.android.synthetic.main.friends_item.*
+import kotlinx.android.synthetic.main.game_item.btn_chat
+import kotlinx.android.synthetic.main.game_item.btn_favorite
+import kotlinx.android.synthetic.main.game_item.friends_profile
+import kotlinx.android.synthetic.main.game_item.profile_name
 import pl.idappstudio.jakdobrzesieznacie.R
 import pl.idappstudio.jakdobrzesieznacie.activity.MenuActivity.Companion.EXTRA_USER_BTN_CHAT_TRANSITION_NAME
 import pl.idappstudio.jakdobrzesieznacie.activity.MenuActivity.Companion.EXTRA_USER_BTN_FAVORITE_TRANSITION_NAME
-import pl.idappstudio.jakdobrzesieznacie.activity.MenuActivity.Companion.EXTRA_USER_IMAGE_GAME_TRANSITION_NAME
 import pl.idappstudio.jakdobrzesieznacie.activity.MenuActivity.Companion.EXTRA_USER_IMAGE_TRANSITION_NAME
 import pl.idappstudio.jakdobrzesieznacie.activity.MenuActivity.Companion.EXTRA_USER_NAME_TRANSITION_NAME
-import pl.idappstudio.jakdobrzesieznacie.activity.MenuActivity.Companion.EXTRA_USER_STATUS_GAME_TRANSITION_NAME
+import pl.idappstudio.jakdobrzesieznacie.enums.ColorSnackBar
 import pl.idappstudio.jakdobrzesieznacie.interfaces.ClickListener
 import pl.idappstudio.jakdobrzesieznacie.model.FriendItem
 import pl.idappstudio.jakdobrzesieznacie.model.UserData
 import pl.idappstudio.jakdobrzesieznacie.util.GlideUtil
+import pl.idappstudio.jakdobrzesieznacie.util.SnackBarUtil
 
 class GamesAdapater(private val user: FriendItem, private val context: Context, private val listener: ClickListener) : Item() {
 
@@ -27,26 +31,23 @@ class GamesAdapater(private val user: FriendItem, private val context: Context, 
 
     override fun bind(holder: ViewHolder, position: Int) {
 
-        ViewCompat.setTransitionName(holder.image_passa, EXTRA_USER_IMAGE_GAME_TRANSITION_NAME)
-        ViewCompat.setTransitionName(holder.imageView5, EXTRA_USER_STATUS_GAME_TRANSITION_NAME)
         ViewCompat.setTransitionName(holder.friends_profile,EXTRA_USER_IMAGE_TRANSITION_NAME)
         ViewCompat.setTransitionName(holder.profile_name, EXTRA_USER_NAME_TRANSITION_NAME)
         ViewCompat.setTransitionName(holder.btn_chat, EXTRA_USER_BTN_CHAT_TRANSITION_NAME)
         ViewCompat.setTransitionName(holder.btn_favorite, EXTRA_USER_BTN_FAVORITE_TRANSITION_NAME)
 
-        if(user.favorite){
-
-            holder.imageView2.setImageResource(R.drawable.input_overlay)
-            holder.friends_profile.borderColor = ContextCompat.getColor(context, R.color.colorCorrectAnswer)
-            holder.imageView5.setImageResource(R.drawable.input_overlay_icon)
-
-        } else {
-
-            holder.imageView2.setImageResource(R.drawable.input_overlay_error)
-            holder.friends_profile.borderColor = ContextCompat.getColor(context, R.color.colorRed)
-            holder.imageView5.setImageResource(R.drawable.input_overlay_icon_error)
+        holder.btn_chat.setOnClickListener {
+            SnackBarUtil.setActivitySnack(
+                    context.resources.getString(R.string.chat_in_build),
+                    ColorSnackBar.WARING,
+                    R.drawable.ic_warning,
+                    it
+            ) { }
 
         }
+
+        holder.btn_chat.visibility = View.GONE
+        holder.btn_favorite.visibility = View.GONE
 
         db.document(user.uid).addSnapshotListener(EventListener<DocumentSnapshot> { doc, e ->
 
@@ -59,6 +60,7 @@ class GamesAdapater(private val user: FriendItem, private val context: Context, 
                 if(doc.exists()){
 
                     holder.profile_name.text = doc.getString("name")
+                    holder.statusText.text = doc.getString("status")
 
                     GlideUtil.setActivityImage(
                         doc.getBoolean("fb")!!,
@@ -69,54 +71,49 @@ class GamesAdapater(private val user: FriendItem, private val context: Context, 
 
                     val user = doc.toObject(UserData::class.java)
 
-                    holder.image_passa.setOnClickListener {
+                    holder.btn_game.setOnClickListener {
 
-                        holder.image_passa.isEnabled = false
+                        holder.btn_game.isEnabled = false
 
                         if (user != null) {
 
-                            listener.onClickFriendGame(
+                            listener.onClickFriend(
                                 user,
                                 holder.friends_profile,
                                 holder.profile_name,
                                 holder.btn_chat,
-                                holder.btn_favorite,
-                                holder.image_passa,
-                                holder.imageView5
-
+                                    holder.btn_favorite
                             )
 
-                            holder.image_passa.isEnabled = true
+                            holder.btn_game.isEnabled = true
 
                         } else {
 
-                            holder.image_passa.isEnabled = true
+                            holder.btn_game.isEnabled = true
 
                         }
 
                     }
 
-                    holder.friendLayout.setOnClickListener {
+                    holder.friendConstraintLayout.setOnClickListener {
 
-                        holder.friendLayout.isEnabled = false
+                        holder.friendConstraintLayout.isEnabled = false
 
                         if (user != null) {
 
-                            listener.onClickFriendGame(
+                            listener.onClickFriend(
                                 user,
                                 holder.friends_profile,
                                 holder.profile_name,
                                 holder.btn_chat,
-                                holder.btn_favorite,
-                                holder.image_passa,
-                                holder.imageView5
+                                    holder.btn_favorite
                             )
 
-                            holder.friendLayout.isEnabled = true
+                            holder.friendConstraintLayout.isEnabled = true
 
                         } else {
 
-                            holder.friendLayout.isEnabled = true
+                            holder.friendConstraintLayout.isEnabled = true
 
                         }
 
@@ -130,6 +127,7 @@ class GamesAdapater(private val user: FriendItem, private val context: Context, 
 
     }
 
-    override fun getLayout(): Int = R.layout.game_item
+    override fun getLayout(): Int = R.layout.friends_item
+
 
 }

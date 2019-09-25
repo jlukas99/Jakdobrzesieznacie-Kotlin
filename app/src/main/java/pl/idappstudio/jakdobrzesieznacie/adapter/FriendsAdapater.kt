@@ -19,12 +19,11 @@ import pl.idappstudio.jakdobrzesieznacie.model.FriendItem
 import pl.idappstudio.jakdobrzesieznacie.model.UserData
 import pl.idappstudio.jakdobrzesieznacie.util.GlideUtil
 import pl.idappstudio.jakdobrzesieznacie.util.SnackBarUtil
-import pl.idappstudio.jakdobrzesieznacie.util.UserUtil
 
 class FriendsAdapater(private val user: FriendItem, private val context: Context, private val listener: ClickListener) : Item() {
 
     private val db = FirebaseFirestore.getInstance().collection("users")
-    private val dbFriends = FirebaseFirestore.getInstance().collection("users").document(UserUtil.user.uid).collection("friends")
+    private val dbFriends = FirebaseFirestore.getInstance().collection("users").document(user.uid).collection("friends")
 
     override fun bind(holder: ViewHolder, position: Int) {
 

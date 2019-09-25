@@ -19,7 +19,9 @@
             android:largeHeap="true"
             android:theme="@style/MyTheme"
             tools:ignore="AllowBackup"
-            tools:replace="android:theme">
+        android:usesCleartextTraffic="true"
+        tools:replace="android:theme"
+        tools:targetApi="m">
 
         <meta-data
                 android:name="com.google.android.gms.ads.APPLICATION_ID"
@@ -36,11 +38,7 @@
 
         <provider android:authorities="com.facebook.app.FacebookContentProvider{249845939148351}"
                   android:name="com.facebook.FacebookContentProvider"
-                  android:exported="true"/>
-
-        <!--<meta-data-->
-                <!--android:name="com.google.android.gms.wallet.api.enabled"-->
-                <!--android:value="true" />-->
+            android:exported="false" />
 
         <activity android:name=".activity.AddQuestionActivity"/>
 

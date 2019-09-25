@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.TextView
 import com.github.ybq.android.spinkit.SpinKitView
 import com.google.firebase.auth.FirebaseAuth
@@ -15,9 +16,9 @@ import org.jetbrains.anko.support.v4.intentFor
 import org.jetbrains.anko.support.v4.startActivity
 import pl.idappstudio.jakdobrzesieznacie.R
 import pl.idappstudio.jakdobrzesieznacie.activity.LoginMenuActivity
+import pl.idappstudio.jakdobrzesieznacie.activity.MenuActivity.Companion.viewPager2
 import pl.idappstudio.jakdobrzesieznacie.activity.SettingsActivity
 import pl.idappstudio.jakdobrzesieznacie.enums.ColorSnackBar
-import pl.idappstudio.jakdobrzesieznacie.enums.StatusMessage
 import pl.idappstudio.jakdobrzesieznacie.model.StatsData
 import pl.idappstudio.jakdobrzesieznacie.util.GameUtil
 import pl.idappstudio.jakdobrzesieznacie.util.GlideUtil
@@ -34,7 +35,8 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
     private lateinit var logout: Button
     private lateinit var settings: Button
     private lateinit var share: Button
-    private lateinit var premium: Button
+
+    private lateinit var back: ImageButton
 
     private lateinit var friendsProfileStatsCanswer: TextView
     private lateinit var friendsProfileStatsBanswer: TextView
@@ -47,13 +49,13 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
 
         name = rootView.findViewById(R.id.profile_name)
         image = rootView.findViewById(R.id.profile_image)
+        back = rootView.findViewById(R.id.back)
 
         loading = rootView.findViewById(R.id.profile_loading_image)
 
         logout = rootView.findViewById(R.id.profile_logout_btn)
         settings = rootView.findViewById(R.id.profile_settings_button)
         share = rootView.findViewById(R.id.profile_share_button)
-        premium = rootView.findViewById(R.id.friends_profile_set_btn)
 
         friendsProfileStatsCanswer = rootView.findViewById(R.id.friends_profile_stats_canswer)
         friendsProfileStatsBanswer = rootView.findViewById(R.id.friends_profile_stats_banswer)
@@ -61,20 +63,14 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
         friendsProfileStatsPrecent = rootView.findViewById(R.id.profile_stats_friend_precent)
         logout.setOnClickListener {
 
-            UserUtil.updateStatus(resources.getString(StatusMessage.offline)) {}
             FirebaseAuth.getInstance().signOut()
             startActivity(intentFor<LoginMenuActivity>().newTask().clearTask())
 
         }
 
-        premium.setOnClickListener {
+        back.setOnClickListener {
 
-            SnackBarUtil.setActivitySnack(
-                resources.getString(R.string.premium_disabled),
-                ColorSnackBar.WARING,
-                R.drawable.ic_corn,
-                it
-            ) { }
+            viewPager2.setCurrentItem(1, true)
 
         }
 
@@ -119,12 +115,11 @@ class ProfileFragment : androidx.fragment.app.Fragment() {
                 val a: Float = i1.toFloat()
                 val b: Float = i2.toFloat()
                 val c: Int = i3
-                val precent = GameUtil.getPrecent(StatsData(i1, i2, i3))
-                resources.getString(R.string.percent)
+                val percent = GameUtil.getPrecent(StatsData(i1, i2, i3))
                 friendsProfileStatsCanswer.text = a.toInt().toString()
                 friendsProfileStatsBanswer.text = b.toInt().toString()
                 friendsProfileStatsGames.text = c.toString()
-                friendsProfileStatsPrecent.text = String.format("$precent%s", "%")
+                friendsProfileStatsPrecent.text = String.format("$percent%s", "%")
 
             }
 

@@ -9,9 +9,10 @@ import pl.idappstudio.jakdobrzesieznacie.R
 import pl.idappstudio.jakdobrzesieznacie.interfaces.ClickSetListener
 import pl.idappstudio.jakdobrzesieznacie.model.SetItem
 
+@Suppress("DEPRECATION")
 class SetAdapater(
-    private val set: SetItem,
-    private val listener: ClickSetListener
+        private val set: SetItem,
+        private val listener: ClickSetListener
 ) : Item() {
 
     override fun bind(holder: ViewHolder, position: Int) {
@@ -22,15 +23,19 @@ class SetAdapater(
 
             holder.itemView.set_btn.setIconResource(R.drawable.ic_corn)
             holder.itemView.set_btn.background.setColorFilter(
-                ContextCompat.getColor(
-                    holder.itemView.context, R.color.colorYellow
-                ), android.graphics.PorterDuff.Mode.SRC_IN)
+                    ContextCompat.getColor(
+                            holder.itemView.context, R.color.colorYellow
+                    ), android.graphics.PorterDuff.Mode.SRC_IN)
 
         } else {
 
             if(set.image == 700034){
 
                 holder.itemView.set_btn.setIconResource(R.drawable.ic_question_icon)
+                holder.itemView.set_btn.background.setColorFilter(
+                        ContextCompat.getColor(
+                                holder.itemView.context, R.color.colorAccent
+                        ), android.graphics.PorterDuff.Mode.SRC_IN)
 
             } else {
 
@@ -39,9 +44,9 @@ class SetAdapater(
             }
 
             holder.itemView.set_btn.background.setColorFilter(
-                ContextCompat.getColor(
-                    holder.itemView.context, R.color.colorPrimary
-                ), android.graphics.PorterDuff.Mode.SRC_IN)
+                    ContextCompat.getColor(
+                            holder.itemView.context, R.color.colorPrimary
+                    ), android.graphics.PorterDuff.Mode.SRC_IN)
 
         }
 

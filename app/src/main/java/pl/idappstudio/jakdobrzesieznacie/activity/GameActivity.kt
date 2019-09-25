@@ -2,7 +2,6 @@ package pl.idappstudio.jakdobrzesieznacie.activity
 
 import android.os.Bundle
 import android.view.View
-import android.widget.ImageButton
 import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
@@ -10,7 +9,6 @@ import kotlinx.android.synthetic.main.activity_game.*
 import pl.idappstudio.jakdobrzesieznacie.R
 import pl.idappstudio.jakdobrzesieznacie.activity.FriendsProfileActivity.Companion.EXTRA_FRIEND_IMAGE_TRANSITION
 import pl.idappstudio.jakdobrzesieznacie.activity.FriendsProfileActivity.Companion.EXTRA_USER_IMAGE_TRANSITION
-import pl.idappstudio.jakdobrzesieznacie.enums.StatusMessage
 import pl.idappstudio.jakdobrzesieznacie.fragments.ClearFragment
 import pl.idappstudio.jakdobrzesieznacie.fragments.stages.StageOneFragment
 import pl.idappstudio.jakdobrzesieznacie.fragments.stages.StageThreeFragment
@@ -21,8 +19,6 @@ import pl.idappstudio.jakdobrzesieznacie.model.*
 import pl.idappstudio.jakdobrzesieznacie.util.GameUtil
 import pl.idappstudio.jakdobrzesieznacie.util.GlideUtil
 import pl.idappstudio.jakdobrzesieznacie.util.UserUtil
-import java.util.*
-import kotlin.concurrent.schedule
 
 class GameActivity : AppCompatActivity(), NextFragment {
 
@@ -139,8 +135,7 @@ class GameActivity : AppCompatActivity(), NextFragment {
         setContentView(R.layout.activity_game)
         supportPostponeEnterTransition()
 
-        val backBtn = linearLayout1.findViewById<ImageButton>(R.id.back_btn)
-        backBtn.setOnClickListener {
+        back.setOnClickListener {
 
             onBackPressed()
 
@@ -407,15 +402,7 @@ class GameActivity : AppCompatActivity(), NextFragment {
 
     override fun onResume() {
         super.onResume()
-        Timer("status", false).schedule(700) {
-            UserUtil.updateStatus(resources.getString(StatusMessage.online)) {}
-        }
         hideSystemUI()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        UserUtil.updateStatus(resources.getString(StatusMessage.offline)) {}
     }
 
     override fun onUserInteraction() {

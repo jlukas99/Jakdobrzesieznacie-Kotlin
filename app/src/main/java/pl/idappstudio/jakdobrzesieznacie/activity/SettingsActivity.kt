@@ -16,14 +16,12 @@ import com.google.firebase.firestore.FirebaseFirestore
 import kotlinx.android.synthetic.main.activity_settings.*
 import pl.idappstudio.jakdobrzesieznacie.R
 import pl.idappstudio.jakdobrzesieznacie.enums.ColorSnackBar
-import pl.idappstudio.jakdobrzesieznacie.enums.StatusMessage
 import pl.idappstudio.jakdobrzesieznacie.util.SnackBarUtil
 import pl.idappstudio.jakdobrzesieznacie.util.StorgeUtil
 import pl.idappstudio.jakdobrzesieznacie.util.UserUtil
 import java.io.ByteArrayOutputStream
-import java.util.*
-import kotlin.concurrent.schedule
 
+@Suppress("DEPRECATION")
 class SettingsActivity : AppCompatActivity() {
 
     private val db: DocumentReference = FirebaseFirestore.getInstance().collection("users").document(UserUtil.user.uid)
@@ -41,10 +39,10 @@ class SettingsActivity : AppCompatActivity() {
             if(save_button.visibility == View.VISIBLE || save_image.visibility == View.VISIBLE || save_gender.visibility == View.VISIBLE){
 
                 SnackBarUtil.setActivitySnack(
-                    resources.getString(R.string.not_saved),
-                    ColorSnackBar.ERROR,
-                    R.drawable.ic_error_,
-                    it
+                        resources.getString(R.string.not_saved),
+                        ColorSnackBar.ERROR,
+                        R.drawable.ic_error_,
+                        it
                 ) { }
 
             } else {
@@ -149,19 +147,19 @@ class SettingsActivity : AppCompatActivity() {
                     if (it.isSuccessful) {
 
                         SnackBarUtil.setActivitySnack(
-                            resources.getString(R.string.change_your_nick_successful),
-                            ColorSnackBar.SUCCES,
-                            R.drawable.ic_check_icon,
-                            it2
+                                resources.getString(R.string.change_your_nick_successful),
+                                ColorSnackBar.SUCCES,
+                                R.drawable.ic_check_icon,
+                                it2
                         ) { }
 
                     } else {
 
                         SnackBarUtil.setActivitySnack(
-                            resources.getString(R.string.change_your_nick_error),
-                            ColorSnackBar.ERROR,
-                            R.drawable.ic_error_,
-                            it2
+                                resources.getString(R.string.change_your_nick_error),
+                                ColorSnackBar.ERROR,
+                                R.drawable.ic_error_,
+                                it2
                         ) { }
 
                     }
@@ -182,10 +180,10 @@ class SettingsActivity : AppCompatActivity() {
                     new_nick.setText("")
 
                     SnackBarUtil.setActivitySnack(
-                        resources.getString(R.string.change_your_nick_error),
-                        ColorSnackBar.ERROR,
-                        R.drawable.ic_error_,
-                        it2
+                            resources.getString(R.string.change_your_nick_error),
+                            ColorSnackBar.ERROR,
+                            R.drawable.ic_error_,
+                            it2
                     ) { }
 
                 }
@@ -193,10 +191,10 @@ class SettingsActivity : AppCompatActivity() {
             } else {
 
                 SnackBarUtil.setActivitySnack(
-                    resources.getString(R.string.change_your_nick_info),
-                    ColorSnackBar.ERROR,
-                    R.drawable.ic_error_,
-                    it2
+                        resources.getString(R.string.change_your_nick_info),
+                        ColorSnackBar.ERROR,
+                        R.drawable.ic_error_,
+                        it2
                 ) { }
 
                 loading_nick.visibility = View.GONE
@@ -226,17 +224,17 @@ class SettingsActivity : AppCompatActivity() {
             } else {
 
                 SnackBarUtil.setActivitySnack(
-                    resources.getString(R.string.select_picture_fb_info),
-                    ColorSnackBar.ERROR,
-                    R.drawable.ic_error_,
-                    it
+                        resources.getString(R.string.select_picture_fb_info),
+                        ColorSnackBar.ERROR,
+                        R.drawable.ic_error_,
+                        it
                 ) { }
 
             }
 
         }
 
-        save_image.setOnClickListener {it2 ->
+        save_image.setOnClickListener { it2 ->
 
             if (fileUri != null){
 
@@ -260,10 +258,10 @@ class SettingsActivity : AppCompatActivity() {
                         if (it.isSuccessful){
 
                             SnackBarUtil.setActivitySnack(
-                                resources.getString(R.string.change_your_avatar_successful),
-                                ColorSnackBar.SUCCES,
-                                R.drawable.ic_check_icon,
-                                it2
+                                    resources.getString(R.string.change_your_avatar_successful),
+                                    ColorSnackBar.SUCCES,
+                                    R.drawable.ic_check_icon,
+                                    it2
                             ) { }
 
                             text_image.text = resources.getString(R.string.change_your_avatar)
@@ -278,10 +276,10 @@ class SettingsActivity : AppCompatActivity() {
                         } else {
 
                             SnackBarUtil.setActivitySnack(
-                                resources.getString(R.string.change_your_avatar_error),
-                                ColorSnackBar.ERROR,
-                                R.drawable.ic_error_,
-                                it2
+                                    resources.getString(R.string.change_your_avatar_error),
+                                    ColorSnackBar.ERROR,
+                                    R.drawable.ic_error_,
+                                    it2
                             ) { }
 
                             text_image.text = resources.getString(R.string.change_your_avatar)
@@ -298,10 +296,10 @@ class SettingsActivity : AppCompatActivity() {
                     }.addOnFailureListener {
 
                         SnackBarUtil.setActivitySnack(
-                            resources.getString(R.string.change_your_avatar_error),
-                            ColorSnackBar.ERROR,
-                            R.drawable.ic_error_,
-                            it2
+                                resources.getString(R.string.change_your_avatar_error),
+                                ColorSnackBar.ERROR,
+                                R.drawable.ic_error_,
+                                it2
                         ) { }
 
                         text_image.text = resources.getString(R.string.change_your_avatar)
@@ -356,17 +354,17 @@ class SettingsActivity : AppCompatActivity() {
             } else {
 
                 SnackBarUtil.setActivitySnack(
-                    resources.getString(R.string.select_gender_fb_info),
-                    ColorSnackBar.ERROR,
-                    R.drawable.ic_error_,
-                    it
+                        resources.getString(R.string.select_gender_fb_info),
+                        ColorSnackBar.ERROR,
+                        R.drawable.ic_error_,
+                        it
                 ) { }
 
             }
 
         }
 
-        save_gender.setOnClickListener {it2 ->
+        save_gender.setOnClickListener { it2 ->
 
             cardView_change_gender.isEnabled = false
             loading_gender.visibility = View.VISIBLE
@@ -381,10 +379,10 @@ class SettingsActivity : AppCompatActivity() {
                 if(it.isSuccessful){
 
                     SnackBarUtil.setActivitySnack(
-                        resources.getString(R.string.change_your_gender_successful),
-                        ColorSnackBar.SUCCES,
-                        R.drawable.ic_check_icon,
-                        it2
+                            resources.getString(R.string.change_your_gender_successful),
+                            ColorSnackBar.SUCCES,
+                            R.drawable.ic_check_icon,
+                            it2
                     ) { }
 
                     text_gender.text = resources.getString(R.string.change_your_gender)
@@ -398,10 +396,10 @@ class SettingsActivity : AppCompatActivity() {
                 } else {
 
                     SnackBarUtil.setActivitySnack(
-                        resources.getString(R.string.change_your_gender_error),
-                        ColorSnackBar.ERROR,
-                        R.drawable.ic_error_,
-                        it2
+                            resources.getString(R.string.change_your_gender_error),
+                            ColorSnackBar.ERROR,
+                            R.drawable.ic_error_,
+                            it2
                     ) { }
 
                     text_gender.text = resources.getString(R.string.change_your_gender)
@@ -416,10 +414,10 @@ class SettingsActivity : AppCompatActivity() {
             }.addOnFailureListener {
 
                 SnackBarUtil.setActivitySnack(
-                    resources.getString(R.string.change_your_gender_error),
-                    ColorSnackBar.ERROR,
-                    R.drawable.ic_error_,
-                    it2
+                        resources.getString(R.string.change_your_gender_error),
+                        ColorSnackBar.ERROR,
+                        R.drawable.ic_error_,
+                        it2
                 ) { }
 
                 text_gender.text = resources.getString(R.string.change_your_gender)
@@ -434,24 +432,24 @@ class SettingsActivity : AppCompatActivity() {
 
         }
 
-        if(UserUtil.user.type == "free"){
-
-            premium_color_switch.isChecked = false
-            premium_color_switch.setOnClickListener {
-
-                SnackBarUtil.setActivitySnack(
-                    resources.getString(R.string.not_have_a_premium),
-                    ColorSnackBar.WARING,
-                    R.drawable.ic_corn,
-                    it
-                ) { }
-
-                premium_color_switch.isChecked = false
-            }
-
-        } else {
-
-        }
+//        if(UserUtil.user.type == "free"){
+//
+//            premium_color_switch.isChecked = false
+//            premium_color_switch.setOnClickListener {
+//
+//                SnackBarUtil.setActivitySnack(
+//                    resources.getString(R.string.not_have_a_premium),
+//                    ColorSnackBar.WARING,
+//                    R.drawable.ic_corn,
+//                    it
+//                ) { }
+//
+//                premium_color_switch.isChecked = false
+//            }
+//
+//        } else {
+//
+//        }
 
     }
 
@@ -486,9 +484,6 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onResume() {
         super.onResume()
-        Timer("status", false).schedule(700) {
-            UserUtil.updateStatus(resources.getString(StatusMessage.online)) {}
-        }
         hideSystemUI()
     }
 
@@ -500,11 +495,6 @@ class SettingsActivity : AppCompatActivity() {
     override fun onStart() {
         super.onStart()
         hideSystemUI()
-    }
-
-    override fun onPause() {
-        super.onPause()
-        UserUtil.updateStatus(resources.getString(StatusMessage.offline)) {}
     }
 
     override fun onBackPressed() {
@@ -526,8 +516,8 @@ class SettingsActivity : AppCompatActivity() {
 
     override fun onWindowFocusChanged(hasFocus:Boolean) {
         super.onWindowFocusChanged(hasFocus)
-            if (hasFocus) {
-                hideSystemUI()
+        if (hasFocus) {
+            hideSystemUI()
         }
     }
 

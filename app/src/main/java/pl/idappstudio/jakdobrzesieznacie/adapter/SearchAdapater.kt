@@ -10,13 +10,13 @@ import com.xwray.groupie.kotlinandroidextensions.Item
 import com.xwray.groupie.kotlinandroidextensions.ViewHolder
 import kotlinx.android.synthetic.main.search_item.*
 import pl.idappstudio.jakdobrzesieznacie.R
-import pl.idappstudio.jakdobrzesieznacie.interfaces.ClickInviteListener
+import pl.idappstudio.jakdobrzesieznacie.interfaces.ClickSendInviteListener
 import pl.idappstudio.jakdobrzesieznacie.model.FriendItem
 import pl.idappstudio.jakdobrzesieznacie.model.UserData
 import pl.idappstudio.jakdobrzesieznacie.util.GlideUtil
 import pl.idappstudio.jakdobrzesieznacie.util.UserUtil
 
-class SearchAdapater(private val user: FriendItem, private val context: Context, private val listener: ClickInviteListener) : Item() {
+class SearchAdapater(private val user: FriendItem, private val context: Context, private val listener: ClickSendInviteListener) : Item() {
 
     private val db = FirebaseFirestore.getInstance().collection("users")
 

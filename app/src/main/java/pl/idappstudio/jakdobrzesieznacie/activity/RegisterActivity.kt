@@ -28,6 +28,7 @@ import pl.idappstudio.jakdobrzesieznacie.util.UserUtil
 import java.io.ByteArrayOutputStream
 import java.util.regex.Pattern
 
+@Suppress("DEPRECATION")
 class RegisterActivity : Activity() {
 
     private lateinit var auth: FirebaseAuth
@@ -44,8 +45,8 @@ class RegisterActivity : Activity() {
         window.decorView.systemUiVisibility = View.SYSTEM_UI_FLAG_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION or View.SYSTEM_UI_FLAG_IMMERSIVE_STICKY
 
         val adapter = ArrayAdapter.createFromResource(this,
-            R.array.gender_list,
-            R.layout.gender_list_layout
+                R.array.gender_list,
+                R.layout.gender_list_layout
         )
         adapter.setDropDownViewResource(R.layout.support_simple_spinner_dropdown_item)
         genderSpinner.adapter = adapter
@@ -71,8 +72,8 @@ class RegisterActivity : Activity() {
             }
 
             startActivityForResult(
-                Intent.createChooser(intent, resources.getString(R.string.select_picture)),
-                RC_SELECT_IMAGE
+                    Intent.createChooser(intent, resources.getString(R.string.select_picture)),
+                    RC_SELECT_IMAGE
             )
         }
 
@@ -134,7 +135,7 @@ class RegisterActivity : Activity() {
 
         })
 
-        btn_send.setOnClickListener {it2 ->
+        btn_send.setOnClickListener { it2 ->
 
             var error = 0
 
@@ -146,10 +147,10 @@ class RegisterActivity : Activity() {
                 repasswordImage.setBackgroundResource(R.drawable.input_overlay_icon_error)
 
                 SnackBarUtil.setActivitySnack(
-                    resources.getString(R.string.password_not_same),
-                    ColorSnackBar.ERROR,
-                    R.mipmap.password_icon,
-                    it2
+                        resources.getString(R.string.password_not_same),
+                        ColorSnackBar.ERROR,
+                        R.mipmap.password_icon,
+                        it2
                 ) { }
 
             }
@@ -162,10 +163,10 @@ class RegisterActivity : Activity() {
                 passwordImage.setBackgroundResource(R.drawable.input_overlay_icon_error)
 
                 SnackBarUtil.setActivitySnack(
-                    resources.getString(R.string.password_validation),
-                    ColorSnackBar.ERROR,
-                    R.mipmap.password_icon,
-                    it2
+                        resources.getString(R.string.password_validation),
+                        ColorSnackBar.ERROR,
+                        R.mipmap.password_icon,
+                        it2
                 ) { }
 
             }
@@ -178,10 +179,10 @@ class RegisterActivity : Activity() {
                 emailImage.setBackgroundResource(R.drawable.input_overlay_icon_error)
 
                 SnackBarUtil.setActivitySnack(
-                    resources.getString(R.string.incoreect_mail),
-                    ColorSnackBar.ERROR,
-                    R.mipmap.email_icon,
-                    it2
+                        resources.getString(R.string.incoreect_mail),
+                        ColorSnackBar.ERROR,
+                        R.mipmap.email_icon,
+                        it2
                 ) { }
 
             }
@@ -191,78 +192,80 @@ class RegisterActivity : Activity() {
             alertDialog.show()
 
             auth.createUserWithEmailAndPassword(emailInput?.text.toString().trim(), passwordInput?.text.toString().trim()).addOnCompleteListener(this) { task ->
-                    if (task.isSuccessful) {
+                if (task.isSuccessful) {
 
-                        val uid = auth.currentUser?.uid.toString()
-                        val gender: String = if(genderSpinner.selectedItemPosition == 0) "male" else "female"
+                    val uid = auth.currentUser?.uid.toString()
+                    val gender: String = if (genderSpinner.selectedItemPosition == 0) "male" else "female"
 
-                        var email = emailInput.text.trim()
-                        val emailNum = email.indexOf("@")
-                        email = email.substring(0, emailNum)
+                    var email = emailInput.text.trim()
+                    val emailNum = email.indexOf("@")
+                    email = email.substring(0, emailNum)
 
-                        val image: String
+                    val image: String
 
-                        image = if(fileUri != null) {
+                    image = if (fileUri != null) {
 
-                            uid
+                        uid
 
-                        } else {
+                    } else {
 
-                            if(genderSpinner.selectedItemPosition == 0) "male" else "female"
+                        if (genderSpinner.selectedItemPosition == 0) "male" else "female"
+
+                    }
+
+                    FirestoreUtil.registerCurrentUser(uid, email, image, false, gender, "free", "") {
+
+                        if (fileUri != null) {
+
+                            val selectedImageBmp = MediaStore.Images.Media.getBitmap(contentResolver, fileUri)
+
+                            val outputStream = ByteArrayOutputStream()
+
+                            selectedImageBmp.compress(Bitmap.CompressFormat.JPEG, 90, outputStream)
+                            val selectedImageBytes = outputStream.toByteArray()
+
+                            StorgeUtil.uploadProfilePhoto(selectedImageBytes) {
+
+                                selectImageText.visibility = View.GONE
+                                selectImageIcon.visibility = View.GONE
+                                selectImage.setImageURI(fileUri)
+
+                            }
 
                         }
 
-                        FirestoreUtil.registerCurrentUser(uid, email, image, false, gender, "free", "") {
+                        UserUtil.initializeUser {
 
-                            if(fileUri != null) {
-                                val selectedImageBmp = MediaStore.Images.Media.getBitmap(contentResolver, fileUri)
+                            alertDialog.dismiss()
 
-                                val outputStream = ByteArrayOutputStream()
-
-                                selectedImageBmp.compress(Bitmap.CompressFormat.JPEG, 90, outputStream)
-                                val selectedImageBytes = outputStream.toByteArray()
-
-                                StorgeUtil.uploadProfilePhoto(selectedImageBytes) {
-
-                                    selectImageText.visibility = View.GONE
-                                    selectImageIcon.visibility = View.GONE
-                                    selectImage.setImageURI(fileUri)
-
-                                }
-                            }
-
-                            UserUtil.initializeUser {
-
-                                alertDialog.dismiss()
-
-                                SnackBarUtil.setActivitySnack(
+                            SnackBarUtil.setActivitySnack(
                                     resources.getString(R.string.create_account_successful),
                                     ColorSnackBar.SUCCES,
                                     R.drawable.ic_check_icon,
                                     it2
-                                ) {
+                            ) {
 
-                                    startActivity(intentFor<MenuActivity>().newTask().clearTask())
-
-                                }
+                                startActivity(intentFor<MenuActivity>().newTask().clearTask())
 
                             }
 
                         }
 
-                    } else {
+                    }
 
-                        alertDialog.dismiss()
+                } else {
 
-                        SnackBarUtil.setActivitySnack(
+                    alertDialog.dismiss()
+
+                    SnackBarUtil.setActivitySnack(
                             resources.getString(R.string.create_account_error),
                             ColorSnackBar.ERROR,
                             R.drawable.ic_error_,
                             it2
-                        ) { }
+                    ) { }
 
-                    }
                 }
+            }
 
         }
 
@@ -289,18 +292,18 @@ class RegisterActivity : Activity() {
 
     fun isEmailValid(email: String): Boolean {
         return Pattern.compile(
-            "^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]|[\\w-]{2,}))@"
-                    + "((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
-                    + "[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\."
-                    + "([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
-                    + "[0-9]{1,2}|25[0-5]|2[0-4][0-9]))|"
-                    + "([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$"
+                "^(([\\w-]+\\.)+[\\w-]+|([a-zA-Z]|[\\w-]{2,}))@"
+                        + "((([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
+                        + "[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\."
+                        + "([0-1]?[0-9]{1,2}|25[0-5]|2[0-4][0-9])\\.([0-1]?"
+                        + "[0-9]{1,2}|25[0-5]|2[0-4][0-9]))|"
+                        + "([a-zA-Z]+[\\w-]+\\.)+[a-zA-Z]{2,4})$"
         ).matcher(email).matches()
     }
 
     fun isPasswordValid(password: String): Boolean {
         return Pattern.compile(
-            "^[a-zA-Z0-9]{6,}$"
+                "^[a-zA-Z0-9]{6,}$"
         ).matcher(password).matches()
     }
 

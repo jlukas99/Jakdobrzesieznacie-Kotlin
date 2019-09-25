@@ -33,7 +33,6 @@ import pl.idappstudio.jakdobrzesieznacie.util.FacebookUtil
 import pl.idappstudio.jakdobrzesieznacie.util.FirestoreUtil
 import pl.idappstudio.jakdobrzesieznacie.util.SnackBarUtil
 import pl.idappstudio.jakdobrzesieznacie.util.UserUtil
-import java.util.*
 
 class LoginMenuActivity : Activity() {
 
@@ -112,7 +111,7 @@ class LoginMenuActivity : Activity() {
 
         textView11.setOnClickListener {
 
-            val url = "http://idappstudio.pl/privacy_policy.html"
+            val url = "https://idapp-jak-dobrze-sie-znacie.firebaseapp.com/privacy_policy.html"
             val i = Intent(Intent.ACTION_VIEW)
 
             i.data = Uri.parse(url)
@@ -123,7 +122,7 @@ class LoginMenuActivity : Activity() {
 
         textView15.setOnClickListener {
 
-            val url2 = "http://idappstudio.pl/terms_and_conditions.html"
+            val url2 = "https://idapp-jak-dobrze-sie-znacie.firebaseapp.com/terms_and_conditions.html"
             val i = Intent(Intent.ACTION_VIEW)
 
             i.data = Uri.parse(url2)
@@ -148,7 +147,7 @@ class LoginMenuActivity : Activity() {
 
             alertDialog.show()
 
-            LoginManager.getInstance().logInWithReadPermissions(this@LoginMenuActivity, Arrays.asList("email","user_gender","user_friends","public_profile"))
+            LoginManager.getInstance().logInWithReadPermissions(this@LoginMenuActivity, listOf("email", "user_gender", "user_friends", "public_profile"))
             LoginManager.getInstance().registerCallback(callbackManager, object : FacebookCallback<LoginResult> {
 
                 override fun onSuccess(loginResult: LoginResult) {

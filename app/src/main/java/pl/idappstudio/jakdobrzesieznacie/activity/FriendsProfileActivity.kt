@@ -8,12 +8,12 @@ import android.os.Handler
 import android.util.Pair
 import android.view.View
 import android.view.Window
-import android.widget.ImageButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.view.ViewCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.firebase.auth.FirebaseAuth
 import com.google.firebase.firestore.*
 import com.google.firebase.firestore.EventListener
 import com.xwray.groupie.GroupAdapter
@@ -31,45 +31,21 @@ import pl.idappstudio.jakdobrzesieznacie.activity.MenuActivity.Companion.EXTRA_U
 import pl.idappstudio.jakdobrzesieznacie.activity.MenuActivity.Companion.EXTRA_USER_NAME_TRANSITION_NAME
 import pl.idappstudio.jakdobrzesieznacie.adapter.SetAdapater
 import pl.idappstudio.jakdobrzesieznacie.enums.ColorSnackBar
-import pl.idappstudio.jakdobrzesieznacie.enums.StatusMessage
 import pl.idappstudio.jakdobrzesieznacie.interfaces.ClickSetListener
-import pl.idappstudio.jakdobrzesieznacie.items.HeaderItem
 import pl.idappstudio.jakdobrzesieznacie.model.*
 import pl.idappstudio.jakdobrzesieznacie.util.GameUtil
 import pl.idappstudio.jakdobrzesieznacie.util.GlideUtil
 import pl.idappstudio.jakdobrzesieznacie.util.SnackBarUtil
 import pl.idappstudio.jakdobrzesieznacie.util.UserUtil
-import java.util.*
 import kotlin.collections.HashMap
-import kotlin.concurrent.schedule
 
-
+@Suppress("DEPRECATION")
 class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
     override fun click(setItem: SetItem) {
 
-        if (UserUtil.user.type == "premium" && setItem.premium) {
-
-            dbGames.document(games.gameId).update("${UserUtil.user.uid}-set", setItem.id)
-            closeDialog()
-
-        } else if (!setItem.premium){
-
-            dbGames.document(games.gameId).update("${UserUtil.user.uid}-set", setItem.id)
-            closeDialog()
-
-        } else {
-
-            SnackBarUtil.setActivitySnack(
-                resources.getString(R.string.have_premium),
-                ColorSnackBar.WARING,
-                R.drawable.ic_corn,
-                setDialog.findViewById(R.id.head_title_text)
-            ) {
-
-            }
-
-        }
+        dbGames.document(games.gameId).update("${UserUtil.user.uid}-set", setItem.id)
+        closeDialog()
 
     }
 
@@ -104,26 +80,12 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
     private lateinit var rvSetDefault: RecyclerView
 
     private val defaultPack = Section()
-    private val yourPack = Section()
-    private val socialPack = Section()
 
     private val defaultItems = HashMap<String, SetAdapater>()
-    private val yourItems = HashMap<String, SetAdapater>()
-    private val socialItems = HashMap<String, SetAdapater>()
 
     private fun addDefaultItem(id: String, set: SetItem): HashMap<String, SetAdapater> {
         defaultItems[id] = SetAdapater(set, this)
         return defaultItems
-    }
-
-    private fun addYourItem(id: String, set: SetItem): HashMap<String, SetAdapater> {
-        yourItems[id] = SetAdapater(set, this)
-        return yourItems
-    }
-
-    private fun addSocialItem(id: String, set: SetItem): HashMap<String, SetAdapater> {
-        socialItems[id] = SetAdapater(set, this)
-        return socialItems
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -139,17 +101,12 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
             friends_profile_startgame_btn.transitionName = imageGame
         }
 
-//        if(extras.getString(EXTRA_USER_STATUS_GAME_TRANSITION_NAME) != null) {
-//            val imageStatus = extras.getString(EXTRA_USER_STATUS_GAME_TRANSITION_NAME)
-//        }
-
         val imageTransitionName = extras.getString(EXTRA_USER_IMAGE_TRANSITION_NAME)
         val nameTransitionName = extras.getString(EXTRA_USER_NAME_TRANSITION_NAME)
         val btnChatTransitionName = extras.getString(EXTRA_USER_BTN_CHAT_TRANSITION_NAME)
         val btnFavoriteTransitionName = extras.getString(EXTRA_USER_BTN_FAVORITE_TRANSITION_NAME)
 
-        val backBtn = linearLayout4.findViewById<ImageButton>(R.id.back_btn)
-        backBtn.setOnClickListener {
+        back.setOnClickListener {
 
             onBackPressed()
 
@@ -204,17 +161,9 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
         rvSetDefault.adapter = groupAdapter
 
-        defaultPack.setHeader(HeaderItem(resources.getString(R.string.head_pack_default)))
-        yourPack.setHeader(HeaderItem(resources.getString(R.string.header_pack_yours)))
-        socialPack.setHeader(HeaderItem(resources.getString(R.string.premium)))
-
         defaultPack.setHideWhenEmpty(true)
-        yourPack.setHideWhenEmpty(true)
-        socialPack.setHideWhenEmpty(true)
 
         groupAdapter.add(0, defaultPack)
-        groupAdapter.add(1, yourPack)
-        groupAdapter.add(2, socialPack)
 
         friends_profile_set_btn.setOnClickListener {
 
@@ -322,26 +271,8 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
                         rvSetDefault.itemAnimator = LandingAnimator()
 
-                        when {
-                            it.document.getBoolean("premium") == true -> {
-
-                                socialItems.remove(it.document.id)
-                                socialPack.update(socialItems.values)
-
-                            }
-                            it.document.getString("category") == UserUtil.user.uid -> {
-
-                                yourItems.remove(it.document.id)
-                                yourPack.update(yourItems.values)
-
-                            }
-                            else -> {
-
-                                defaultItems.remove(it.document.id)
-                                defaultPack.update(defaultItems.values)
-
-                            }
-                        }
+                        defaultItems.remove(it.document.id)
+                        defaultPack.update(defaultItems.values)
 
                     }
 
@@ -349,49 +280,23 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
                         rvSetDefault.itemAnimator = LandingAnimator()
 
-                        when {
-                            it.document.getBoolean("premium") == true -> {
-
-                                addSocialItem(it.document.id, it.document.toObject(SetItem::class.java))
-                                defaultPack.update(defaultItems.values)
-
-                            }
-                            it.document.getString("category") == UserUtil.user.uid -> {
-
-                                addYourItem(it.document.id, it.document.toObject(SetItem::class.java))
-                                yourPack.update(yourItems.values)
-
-                            }
-                            else -> {
-
-                                addDefaultItem(it.document.id, it.document.toObject(SetItem::class.java))
-                                defaultPack.update(defaultItems.values)
-
-                            }
-                        }
+                        addDefaultItem(it.document.id, it.document.toObject(SetItem::class.java))
+                        defaultPack.update(defaultItems.values)
 
                     }
 
                     if (it.type == DocumentChange.Type.ADDED) {
 
-                        if (it.document.getBoolean("premium") == true) {
+                        if (it.document.getString("category") == "default" || it.document.getString(
+                                        "category"
+                                ) == "own_question"
+                        ) {
 
-                            addSocialItem(it.document.id, it.document.toObject(SetItem::class.java))
-                            socialPack.update(socialItems.values)
-
-                        } else if(it.document.getString("category") == UserUtil.user.uid){
-
-                            addYourItem(it.document.id, it.document.toObject(SetItem::class.java))
-                            yourPack.update(yourItems.values)
-
-                        } else {
-
-                            if(it.document.getString("category") == "default" || it.document.getString("category") == "own_question"){
-
-                                addDefaultItem(it.document.id, it.document.toObject(SetItem::class.java))
-                                defaultPack.update(defaultItems.values)
-
-                            }
+                            addDefaultItem(
+                                    it.document.id,
+                                    it.document.toObject(SetItem::class.java)
+                            )
+                            defaultPack.update(defaultItems.values)
 
                         }
 
@@ -485,8 +390,7 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
     private fun statsFriend() {
 
-        friendStatsListener =
-            db.document(friend.uid).collection("friends").document(UserUtil.user.uid).addSnapshotListener(
+        friendStatsListener = db.document(friend.uid).collection("friends").document(FirebaseAuth.getInstance().currentUser?.uid!!).addSnapshotListener(
                 EventListener<DocumentSnapshot> { doc, e ->
 
                     if (e != null) {
@@ -670,17 +574,11 @@ class FriendsProfileActivity : AppCompatActivity(), ClickSetListener {
 
     override fun onResume() {
         super.onResume()
-
-        Timer("status", false).schedule(700) {
-            UserUtil.updateStatus(resources.getString(StatusMessage.online)) {}
-        }
-
         hideSystemUI()
     }
 
     override fun onPause() {
         super.onPause()
-        UserUtil.updateStatus(resources.getString(StatusMessage.offline)) {}
         setListener?.remove()
         friendStatsListener?.remove()
         friendDataListener?.remove()

@@ -40,8 +40,9 @@ import pl.idappstudio.jakdobrzesieznacie.model.NotificationType
 import pl.idappstudio.jakdobrzesieznacie.model.UserQuestionData
 import pl.idappstudio.jakdobrzesieznacie.util.*
 
+@Suppress("DEPRECATION")
 class StageThreeFragment(private val listener: NextFragment, private val packUrl: String) :
-    androidx.fragment.app.Fragment(), View.OnClickListener {
+        androidx.fragment.app.Fragment(), View.OnClickListener {
 
     override fun onClick(v: View?) {
 
@@ -148,12 +149,12 @@ class StageThreeFragment(private val listener: NextFragment, private val packUrl
 
         alertDialog = dialogBuilder.create()
         alertDialog.window?.setBackgroundDrawable(
-            ColorDrawable(
-                ContextCompat.getColor(
-                    this.context!!,
-                    R.color.colorTranspery
+                ColorDrawable(
+                        ContextCompat.getColor(
+                                this.context!!,
+                                R.color.colorTranspery
+                        )
                 )
-            )
         )
         alertDialog.setCanceledOnTouchOutside(false)
         alertDialog.setCancelable(false)
@@ -188,10 +189,10 @@ class StageThreeFragment(private val listener: NextFragment, private val packUrl
                 }
 
                 SnackBarUtil.setActivitySnack(
-                    resources.getString(R.string.load_ad_failed),
-                    ColorSnackBar.ERROR,
-                    R.drawable.ic_error_,
-                    setDialog.window?.decorView!!
+                        resources.getString(R.string.load_ad_failed),
+                        ColorSnackBar.ERROR,
+                        R.drawable.ic_error_,
+                        setDialog.window?.decorView!!
                 ) {}
 
             }
@@ -210,26 +211,26 @@ class StageThreeFragment(private val listener: NextFragment, private val packUrl
         if(userStats.games == 0) {
 
             TapTargetView.showFor(
-                this.activity,
-                TapTarget.forView(
-                    reportQuestion,
-                    resources.getString(R.string.report_question_dialog),
-                    resources.getString(R.string.report_text_info)
-                )
-                    .outerCircleColor(R.color.colorPrimaryDark)
-                    .outerCircleAlpha(0.96f)
-                    .targetCircleColor(R.color.colorWhite)
-                    .titleTextSize(20)
-                    .titleTextColor(R.color.colorWhite)
-                    .descriptionTextSize(12)
-                    .descriptionTextColor(R.color.colorWhite)
-                    .textColor(R.color.colorWhite)
-                    .dimColor(R.color.colorButtonSecondary)
-                    .drawShadow(true)
-                    .cancelable(true)
-                    .tintTarget(true)
-                    .transparentTarget(false)
-                    .targetRadius(60)
+                    this.activity,
+                    TapTarget.forView(
+                            reportQuestion,
+                            resources.getString(R.string.report_question_dialog),
+                            resources.getString(R.string.report_text_info)
+                    )
+                            .outerCircleColor(R.color.colorPrimaryDark)
+                            .outerCircleAlpha(0.96f)
+                            .targetCircleColor(R.color.colorWhite)
+                            .titleTextSize(20)
+                            .titleTextColor(R.color.colorWhite)
+                            .descriptionTextSize(12)
+                            .descriptionTextColor(R.color.colorWhite)
+                            .textColor(R.color.colorWhite)
+                            .dimColor(R.color.colorButtonSecondary)
+                            .drawShadow(true)
+                            .cancelable(true)
+                            .tintTarget(true)
+                            .transparentTarget(false)
+                            .targetRadius(60)
             )
 
         }
@@ -327,9 +328,9 @@ class StageThreeFragment(private val listener: NextFragment, private val packUrl
 
         nextQuestion.text = resources.getString(R.string.answer_the_question)
         nextQuestion.background.setColorFilter(
-            ContextCompat.getColor(
-                this.context!!, R.color.colorBadAnswer
-            ), android.graphics.PorterDuff.Mode.SRC_IN)
+                ContextCompat.getColor(
+                        this.context!!, R.color.colorBadAnswer
+                ), android.graphics.PorterDuff.Mode.SRC_IN)
 
         stageTitle.text = resources.getString(R.string.answer_the_question)
 
@@ -358,18 +359,18 @@ class StageThreeFragment(private val listener: NextFragment, private val packUrl
 
             nextQuestion.text = resources.getString(R.string.finish_your_turn)
             nextQuestion.background.setColorFilter(
-                ContextCompat.getColor(
-                    this.context!!, R.color.colorCorrectAnswer
-                ), android.graphics.PorterDuff.Mode.SRC_IN
+                    ContextCompat.getColor(
+                            this.context!!, R.color.colorCorrectAnswer
+                    ), android.graphics.PorterDuff.Mode.SRC_IN
             )
 
         } else {
 
             nextQuestion.text = resources.getString(R.string.next_question)
             nextQuestion.background.setColorFilter(
-                ContextCompat.getColor(
-                    this.context!!, R.color.colorPrimary
-                ), android.graphics.PorterDuff.Mode.SRC_IN
+                    ContextCompat.getColor(
+                            this.context!!, R.color.colorPrimary
+                    ), android.graphics.PorterDuff.Mode.SRC_IN
             )
 
         }
@@ -391,9 +392,9 @@ class StageThreeFragment(private val listener: NextFragment, private val packUrl
             } else {
 
                 GameUtil.sendAnswerStageThree(game, UserUtil.user, friends, userAnswer[0], userAnswer[1], userAnswer[2],
-                    "$packUrl/${questionList.question.questionId}",
-                    "$packUrl/${questionList.question1.questionId}",
-                    "$packUrl/${questionList.question2.questionId}"){
+                        "$packUrl/${questionList.question.questionId}",
+                        "$packUrl/${questionList.question1.questionId}",
+                        "$packUrl/${questionList.question2.questionId}") {
 
                     if(userStats.games == 0 && friendsStats.games == 1){
 
@@ -404,12 +405,12 @@ class StageThreeFragment(private val listener: NextFragment, private val packUrl
                     GameUtil.updateGame(userStats.games, UserUtil.user.uid, friends.uid)
 
                     val msg: Message = InviteNotificationMessage(
-                        resources.getString(R.string.notification_finish_turn_title),
-                        resources.getString(R.string.notification_finish_turn, UserUtil.user.name),
-                        UserUtil.user.uid,
-                        friends.uid,
-                        UserUtil.user.name,
-                        NotificationType.GAME
+                            resources.getString(R.string.notification_finish_turn_title),
+                            resources.getString(R.string.notification_finish_turn, UserUtil.user.name),
+                            UserUtil.user.uid,
+                            friends.uid,
+                            UserUtil.user.name,
+                            NotificationType.GAME
                     )
                     FirestoreUtil.sendMessage(msg, friends.uid)
 
@@ -527,22 +528,6 @@ class StageThreeFragment(private val listener: NextFragment, private val packUrl
 
             }
 
-            //        if(canswer.equals("tak", true) || canswer.equals("nie", true)){
-            //
-            //            aAnswerText.text = "Tak"
-            //
-            //            aAnswerButton.isEnabled = true
-            //            aAnswerButton.visibility = View.VISIBLE
-            //
-            //            bAnswerText.text = "Nie"
-            //
-            //            bAnswerButton.isEnabled = true
-            //            bAnswerButton.visibility = View.VISIBLE
-            //
-            //            array.removeAt(0)
-            //            array.removeAt(0)
-            //
-            //        }
         }
 
         questionText.text = question
@@ -565,23 +550,6 @@ class StageThreeFragment(private val listener: NextFragment, private val packUrl
             array.add(banswer3)
 
         }
-
-//        if(canswer.equals("tak", true) || canswer.equals("nie", true)){
-//
-//            aAnswerText.text = "Tak"
-//
-//            aAnswerButton.isEnabled = true
-//            aAnswerButton.visibility = View.VISIBLE
-//
-//            bAnswerText.text = "Nie"
-//
-//            bAnswerButton.isEnabled = true
-//            bAnswerButton.visibility = View.VISIBLE
-//
-//            array.removeAt(0)
-//            array.removeAt(0)
-//
-//        }
 
         array.shuffle()
 
@@ -707,10 +675,10 @@ class StageThreeFragment(private val listener: NextFragment, private val packUrl
             if(dialogReason.text.trim().length < 5){
 
                 SnackBarUtil.setActivitySnack(
-                    resources.getString(R.string.reason_is_to_short),
-                    ColorSnackBar.WARING,
-                    R.drawable.ic_edit_text,
-                    setDialog.window?.decorView!!
+                        resources.getString(R.string.reason_is_to_short),
+                        ColorSnackBar.WARING,
+                        R.drawable.ic_edit_text,
+                        setDialog.window?.decorView!!
                 ) {
 
                     dialogReason.isEnabled = true
@@ -731,10 +699,10 @@ class StageThreeFragment(private val listener: NextFragment, private val packUrl
 
                 closeDialog()
                 SnackBarUtil.setActivitySnack(
-                    resources.getString(R.string.send_report_successful, it2.id),
-                    ColorSnackBar.SUCCES,
-                    R.drawable.ic_check_icon,
-                    gameStageTitle
+                        resources.getString(R.string.send_report_successful, it2.id),
+                        ColorSnackBar.SUCCES,
+                        R.drawable.ic_check_icon,
+                        gameStageTitle
                 ) {
 
                     resetDialog()
@@ -744,10 +712,10 @@ class StageThreeFragment(private val listener: NextFragment, private val packUrl
             }.addOnFailureListener {
 
                 SnackBarUtil.setActivitySnack(
-                    resources.getString(R.string.send_report_error),
-                    ColorSnackBar.ERROR,
-                    R.drawable.ic_error_,
-                    setDialog.window?.decorView!!
+                        resources.getString(R.string.send_report_error),
+                        ColorSnackBar.ERROR,
+                        R.drawable.ic_error_,
+                        setDialog.window?.decorView!!
                 ) {
 
                     dialogReason.isEnabled = true
@@ -776,7 +744,7 @@ class StageThreeFragment(private val listener: NextFragment, private val packUrl
     private fun getVersion() : String{
 
         return try {
-            val pInfo = context?.packageManager?.getPackageInfo(context?.packageName, 0)
+            val pInfo = context?.packageManager?.getPackageInfo(context?.packageName!!, 0)
             pInfo?.versionName!!
         } catch (e: PackageManager.NameNotFoundException) {
             e.printStackTrace()
